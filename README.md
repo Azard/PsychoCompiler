@@ -1,4 +1,4 @@
 PsychoCompiler
 ==============
 
-A project for SE302
+The project for Compiler Course (SE302)
