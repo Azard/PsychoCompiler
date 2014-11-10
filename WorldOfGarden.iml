@@ -16,8 +16,5 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.jogamp.jogl:jogl-all:2.2.4" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.jogamp.gluegen:gluegen-rt:2.2.4" level="project" />
-    <orderEntry type="library" name="jogamp-lib-windows-i586" level="project" />
   </component>
 </module>

@@ -9,8 +9,6 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile 'org.jogamp.jogl:jogl-all:2.2.4',
-            'org.jogamp.gluegen:gluegen-rt:2.2.4'
 }
 
 task copyJars(type: Copy) {
