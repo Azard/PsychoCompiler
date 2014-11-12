@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PsychoCompiler.iml" filepath="$PROJECT_DIR$/PsychoCompiler.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WorldOfGarden.iml" filepath="$PROJECT_DIR$/WorldOfGarden.iml" />
     </modules>
   </component>
 </project>
