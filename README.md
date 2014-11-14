@@ -1,14 +1,12 @@
 PsychoCompiler
 ==============
 
-#Note
-
 ##TODO list
+* Build a simple Demo
 
 ##Update
+* 2014/11/14：Start project.
 
-
-#Introduction
 
 ##Abstract
 This is a project for Compiler Course (SE302), just a toy compiler for fun.
