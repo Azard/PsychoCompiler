@@ -14,4 +14,4 @@ Psycho-Compiler
 ##环境
 * Runtime : Java JDK1.8 32bit
 * IDE     : IDEA 14 with gradle
-* Lib     : JavaCC-6.1.2
+* Lib     : JavaCC-5.0

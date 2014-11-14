@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="javacc-6.1.2">
+  <library name="javacc">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/javacc-6.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/javacc-5.0/bin/lib/javacc.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

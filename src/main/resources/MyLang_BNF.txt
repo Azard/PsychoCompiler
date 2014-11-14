@@ -1,0 +1,179 @@
+#起始单元，1个文件最多包含1个program申明
+<compilation unit> ::= <program declaration>
+
+
+#程序的主要部分划分，head包括函数名，参数，参数类型，body包括程序的组件(类和函数)，变量声明，主逻辑
+<program declaration> ::= <program head> <program body>
+<program head> ::= "program" <white-space> <program name> <program parameter list> <line-end> <program parameters type> [<program return declaration>]
+<program body> ::= <component declarations> <program variable declarations> <program process>
+
+<program name> ::= <identifier>
+<program parameter list> ::= <parameter list>
+<program parameters type> ::= {<program parameter type>}
+<program parameter type> ::= <variable declaration>
+<program return declaration> ::= "return" <white-space> <type> <semicolon> <line-end>
+<program variable declarations> ::= "is" <line-end> {<program variable declaration>}
+<program variable declaration> ::= <variable declaration>
+<program process> ::= "begin" <line-end> <block> "end" <line-end>
+
+
+#程序内容的分类，在<program body>中
+<component declarations> ::= {<component declaration>}
+<component declaration> ::= <function declaration>
+                          | <type declaration>
+                          | <class declaration>
+
+
+#函数定义，head包括参数和返回值，body包括声明部分和实现部分
+<function declaration> ::= <function head> <function body>
+<function head> ::= "function" <white-space> <function name> <function parameter list> <line-end> <function parameters type> [<function return declaration>]
+<function body> ::= <function variable declarations> <function process>
+
+<function name> ::= <identifier>
+<function parameter list> ::= <parameter list>
+<function parameters type> ::= {<function parameter type>}
+<function paramter type> ::= <variable declaration>
+<function return declaration> ::= "return" <white-space> <type> <semicolon> <line-end>
+<function variable declarations> ::= "is" <line-end> {<function variable declaration>}
+<function variable declaration> ::= <variable declaration> 
+<function process> ::= "begin" <line-end> <block> "end" <white-space> "function" <white-space> <function name> <semicolon> <line-end>
+
+
+#变量声明，同时用于program和function的参数声明，变量声明
+<variable declaration> ::= "var" <white-space> <identifier> <white-space> "is" <white-space> <type> <semicolon> <line-end>
+
+
+#参数列表
+<parameter list> ::= "(" [<parameters>] ")"
+<parameters> ::= <parameter>
+               | <parameter> "," {<white-space>} <parameters>
+<parameter> ::= <identifier>
+
+
+#类型定义(type is)
+<type declaration> ::= "type" <white-space> <identifier> <white-space> "is" <white-space> <type> <semicolon> <line-end>
+
+
+
+#类定义(class)，head包括类名，继承，body包括成员变量，成员函数，tail包括类的结尾
+<class declaration> ::= <class head> <class body> <class tail>
+<class head> ::= "type" <white-space> <class name> <white-space> "is" <white-space> "class" [<class extend>] <line-end>
+<class body> ::= <class variable declarations> <class function declarations>
+<class tail> ::= "end" <white-space> "class" <semicolon> <line-end>
+
+<class name> ::= <identifier>
+<class extend> ::= <white-space> "extends" <white-space> <class type>
+<class variable declarations> ::= {<class variable declaration>}
+<class variable declaration> ::= <variable declaration>
+<class function declarations> ::= {<class function declaration>}
+<class function declaration> ::= <function declaration>
+
+
+
+
+#类型(Types)
+<type> ::= <primitive type> | <reference type>
+<primitive type> ::= <numeric type> | "boolean"
+<numeric type> ::= <integral type>
+<integral type> ::= "integer"
+<reference type> ::= <class type> | <array type>
+<class type> ::= <type name>
+<type name> ::= <identifier>
+<array type> ::= "array" <white-space> "of" <white-space> <expression> <white-space> <type>
+
+
+
+#块(Block)和命令(Command)
+<block> ::= {<block statements>}
+<block statements> ::= <block statement> | <block statements> <block statement>
+<block statement> ::= <statement>
+<statement> ::= <statement without substatement> 
+              | <if statement> 
+              | <while statement> 
+              | <repeat statement>
+              | <foreach statement>
+
+<statement without substatement> ::= <empty statement>
+                                   | <return statement>
+                                   | <expression statement>
+                                   | <print statement>
+<empty statement> ::= <semicolon> <line-end>
+<return statement> ::= "return" <white-space> <expression> <semicolon> <line-end>
+<expression statement> ::= <assignment>
+<print statement> ::= "print" <white-space> <expression> <semicolon> <line-end>
+
+<if statement> ::= "if" <white-space> <logical expression> <white-space> "then" <line-end> <block> {<elif statement>} [<else statement>] "end" <white-space> "if" <line-end>
+<elif statement> ::= "elif" <white-space> <logical expression> <white-space> "then" <line-end> <block>
+<else statement> ::= "else" <line-end> <block>
+
+<while statement> ::= "whilte" <white-space> <logical expression> <whilte-space> "do" <line-end> <block> "end" <white-space> "while" <line-end>
+
+<repeat statement> ::= "repeat" <line-end> <block> "until" <white-space> <logical expression> <semicolon> <line-end>
+
+<foreach statement> ::= "foreach" <white-space> <identifier> <white-space> "in" <white-space> <identifier> <white-space> "do" <line-end> <block> "end" <white-space> "foreach" <line-end> 
+
+
+
+
+
+#表达式(Expression)
+<expression> ::= <arithmetic expression>
+               | <logical expression>
+               | <assignment expression>
+
+<arithmetic expression> ::= <additive expression>
+<additive expression> ::= <multiplicative expression> 
+                        | <additive expression> <additive operator> <multiplicative expression>
+<multiplicative expression> ::= <unary expression> 
+                              | <multiplicative expression> <multiplicative operator> <unary expression>
+<unary expression> ::= <constant expression> 
+                     | <identifier> 
+                     | <array access expression> 
+                     | <class member expression>
+                     | <function call expression>
+                     | "(" <arithmetic expression> ")"
+                     | <sign> <unary expression>
+
+<logical expression> ::= <or expression> 
+<or expression> ::= <and expression>
+                  | <or expression> <or operator> <and expression>
+<and expression> ::= <unary logical expression>
+                   | <and expression> <and operator> <unary logical expression>
+<unary logical expression> ::= <arithmetic expression>
+                             | <relation expression>
+                             | "(" <unary logical expression> ")"
+                             | <unary logical operator> <unary logical expression>
+<relation expression> ::= <expression> <white-space> <relation operator> <white-space> <expression>
+
+
+<assignment> ::= <assignment expression>
+<assignment expression> ::= <left value> <white-space> ":=" <white-space> <expression>
+
+<left value> ::= <identifier>
+               | <array access expression>
+               | <class member expression>
+<constant expression> ::= [<sign>] <digits>
+<array access expression> ::= <identifier> "[" <arithmetic expression> "]"
+<class member expression> ::= <class name> "." <identifier> 
+                            | <class member expression> "." <identifier>
+<function call expression> ::= <function name> <function parameter list>
+
+
+
+#Tokens单元
+<white-space> ::= " "
+<semicolon> ::= ";"
+<line-end> ::= "\n"
+<additive operator> ::= "+" | "-"
+<multiplicative operator> ::= "*" | "/" | "%"
+<relation operator> ::= "==" | "!=" | ">" | ">=" | "<" | "<="
+<or operator> ::= "or" | "||"
+<and operator> ::= "and" | "&&"
+<unary logical operator> ::= "not" | "!"
+<sign> ::= "+" | "-"
+<digits> ::= <digit> 
+           | <digits> <digit>
+<digit> ::= "0" | <non zero digit>
+<non zero digit> ::= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+<keyword> ::= "program" | "function" | "var" | "is" | "integer" | "boolean" | "return" | "true" | "false" |"begin" | "end" | "if" | "else" | "elif" | "then" | "type" | "array" | "of" | "do" | "while" | "repeat" | "until" | "foreach" | "in" | "print" | "class" | "extends"
+
