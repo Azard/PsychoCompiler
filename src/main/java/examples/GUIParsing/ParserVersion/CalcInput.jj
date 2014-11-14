@@ -28,52 +28,115 @@
 
 
 options {
-  LOOKAHEAD = 1;
-  CHOICE_AMBIGUITY_CHECK = 2;
-  OTHER_AMBIGUITY_CHECK = 1;
-  STATIC = false;
-  DEBUG_PARSER = false;
-  DEBUG_LOOKAHEAD = false;
-  DEBUG_TOKEN_MANAGER = false;
-  ERROR_REPORTING = true;
-  JAVA_UNICODE_ESCAPE = false;
-  UNICODE_INPUT = false;
-  IGNORE_CASE = false;
-  USER_TOKEN_MANAGER = false;
-  USER_CHAR_STREAM = false;
-  BUILD_PARSER = true;
-  BUILD_TOKEN_MANAGER = true;
-  SANITY_CHECK = true;
-  FORCE_LA_CHECK = false;
+  USER_TOKEN_MANAGER = true;
 }
 
-PARSER_BEGIN(Simple1)
+PARSER_BEGIN(CalcInputParser)
 
-package jj;
+package examples.GUIParsing.ParserVersion;
 
-/** Simple brace matcher. */
-public class Simple1 {
-
-  /** Main entry point. */
-  public static void main(String args[]) throws ParseException {
-    Simple1 parser = new Simple1(System.in);
-    parser.Input();
-  }
-
+public class CalcInputParser {
 }
 
-PARSER_END(Simple1)
+PARSER_END(CalcInputParser)
 
-/** Root production. */
 void Input() :
-{}
+	{
+	  double larg = 0.0;
+	  double rarg;
+	}
 {
-  MatchedBraces() ("\n"|"\r")* "e"
+  ( 
+    [
+      larg=Number() 
+	{
+	  CalcGUI.print(larg);
+	}
+    ]
+    (
+      <ADD>
+      rarg=Number()
+	{
+	  larg = larg + rarg;
+	  CalcGUI.print(larg);
+	}
+    |
+      <SUB>
+      rarg=Number()
+	{
+	  larg = larg - rarg;
+	  CalcGUI.print(larg);
+	}
+    |
+      <MUL>
+      rarg=Number()
+	{
+	  larg = larg * rarg;
+	  CalcGUI.print(larg);
+	}
+    |
+      <DIV>
+      rarg=Number()
+	{
+	  larg = (rarg==0) ? Float.POSITIVE_INFINITY : (larg / rarg);
+	  CalcGUI.print(larg);
+	}
+    )*
+    <EQ: "=" >
+  )*
 }
 
-/** Brace matching production. */
-void MatchedBraces() :
-{}
+double Number() :
+	{
+	  Token t;
+	  String image = "";
+	  double value = 0.0;
+	  double decimalPlace = 1.0;
+	}
 {
-  "{" [ MatchedBraces() ] "}"
+  (
+    t=<DIGIT>
+	{
+	  image += t.image;
+	  value = value*10 + Integer.parseInt(t.image);
+	  CalcGUI.print(image);
+	}
+  )+
+  [
+    <DOT>
+	{
+	  image += ".";
+	  CalcGUI.print(image);
+	}
+    (
+      t=<DIGIT>
+	{
+	  image += t.image;
+	  decimalPlace *= 0.1;
+	  value = value + Integer.parseInt(t.image)*decimalPlace;
+	  CalcGUI.print(image);
+	}
+    )+
+  ]
+	{
+	  return value;
+	}
+|
+  <DOT>
+	{
+	  image = "0.";
+	  CalcGUI.print(image);
+	}
+  (
+    t=<DIGIT>
+	{
+	  image += t.image;
+	  decimalPlace *= 0.1;
+	  value = value + Integer.parseInt(t.image)*decimalPlace;
+	  CalcGUI.print(image);
+	}
+  )+
+	{
+	  return value;
+	}
 }

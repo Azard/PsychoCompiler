@@ -1,9 +1,9 @@
-/* Copyright (c) 2006, Sun Microsystems, Inc.
+package examples.GUIParsing.ParserVersion;/* Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,53 +27,43 @@
  */
 
 
-options {
-  LOOKAHEAD = 1;
-  CHOICE_AMBIGUITY_CHECK = 2;
-  OTHER_AMBIGUITY_CHECK = 1;
-  STATIC = false;
-  DEBUG_PARSER = false;
-  DEBUG_LOOKAHEAD = false;
-  DEBUG_TOKEN_MANAGER = false;
-  ERROR_REPORTING = true;
-  JAVA_UNICODE_ESCAPE = false;
-  UNICODE_INPUT = false;
-  IGNORE_CASE = false;
-  USER_TOKEN_MANAGER = false;
-  USER_CHAR_STREAM = false;
-  BUILD_PARSER = true;
-  BUILD_TOKEN_MANAGER = true;
-  SANITY_CHECK = true;
-  FORCE_LA_CHECK = false;
-}
+public class ProducerConsumer {
 
-PARSER_BEGIN(Simple1)
+  /**
+   * A single producer-consumer instance that is used by others.
+   */
+  public static ProducerConsumer pc = new ProducerConsumer();
 
-package jj;
+  /**
+   * The data structure where the tokens are stored.
+   */
+  private java.util.Vector queue = new java.util.Vector();
 
-/** Simple brace matcher. */
-public class Simple1 {
-
-  /** Main entry point. */
-  public static void main(String args[]) throws ParseException {
-    Simple1 parser = new Simple1(System.in);
-    parser.Input();
+  /**
+   * The producer calls this method to add a new token
+   * whenever it is available.
+   */
+  synchronized public void addToken(Token token) {
+    queue.addElement(token);
+    notify();
   }
 
-}
+  /**
+   * The consumer calls this method to get the next token
+   * in the queue.  If the queue is empty, this method
+   * blocks until a token becomes available.
+   */
+  synchronized public Token getToken() {
+    if (queue.isEmpty()) {
+      try {
+        wait();
+      } catch (InterruptedException willNotHappen) {
+        throw new Error();
+      }
+    }
+    Token retval = (Token)(queue.elementAt(0));
+    queue.removeElementAt(0);
+    return retval;
+  }
 
-PARSER_END(Simple1)
-
-/** Root production. */
-void Input() :
-{}
-{
-  MatchedBraces() ("\n"|"\r")* "e"
-}
-
-/** Brace matching production. */
-void MatchedBraces() :
-{}
-{
-  "{" [ MatchedBraces() ] "}"
 }

@@ -1,9 +1,9 @@
-/* Copyright (c) 2006, Sun Microsystems, Inc.
+package examples.GUIParsing.ParserVersion;/* Copyright (c) 2006, Sun Microsystems, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of the Sun Microsystems, Inc. nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,53 +27,19 @@
  */
 
 
-options {
-  LOOKAHEAD = 1;
-  CHOICE_AMBIGUITY_CHECK = 2;
-  OTHER_AMBIGUITY_CHECK = 1;
-  STATIC = false;
-  DEBUG_PARSER = false;
-  DEBUG_LOOKAHEAD = false;
-  DEBUG_TOKEN_MANAGER = false;
-  ERROR_REPORTING = true;
-  JAVA_UNICODE_ESCAPE = false;
-  UNICODE_INPUT = false;
-  IGNORE_CASE = false;
-  USER_TOKEN_MANAGER = false;
-  USER_CHAR_STREAM = false;
-  BUILD_PARSER = true;
-  BUILD_TOKEN_MANAGER = true;
-  SANITY_CHECK = true;
-  FORCE_LA_CHECK = false;
-}
+public class Main {
 
-PARSER_BEGIN(Simple1)
-
-package jj;
-
-/** Simple brace matcher. */
-public class Simple1 {
-
-  /** Main entry point. */
-  public static void main(String args[]) throws ParseException {
-    Simple1 parser = new Simple1(System.in);
-    parser.Input();
+  public static void main(String[] args) {
+    new CalcGUI();
+    TokenManager tm = new TokenCollector();
+    CalcInputParser cp = new CalcInputParser(tm);
+    while (true) {
+      try {
+        cp.Input();
+      } catch (ParseException e) {
+        CalcGUI.print("ERROR (click 0)");
+      }
+    }
   }
 
-}
-
-PARSER_END(Simple1)
-
-/** Root production. */
-void Input() :
-{}
-{
-  MatchedBraces() ("\n"|"\r")* "e"
-}
-
-/** Brace matching production. */
-void MatchedBraces() :
-{}
-{
-  "{" [ MatchedBraces() ] "}"
 }
