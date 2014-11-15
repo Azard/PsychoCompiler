@@ -1,7 +1,7 @@
 package PsychoCompiler;
 
 import jj.ParseException;
-import jj.Simple1;
+import jj.MyLang;
 
 
 public class CompilerMain {
@@ -9,7 +9,7 @@ public class CompilerMain {
 
         System.out.println("Hello World!");
 
-        Simple1 tt = new Simple1(System.in);
+        MyLang tt = new MyLang(System.in);
         try {
             tt.Input();
         } catch(ParseException e) {
