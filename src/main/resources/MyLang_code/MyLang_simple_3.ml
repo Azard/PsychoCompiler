@@ -1,4 +1,4 @@
-program simple_2(a)
+program simple_3(a)
     var a is integer;
     return integer;
 
