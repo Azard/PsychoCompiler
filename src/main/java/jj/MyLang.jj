@@ -32,7 +32,7 @@ public class MyLang {
   public static void main(String args[]) throws ParseException {
       FileInputStream ml_file = null;
       String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
-      String file_name = "MyLang_simple_1.ml";
+      String file_name = "MyLang_simple_2.ml";
       File file = new File(parent_path + file_name);
       if (file.isFile() && file.exists()) {
         System.out.println("find file");
@@ -87,6 +87,13 @@ TOKEN:
   | <IS:"is">
   | <BEGIN:"begin">
   | <END:"end">
+  | <FUNCTION:"function">
+  | <RETURN:"return">
+  | <TYPE:"type">
+  | <BOOLEAN:"boolean">
+  | <INTEGER:"integer">
+  | <ARRAY:"array">
+  | <OF:"of">
 }
 
 TOKEN:/* 定义整数 */
@@ -143,7 +150,7 @@ void Program_declaration():{}{
 }
 
 void Program_head():{}{
-  <PROGRAM> Program_name() Program_parameter_list()
+  <PROGRAM> Program_name() Program_parameter_list() Program_parameters_type() [Program_return_declaration()]
 }
 
 void Program_body():{}{
@@ -155,7 +162,19 @@ void Program_name():{}{
 }
 
 void Program_parameter_list():{}{
-  <LEFTPARENTHESES><RIGHTPARENTHESES>
+  Parameter_list()
+}
+
+void Program_parameters_type():{}{
+  (Program_parameter_type())*
+}
+
+void Program_parameter_type():{}{
+  Variable_declaration()
+}
+
+void Program_return_declaration():{}{
+  <RETURN> Type() <SEMICOLON>
 }
 
 void Program_variable_declarations():{}{
@@ -171,14 +190,135 @@ void Program_process():{}{
 }
 
 void Component_declarations():{}{
-  [<VAR>]
+  (Component_declaration())*
 }
+
+void Component_declaration():{}{
+  Function_declaration()
+  | Type_declaration()
+  //TODO class declaration
+  //| Class_declaration()
+}
+
+
+void Function_declaration():{}{
+  Function_head() Function_body()
+}
+
+void Function_head():{}{
+  <FUNCTION> Function_name() Function_parameter_list() Function_parameters_type() [Function_return_declaration()]
+}
+
+void Function_body():{}{
+  Function_variable_declarations() Function_process()
+}
+
+void Function_name():{}{
+  Identifier()
+}
+
+void Function_parameter_list():{}{
+  Parameter_list()
+}
+
+void Function_parameters_type():{}{
+  (Function_parameter_type())*
+}
+
+void Function_parameter_type():{}{
+  Variable_declaration()
+}
+
+void Function_return_declaration():{}{
+  <RETURN> Type() <SEMICOLON>
+}
+
+void Function_variable_declarations():{}{
+  <IS> (Function_variable_declaration())*
+}
+
+void Function_variable_declaration():{}{
+  Variable_declaration()
+}
+
+void Function_process():{}{
+  <BEGIN> Block() <END> <FUNCTION> Function_name() <SEMICOLON>
+}
+
+
+
+
 
 void Variable_declaration():{}{
-  <VAR>
+  <VAR> Identifier() <IS> Type() <SEMICOLON>
 }
 
+void Parameter_list():{}{
+  <LEFTPARENTHESES> [Parameters()] <RIGHTPARENTHESES>
+}
+
+void Parameters():{}{
+  Parameter() (<COMMA> Parameter())*
+}
+
+void Parameter():{}{
+  Identifier()
+}
+
+void Type_declaration():{}{
+  <TYPE> Identifier() <IS> Type() <SEMICOLON>
+}
+
+
+// TODO class
+
+
+
+// TODO reference_type
+void Type():{}{
+  Primitive_type()
+  //| Reference_type()
+}
+
+void Primitive_type():{}{
+  Numeric_type()
+  | <BOOLEAN>
+}
+
+void Numeric_type():{}{
+  Integral_type()
+}
+
+void Integral_type():{}{
+  <INTEGER>
+}
+
+/*
+void Reference_type():{}{
+  Class_type()
+  | Array_type()
+}
+
+void Class_type():{}{
+  Type_name()
+}
+
+void Type_name():{}{
+  Identifier()
+}
+
+void Array_type():{}{
+  <ARRAY> <OF> Expression() Type()
+}
+*/
+// TODO Expression
+
+
+
+
+
 void Block():{}{
+  // TODO
   [<VAR>]
 }
 

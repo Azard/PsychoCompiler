@@ -45,8 +45,7 @@
 
 #参数列表
 <parameter list> ::= "(" [<parameters>] ")"
-<parameters> ::= <parameter>
-               | <parameter> "," {<white-space>} <parameters>
+<parameters> ::=  <parameter> {"," {<white-space>} <parameters> }
 <parameter> ::= <identifier>
 
 
