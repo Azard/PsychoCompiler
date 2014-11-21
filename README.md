@@ -1,6 +1,12 @@
 Psycho-Compiler
 ==============
 
+##TODO
+* Block的jj定义
+* expression部分的测试
+* UI包装
+* JJTree
+
 ##更新记录
 * 2014/11/14：项目开始。
 * 2014/11/21：完成了program，function，type部分的jj定义。
