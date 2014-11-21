@@ -1,11 +1,9 @@
 Psycho-Compiler
 ==============
 
-##TODO列表
-* 参考examples，完成JavaCC的表达式词法和GUI，两者相连。
-
 ##更新记录
 * 2014/11/14：项目开始。
+* 2014/11/21：完成了program，function，type部分的jj定义。
 
 
 ##简介
