@@ -9,9 +9,9 @@ public class CompilerMain {
 
         System.out.println("Hello World!");
 
-        MyLang tt = new MyLang(System.in);
+        MyLang parser = new MyLang(System.in);
         try {
-            tt.Input();
+            parser.Start();
         } catch(ParseException e) {
             throw new RuntimeException(e);
         }

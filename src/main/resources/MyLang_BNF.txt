@@ -1,5 +1,5 @@
 #起始单元，1个文件最多包含1个program申明
-<compilation unit> ::= <program declaration>
+<start> ::= <program declaration>
 
 
 #程序的主要部分划分，head包括函数名，参数，参数类型，body包括程序的组件(类和函数)，变量声明，主逻辑

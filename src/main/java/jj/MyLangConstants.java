@@ -10,6 +10,48 @@ public interface MyLangConstants {
 
   /** End of File. */
   int EOF = 0;
+  /** RegularExpression Id. */
+  int PROGRAM = 7;
+  /** RegularExpression Id. */
+  int VAR = 8;
+  /** RegularExpression Id. */
+  int IS = 9;
+  /** RegularExpression Id. */
+  int BEGIN = 10;
+  /** RegularExpression Id. */
+  int END = 11;
+  /** RegularExpression Id. */
+  int INTEGER_LITERAL = 12;
+  /** RegularExpression Id. */
+  int REAL_LITERAL = 13;
+  /** RegularExpression Id. */
+  int DIGIT = 14;
+  /** RegularExpression Id. */
+  int UNDERSCORE = 15;
+  /** RegularExpression Id. */
+  int COMMA = 16;
+  /** RegularExpression Id. */
+  int SEMICOLON = 17;
+  /** RegularExpression Id. */
+  int COLON = 18;
+  /** RegularExpression Id. */
+  int LEFTPARENTHESES = 19;
+  /** RegularExpression Id. */
+  int RIGHTPARENTHESES = 20;
+  /** RegularExpression Id. */
+  int EQUAL = 21;
+  /** RegularExpression Id. */
+  int PLUS = 22;
+  /** RegularExpression Id. */
+  int MINUS = 23;
+  /** RegularExpression Id. */
+  int TIMES = 24;
+  /** RegularExpression Id. */
+  int DIVIDE = 25;
+  /** RegularExpression Id. */
+  int IDENTIFIER = 26;
+  /** RegularExpression Id. */
+  int LETTER = 27;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -17,11 +59,33 @@ public interface MyLangConstants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
+    "\" \"",
+    "\"\\t\"",
     "\"\\n\"",
     "\"\\r\"",
-    "\"e\"",
-    "\"{\"",
-    "\"}\"",
+    "<token of kind 5>",
+    "<token of kind 6>",
+    "\"program\"",
+    "\"var\"",
+    "\"is\"",
+    "\"begin\"",
+    "\"end\"",
+    "<INTEGER_LITERAL>",
+    "<REAL_LITERAL>",
+    "<DIGIT>",
+    "\"_\"",
+    "\",\"",
+    "\";\"",
+    "\":\"",
+    "\"(\"",
+    "\")\"",
+    "\"=\"",
+    "\"+\"",
+    "\"-\"",
+    "\"*\"",
+    "\"/\"",
+    "<IDENTIFIER>",
+    "<LETTER>",
   };
 
 }

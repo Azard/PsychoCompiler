@@ -3,7 +3,7 @@ options {
   LOOKAHEAD = 1;
   CHOICE_AMBIGUITY_CHECK = 2;
   OTHER_AMBIGUITY_CHECK = 1;
-  STATIC = false;
+  STATIC = true;
   DEBUG_PARSER = false;
   DEBUG_LOOKAHEAD = false;
   DEBUG_TOKEN_MANAGER = false;
@@ -23,29 +23,168 @@ PARSER_BEGIN(MyLang)
 
 package jj;
 
-/** Simple brace matcher. */
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class MyLang {
 
-  /** Main entry point. */
   public static void main(String args[]) throws ParseException {
-    MyLang parser = new MyLang(System.in);
-    parser.Input();
-  }
+      FileInputStream ml_file = null;
+      String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
+      String file_name = "MyLang_simple_1.ml";
+      File file = new File(parent_path + file_name);
+      if (file.isFile() && file.exists()) {
+        System.out.println("find file");
+      } else {
+        System.out.println("not find file");
+      }
+      try {
+        ml_file = new FileInputStream(file);
+      }
+      catch (FileNotFoundException e) {
+        System.out.print("src file open failed.");
+      }
+      //MyLang parser = new MyLang(System.in);
+      MyLang parser = new MyLang(ml_file);
 
+      System.out.println("Please type the valid statement...");
+      System.out.println("input>>");
+      try {
+        switch (MyLang.Start()){
+          case 0:System.out.println("OK.You have typed the correct statements.");
+          break ;
+          case 1:System.out.println("Goodbye.Thank you for you testing!");
+        }
+      }
+      catch (Exception e){
+        System.out.println("Sorry! You have typed the invalid statements.");
+        System.out.println(e.getMessage());
+        //MyLang.ReInit(System.in);
+      }
+      catch (Error e){
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+  }
 }
 
 PARSER_END(MyLang)
 
-/** Root production. */
-void Input() :
-{}
-{
-  MatchedBraces() ("\n"|"\r")* "e"
+SKIP:{
+  " "
+  | "\t"
+  | "\n"
+  | "\r"
+  | <"//"(~["\n", "\r"])*("\n"|"\r"|"\r\n")>
+  | <"/*"(~["*"])*"*"(~["/"](~["*"])*"*")*"/">
 }
 
-/** Brace matching production. */
-void MatchedBraces() :
-{}
+TOKEN:
 {
-  "{" [ MatchedBraces() ] "}"
+  <PROGRAM:"program">
+  | <VAR:"var">
+  | <IS:"is">
+  | <BEGIN:"begin">
+  | <END:"end">
+}
+
+TOKEN:/* 定义整数 */
+{
+ <INTEGER_LITERAL:["1"-"9"](<DIGIT>)*>
+}
+
+TOKEN:/* 定义实数 */
+{
+ <REAL_LITERAL:(<DIGIT>)+
+ | (<DIGIT>)+"."
+ | (<DIGIT>)+"."(<DIGIT>)+
+ | "."(<DIGIT>)+>
+}
+
+TOKEN:/*定义数字*/
+{
+ <#DIGIT:["0"-"9"]>
+}
+
+TOKEN:/*定义符号*/
+{
+   <UNDERSCORE:"_">
+ | <COMMA:",">
+ | <SEMICOLON:";">
+ | <COLON:":">
+ | <LEFTPARENTHESES:"(">
+ | <RIGHTPARENTHESES:")">
+ | <EQUAL:"=">
+ | <PLUS:"+">
+ | <MINUS:"-">
+ | <TIMES:"*">
+ | <DIVIDE:"/">
+}
+
+TOKEN:/* 定义标识符 */
+{
+ <IDENTIFIER:
+     <LETTER>
+   | <LETTER>(<LETTER>|<DIGIT>|<UNDERSCORE>)*(<LETTER>|<DIGIT>)+
+ >
+ | <#LETTER:["a"-"z", "A"-"Z"]>
+}
+
+int Start():{}{
+  Program_declaration() <EOF>
+  {
+    return 0;
+  }
+}
+
+void Program_declaration():{}{
+  Program_head() Program_body()
+}
+
+void Program_head():{}{
+  <PROGRAM> Program_name() Program_parameter_list()
+}
+
+void Program_body():{}{
+  Component_declarations() Program_variable_declarations() Program_process()
+}
+
+void Program_name():{}{
+  Identifier()
+}
+
+void Program_parameter_list():{}{
+  <LEFTPARENTHESES><RIGHTPARENTHESES>
+}
+
+void Program_variable_declarations():{}{
+  <IS> (Program_variable_declaration())*
+}
+
+void Program_variable_declaration():{}{
+  Variable_declaration()
+}
+
+void Program_process():{}{
+  <BEGIN> Block() <END>
+}
+
+void Component_declarations():{}{
+  [<VAR>]
+}
+
+void Variable_declaration():{}{
+  <VAR>
+}
+
+void Block():{}{
+  [<VAR>]
+}
+
+
+
+
+void Identifier():{}{
+  <IDENTIFIER>
 }
