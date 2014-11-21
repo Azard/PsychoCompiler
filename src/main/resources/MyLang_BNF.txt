@@ -20,8 +20,8 @@
 #程序内容的分类，在<program body>中
 <component declarations> ::= {<component declaration>}
 <component declaration> ::= <function declaration>
-                          | <type declaration>
-                          | <class declaration>
+                          | <type and class declaration>
+<type and class declaration> ::= "type" <identifier> "is" (<type declaration> | <class declaration>)
 
 
 #函数定义，head包括参数和返回值，body包括声明部分和实现部分
@@ -50,13 +50,13 @@
 
 
 #类型定义(type is)
-<type declaration> ::= "type" <white-space> <identifier> <white-space> "is" <white-space> <type> <semicolon> <line-end>
+<type declaration> ::= "array" "of" <digits> <type> <semicolon> <line-end>
 
 
 
 #类定义(class)，head包括类名，继承，body包括成员变量，成员函数，tail包括类的结尾
 <class declaration> ::= <class head> <class body> <class tail>
-<class head> ::= "type" <white-space> <class name> <white-space> "is" <white-space> "class" [<class extend>] <line-end>
+<class head> ::= "class" [<class extend>] <line-end>
 <class body> ::= <class variable declarations> <class function declarations>
 <class tail> ::= "end" <white-space> "class" <semicolon> <line-end>
 
@@ -75,11 +75,9 @@
 <primitive type> ::= <numeric type> | "boolean"
 <numeric type> ::= <integral type>
 <integral type> ::= "integer"
-<reference type> ::= <class type> | <array type>
+<reference type> ::= <class type>
 <class type> ::= <type name>
 <type name> ::= <identifier>
-<array type> ::= "array" <white-space> "of" <white-space> <expression> <white-space> <type>
-
 
 
 #块(Block)和命令(Command)
@@ -117,14 +115,11 @@
 
 #表达式(Expression)
 <expression> ::= <arithmetic expression>
-               | <logical expression>
                | <assignment expression>
 
 <arithmetic expression> ::= <additive expression>
-<additive expression> ::= <multiplicative expression> 
-                        | <additive expression> <additive operator> <multiplicative expression>
-<multiplicative expression> ::= <unary expression> 
-                              | <multiplicative expression> <multiplicative operator> <unary expression>
+<additive expression> ::= <multiplicative expression> {<additive operator> <multiplicative expression>}
+<multiplicative expression> ::= <unary expression> {<multiplicative operator> <unary expression>}
 <unary expression> ::= <constant expression> 
                      | <identifier> 
                      | <array access expression> 
@@ -134,10 +129,8 @@
                      | <sign> <unary expression>
 
 <logical expression> ::= <or expression> 
-<or expression> ::= <and expression>
-                  | <or expression> <or operator> <and expression>
-<and expression> ::= <unary logical expression>
-                   | <and expression> <and operator> <unary logical expression>
+<or expression> ::= <and expression> {<or operator> <and expression>}
+<and expression> ::= <unary logical expression> {<and operator> <unary logical expression>}
 <unary logical expression> ::= <arithmetic expression>
                              | <relation expression>
                              | "(" <unary logical expression> ")"
@@ -153,7 +146,7 @@
                | <class member expression>
 <constant expression> ::= [<sign>] <digits>
 <array access expression> ::= <identifier> "[" <arithmetic expression> "]"
-<class member expression> ::= <class name> "." <identifier> 
+<class member expression> ::= <class name> {"." <identifier>}+
                             | <class member expression> "." <identifier>
 <function call expression> ::= <function name> <function parameter list>
 
@@ -171,7 +164,7 @@
 <unary logical operator> ::= "not" | "!"
 <sign> ::= "+" | "-"
 <digits> ::= <digit> 
-           | <digits> <digit>
+           | <digit> <digits>
 <digit> ::= "0" | <non zero digit>
 <non zero digit> ::= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 <keyword> ::= "program" | "function" | "var" | "is" | "integer" | "boolean" | "return" | "true" | "false" |"begin" | "end" | "if" | "else" | "elif" | "then" | "type" | "array" | "of" | "do" | "while" | "repeat" | "until" | "foreach" | "in" | "print" | "class" | "extends"

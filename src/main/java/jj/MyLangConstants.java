@@ -13,59 +13,97 @@ public interface MyLangConstants {
   /** RegularExpression Id. */
   int PROGRAM = 7;
   /** RegularExpression Id. */
-  int VAR = 8;
+  int CLASS = 8;
   /** RegularExpression Id. */
-  int IS = 9;
+  int VAR = 9;
   /** RegularExpression Id. */
-  int BEGIN = 10;
+  int IS = 10;
   /** RegularExpression Id. */
-  int END = 11;
+  int BEGIN = 11;
   /** RegularExpression Id. */
-  int FUNCTION = 12;
+  int END = 12;
   /** RegularExpression Id. */
-  int RETURN = 13;
+  int FUNCTION = 13;
   /** RegularExpression Id. */
-  int TYPE = 14;
+  int RETURN = 14;
   /** RegularExpression Id. */
-  int BOOLEAN = 15;
+  int TYPE = 15;
   /** RegularExpression Id. */
-  int INTEGER = 16;
+  int BOOLEAN = 16;
   /** RegularExpression Id. */
-  int ARRAY = 17;
+  int INTEGER = 17;
   /** RegularExpression Id. */
-  int OF = 18;
+  int ARRAY = 18;
   /** RegularExpression Id. */
-  int INTEGER_LITERAL = 19;
+  int OF = 19;
   /** RegularExpression Id. */
-  int REAL_LITERAL = 20;
+  int OR = 20;
   /** RegularExpression Id. */
-  int DIGIT = 21;
+  int AND = 21;
   /** RegularExpression Id. */
-  int UNDERSCORE = 22;
+  int NOT = 22;
   /** RegularExpression Id. */
-  int COMMA = 23;
+  int EXTENDS = 23;
   /** RegularExpression Id. */
-  int SEMICOLON = 24;
+  int INTEGER_LITERAL = 24;
   /** RegularExpression Id. */
-  int COLON = 25;
+  int REAL_LITERAL = 25;
   /** RegularExpression Id. */
-  int LEFTPARENTHESES = 26;
+  int DIGIT = 26;
   /** RegularExpression Id. */
-  int RIGHTPARENTHESES = 27;
+  int UNDERSCORE = 27;
   /** RegularExpression Id. */
-  int EQUAL = 28;
+  int VERTICALVERTICAL = 28;
   /** RegularExpression Id. */
-  int PLUS = 29;
+  int ANDAND = 29;
   /** RegularExpression Id. */
-  int MINUS = 30;
+  int EQUALEQUAL = 30;
   /** RegularExpression Id. */
-  int TIMES = 31;
+  int EXCLAMEQUAL = 31;
   /** RegularExpression Id. */
-  int DIVIDE = 32;
+  int GREATEREQUAL = 32;
   /** RegularExpression Id. */
-  int IDENTIFIER = 33;
+  int SMALLEREQUAL = 33;
   /** RegularExpression Id. */
-  int LETTER = 34;
+  int GREATER = 34;
+  /** RegularExpression Id. */
+  int SMALLER = 35;
+  /** RegularExpression Id. */
+  int COLONEQUAL = 36;
+  /** RegularExpression Id. */
+  int COMMA = 37;
+  /** RegularExpression Id. */
+  int SEMICOLON = 38;
+  /** RegularExpression Id. */
+  int COLON = 39;
+  /** RegularExpression Id. */
+  int LEFTPARENTHESES = 40;
+  /** RegularExpression Id. */
+  int RIGHTPARENTHESES = 41;
+  /** RegularExpression Id. */
+  int EQUAL = 42;
+  /** RegularExpression Id. */
+  int PLUS = 43;
+  /** RegularExpression Id. */
+  int MINUS = 44;
+  /** RegularExpression Id. */
+  int TIMES = 45;
+  /** RegularExpression Id. */
+  int DIVIDE = 46;
+  /** RegularExpression Id. */
+  int MOD = 47;
+  /** RegularExpression Id. */
+  int LEFTBRACKET = 48;
+  /** RegularExpression Id. */
+  int RIGHTBRACKET = 49;
+  /** RegularExpression Id. */
+  int POINT = 50;
+  /** RegularExpression Id. */
+  int EXCLAM = 51;
+  /** RegularExpression Id. */
+  int IDENTIFIER = 52;
+  /** RegularExpression Id. */
+  int LETTER = 53;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -80,6 +118,7 @@ public interface MyLangConstants {
     "<token of kind 5>",
     "<token of kind 6>",
     "\"program\"",
+    "\"class\"",
     "\"var\"",
     "\"is\"",
     "\"begin\"",
@@ -91,10 +130,23 @@ public interface MyLangConstants {
     "\"integer\"",
     "\"array\"",
     "\"of\"",
+    "\"or\"",
+    "\"and\"",
+    "\"not\"",
+    "\"extends\"",
     "<INTEGER_LITERAL>",
     "<REAL_LITERAL>",
     "<DIGIT>",
     "\"_\"",
+    "\"||\"",
+    "\"&&\"",
+    "\"==\"",
+    "\"!=\"",
+    "\">=\"",
+    "\"<=\"",
+    "\">\"",
+    "\"<\"",
+    "\":=\"",
     "\",\"",
     "\";\"",
     "\":\"",
@@ -105,6 +157,11 @@ public interface MyLangConstants {
     "\"-\"",
     "\"*\"",
     "\"/\"",
+    "\"%\"",
+    "\"[\"",
+    "\"]\"",
+    "\".\"",
+    "\"!\"",
     "<IDENTIFIER>",
     "<LETTER>",
   };

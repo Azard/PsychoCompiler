@@ -1,6 +1,6 @@
 
 options {
-  LOOKAHEAD = 1;
+  LOOKAHEAD = 3;
   CHOICE_AMBIGUITY_CHECK = 2;
   OTHER_AMBIGUITY_CHECK = 1;
   STATIC = true;
@@ -16,7 +16,7 @@ options {
   BUILD_PARSER = true;
   BUILD_TOKEN_MANAGER = true;
   SANITY_CHECK = true;
-  FORCE_LA_CHECK = false;
+  FORCE_LA_CHECK = true;
 }
 
 PARSER_BEGIN(MyLang)
@@ -32,7 +32,7 @@ public class MyLang {
   public static void main(String args[]) throws ParseException {
       FileInputStream ml_file = null;
       String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
-      String file_name = "MyLang_simple_2.ml";
+      String file_name = "MyLang_simple_3.ml";
       File file = new File(parent_path + file_name);
       if (file.isFile() && file.exists()) {
         System.out.println("find file");
@@ -83,6 +83,7 @@ SKIP:{
 TOKEN:
 {
   <PROGRAM:"program">
+  | <CLASS:"class">
   | <VAR:"var">
   | <IS:"is">
   | <BEGIN:"begin">
@@ -94,6 +95,10 @@ TOKEN:
   | <INTEGER:"integer">
   | <ARRAY:"array">
   | <OF:"of">
+  | <OR:"or">
+  | <AND:"and">
+  | <NOT:"not">
+  | <EXTENDS:"extends">
 }
 
 TOKEN:/* 定义整数 */
@@ -111,12 +116,21 @@ TOKEN:/* 定义实数 */
 
 TOKEN:/*定义数字*/
 {
- <#DIGIT:["0"-"9"]>
+ <DIGIT:["0"-"9"]>
 }
 
 TOKEN:/*定义符号*/
 {
    <UNDERSCORE:"_">
+ | <VERTICALVERTICAL:"||">
+ | <ANDAND:"&&">
+ | <EQUALEQUAL:"==">
+ | <EXCLAMEQUAL:"!=">
+ | <GREATEREQUAL:">=">
+ | <SMALLEREQUAL:"<=">
+ | <GREATER:">">
+ | <SMALLER:"<">
+ | <COLONEQUAL:":=">
  | <COMMA:",">
  | <SEMICOLON:";">
  | <COLON:":">
@@ -127,6 +141,11 @@ TOKEN:/*定义符号*/
  | <MINUS:"-">
  | <TIMES:"*">
  | <DIVIDE:"/">
+ | <MOD:"%">
+ | <LEFTBRACKET:"[">
+ | <RIGHTBRACKET:"]">
+ | <POINT:".">
+ | <EXCLAM:"!">
 }
 
 TOKEN:/* 定义标识符 */
@@ -194,10 +213,11 @@ void Component_declarations():{}{
 }
 
 void Component_declaration():{}{
-  Function_declaration()
-  | Type_declaration()
-  //TODO class declaration
-  //| Class_declaration()
+  Function_declaration() | Type_and_class_declaration()
+}
+
+void Type_and_class_declaration():{}{
+  <TYPE> Identifier() <IS> (Type_declaration() | Class_declaration())
 }
 
 
@@ -266,18 +286,59 @@ void Parameter():{}{
 }
 
 void Type_declaration():{}{
-  <TYPE> Identifier() <IS> Type() <SEMICOLON>
+  <ARRAY> <OF> <INTEGER_LITERAL> Type() <SEMICOLON>
 }
 
 
-// TODO class
+
+
+void Class_declaration():{}{
+  Class_head() Class_body() Class_tail()
+}
+
+void Class_head():{}{
+ <CLASS> [Class_extend()]
+}
+
+void Class_body():{}{
+  Class_variable_declarations() Class_function_declarations()
+}
+
+void Class_tail():{}{
+  <END> <CLASS> <SEMICOLON>
+}
+
+void Class_name():{}{
+  Identifier()
+}
+
+void Class_extend():{}{
+  <EXTENDS> Class_type()
+}
+
+void Class_variable_declarations():{}{
+  (Class_variable_declaration())*
+}
+
+void Class_variable_declaration():{}{
+  Variable_declaration()
+}
+
+void Class_function_declarations():{}{
+  (Class_function_declaration())*
+}
+
+void Class_function_declaration():{}{
+  Function_declaration()
+}
 
 
 
-// TODO reference_type
+
+
 void Type():{}{
   Primitive_type()
-  //| Reference_type()
+  | Reference_type()
 }
 
 void Primitive_type():{}{
@@ -293,10 +354,8 @@ void Integral_type():{}{
   <INTEGER>
 }
 
-/*
 void Reference_type():{}{
   Class_type()
-  | Array_type()
 }
 
 void Class_type():{}{
@@ -307,19 +366,152 @@ void Type_name():{}{
   Identifier()
 }
 
-void Array_type():{}{
-  <ARRAY> <OF> Expression() Type()
-}
-*/
-// TODO Expression
 
 
 
 
 
+// TODO Block and Statement Command
 void Block():{}{
   // TODO
   [<VAR>]
+}
+
+
+
+
+void Expression():{}{
+  Arithmetic_expression()
+  | Assignment_expression()
+}
+
+void Arithmetic_expression():{}{
+  Additive_expression()
+}
+
+void Additive_expression():{}{
+  Multiplicative_expression() (Additive_operator() Multiplicative_expression())*
+}
+
+void Multiplicative_expression():{}{
+  Unary_expression() (Multiplicative_operator() Unary_expression())*
+}
+
+void Unary_expression():{}{
+  Constant_expression()
+  | Identifier()
+  | Array_access_expression()
+  | Class_member_expression()
+  | Function_call_expression()
+  | (<LEFTPARENTHESES> Arithmetic_expression() <RIGHTPARENTHESES>)
+  | (Sign() Unary_expression())
+}
+
+void Logical_expression():{}{
+  Or_expression()
+}
+
+void Or_expression():{}{
+  And_expression() (Or_operator() And_expression())*
+}
+
+void And_expression():{}{
+  Unary_logical_expression() (And_operator() Unary_logical_expression())*
+}
+
+void Unary_logical_expression():{}{
+  Arithmetic_expression()
+  | Relation_expression()
+  | (<LEFTPARENTHESES> Unary_logical_expression() <RIGHTPARENTHESES>)
+  | (Unary_logical_operator() Unary_logical_expression())
+}
+
+void Relation_expression():{}{
+  Expression() Relation_operator() Expression()
+}
+
+void Assignment():{}{
+  Assignment_expression()
+}
+
+void Assignment_expression():{}{
+  Left_value() <COLONEQUAL> Expression()
+}
+
+void Left_value():{}{
+  Identifier()
+  | Array_access_expression()
+  | Class_member_expression()
+}
+
+void Constant_expression():{}{
+  [Sign()] Digits()
+}
+
+void Array_access_expression():{}{
+  Identifier() <LEFTBRACKET> Arithmetic_expression() <RIGHTBRACKET>
+}
+
+void Class_member_expression():{}{
+  Class_name() <POINT> Identifier() (<POINT> Identifier())*
+}
+
+void Function_call_expression():{}{
+  Function_name() Function_parameter_list()
+}
+
+
+
+
+
+
+void Additive_operator():{}{
+   <PLUS>
+   | <MINUS>
+}
+
+void Multiplicative_operator():{}{
+  <TIMES>
+  | <DIVIDE>
+  | <MOD>
+}
+
+void Relation_operator():{}{
+  <EQUALEQUAL>
+  | <EXCLAMEQUAL>
+  | <GREATER>
+  | <GREATEREQUAL>
+  | <SMALLER>
+  | <SMALLEREQUAL>
+}
+
+void Or_operator():{}{
+  <OR>
+  | <VERTICALVERTICAL>
+}
+
+void And_operator():{}{
+  <AND>
+  | <ANDAND>
+}
+
+void Unary_logical_operator():{}{
+  <NOT>
+  | <EXCLAM>
+}
+
+void Sign():{}{
+  <PLUS>
+  | <MINUS>
+}
+
+void Digits():{}{
+  Digit()
+  | Digit() Digits()
+}
+
+void Digit():{}{
+  <DIGIT>
 }
 
 
