@@ -37,8 +37,9 @@ public class CompilerMain {
             // Token test
             String temp = null;
             while(!(temp = parser.getNextToken().toString()).equals("")) {
-                System.out.println(temp);
+                System.out.print(temp + " ");
             }
+            System.out.println(" ");
 
             // Parser test
             file = new File(parent_path + file_name);
