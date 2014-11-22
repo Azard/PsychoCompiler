@@ -71,63 +71,63 @@ public interface MyLangConstants {
   /** RegularExpression Id. */
   int NO = 36;
   /** RegularExpression Id. */
-  int INTEGER_LITERAL = 37;
+  int IDENTIFIER = 37;
   /** RegularExpression Id. */
-  int DIGIT = 38;
+  int LETTER = 38;
   /** RegularExpression Id. */
-  int UNDERSCORE = 39;
+  int INTEGER_LITERAL = 39;
   /** RegularExpression Id. */
-  int VERTICALVERTICAL = 40;
+  int DIGIT = 40;
   /** RegularExpression Id. */
-  int ANDAND = 41;
+  int UNDERSCORE = 41;
   /** RegularExpression Id. */
-  int EQUALEQUAL = 42;
+  int VERTICALVERTICAL = 42;
   /** RegularExpression Id. */
-  int EXCLAMEQUAL = 43;
+  int ANDAND = 43;
   /** RegularExpression Id. */
-  int GREATEREQUAL = 44;
+  int EQUALEQUAL = 44;
   /** RegularExpression Id. */
-  int SMALLEREQUAL = 45;
+  int EXCLAMEQUAL = 45;
   /** RegularExpression Id. */
-  int GREATER = 46;
+  int GREATEREQUAL = 46;
   /** RegularExpression Id. */
-  int SMALLER = 47;
+  int SMALLEREQUAL = 47;
   /** RegularExpression Id. */
-  int COLONEQUAL = 48;
+  int GREATER = 48;
   /** RegularExpression Id. */
-  int COMMA = 49;
+  int SMALLER = 49;
   /** RegularExpression Id. */
-  int SEMICOLON = 50;
+  int COLONEQUAL = 50;
   /** RegularExpression Id. */
-  int COLON = 51;
+  int COMMA = 51;
   /** RegularExpression Id. */
-  int LEFTPARENTHESES = 52;
+  int SEMICOLON = 52;
   /** RegularExpression Id. */
-  int RIGHTPARENTHESES = 53;
+  int COLON = 53;
   /** RegularExpression Id. */
-  int EQUAL = 54;
+  int LEFTPARENTHESES = 54;
   /** RegularExpression Id. */
-  int PLUS = 55;
+  int RIGHTPARENTHESES = 55;
   /** RegularExpression Id. */
-  int MINUS = 56;
+  int EQUAL = 56;
   /** RegularExpression Id. */
-  int TIMES = 57;
+  int PLUS = 57;
   /** RegularExpression Id. */
-  int DIVIDE = 58;
+  int MINUS = 58;
   /** RegularExpression Id. */
-  int MOD = 59;
+  int TIMES = 59;
   /** RegularExpression Id. */
-  int LEFTBRACKET = 60;
+  int DIVIDE = 60;
   /** RegularExpression Id. */
-  int RIGHTBRACKET = 61;
+  int MOD = 61;
   /** RegularExpression Id. */
-  int POINT = 62;
+  int LEFTBRACKET = 62;
   /** RegularExpression Id. */
-  int EXCLAM = 63;
+  int RIGHTBRACKET = 63;
   /** RegularExpression Id. */
-  int IDENTIFIER = 64;
+  int POINT = 64;
   /** RegularExpression Id. */
-  int LETTER = 65;
+  int EXCLAM = 65;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -171,6 +171,8 @@ public interface MyLangConstants {
     "\"print\"",
     "\"yes\"",
     "\"no\"",
+    "<IDENTIFIER>",
+    "<LETTER>",
     "<INTEGER_LITERAL>",
     "<DIGIT>",
     "\"_\"",
@@ -198,8 +200,6 @@ public interface MyLangConstants {
     "\"]\"",
     "\".\"",
     "\"!\"",
-    "<IDENTIFIER>",
-    "<LETTER>",
   };
 
 }

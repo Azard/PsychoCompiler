@@ -10,7 +10,7 @@ Psycho-Compiler
 ##更新记录
 * 2014/11/14：项目开始。
 * 2014/11/21：完成了program，function，type部分的jj定义。
-* 2014/11/22：完成了class, expression部分的jj定义
+* 2014/11/22：完成了全部的jj定义，添加了命令行版的token，parser报错
 
 
 ##简介

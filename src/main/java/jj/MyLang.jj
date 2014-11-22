@@ -3,7 +3,7 @@ options {
   LOOKAHEAD = 3;
   CHOICE_AMBIGUITY_CHECK = 2;
   OTHER_AMBIGUITY_CHECK = 1;
-  STATIC = true;
+  STATIC = false;
   DEBUG_PARSER = false;
   DEBUG_LOOKAHEAD = false;
   DEBUG_TOKEN_MANAGER = false;
@@ -12,11 +12,12 @@ options {
   UNICODE_INPUT = false;
   IGNORE_CASE = false;
   USER_TOKEN_MANAGER = false;
+  SUPPORT_CLASS_VISIBILITY_PUBLIC = true;
   USER_CHAR_STREAM = false;
   BUILD_PARSER = true;
   BUILD_TOKEN_MANAGER = true;
   SANITY_CHECK = true;
-  FORCE_LA_CHECK = true;
+  FORCE_LA_CHECK = false;
 }
 
 PARSER_BEGIN(MyLang)
@@ -32,7 +33,7 @@ public class MyLang {
   public static void main(String args[]) throws ParseException {
       FileInputStream ml_file = null;
       String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
-      String file_name = "MyLang_quick_sort.ml";
+      String file_name = "MyLang_simple_1.ml";
       File file = new File(parent_path + file_name);
       if (file.isFile() && file.exists()) {
         System.out.println("find file");
@@ -51,7 +52,7 @@ public class MyLang {
       System.out.println("Please type the valid statement...");
       System.out.println("input>>");
       try {
-        switch (MyLang.Start()){
+        switch (parser.Start()){
           case 0:System.out.println("OK.You have typed the correct statements.");
           break ;
           case 1:System.out.println("Goodbye.Thank you for you testing!");
@@ -60,7 +61,6 @@ public class MyLang {
       catch (Exception e){
         System.out.println("Sorry! You have typed the invalid statements.");
         System.out.println(e.getMessage());
-        //MyLang.ReInit(System.in);
       }
       catch (Error e){
         System.out.println("Oops.");
@@ -115,6 +115,15 @@ TOKEN:
 
 }
 
+TOKEN:/* 定义标识符 */
+{
+ <IDENTIFIER:
+     <LETTER>
+   | <LETTER>(<LETTER>|<DIGIT>|<UNDERSCORE>)*(<LETTER>|<DIGIT>)+
+ >
+ | <#LETTER:["a"-"z", "A"-"Z"]>
+}
+
 TOKEN:/* 定义整数 */
 {
  //<INTEGER_LITERAL:["1"-"9"](<DIGIT>)*>
@@ -165,14 +174,7 @@ TOKEN:/*定义符号*/
  | <EXCLAM:"!">
 }
 
-TOKEN:/* 定义标识符 */
-{
- <IDENTIFIER:
-     <LETTER>
-   | <LETTER>(<LETTER>|<DIGIT>|<UNDERSCORE>)*(<LETTER>|<DIGIT>)+
- >
- | <#LETTER:["a"-"z", "A"-"Z"]>
-}
+
 
 int Start():{}{
   Program_declaration() <EOF>

@@ -10,7 +10,7 @@ public class MyLang implements MyLangConstants {
   public static void main(String args[]) throws ParseException {
       FileInputStream ml_file = null;
       String parent_path = "I:\u005c\u005cJetBrains\u005c\u005cPsychoCompiler\u005c\u005csrc\u005c\u005cmain\u005c\u005cresources\u005c\u005cMyLang_code\u005c\u005c";
-      String file_name = "MyLang_quick_sort.ml";
+      String file_name = "MyLang_simple_1.ml";
       File file = new File(parent_path + file_name);
       if (file.isFile() && file.exists()) {
         System.out.println("find file");
@@ -29,7 +29,7 @@ public class MyLang implements MyLangConstants {
       System.out.println("Please type the valid statement...");
       System.out.println("input>>");
       try {
-        switch (MyLang.Start()){
+        switch (parser.Start()){
           case 0:System.out.println("OK.You have typed the correct statements.");
           break ;
           case 1:System.out.println("Goodbye.Thank you for you testing!");
@@ -38,7 +38,6 @@ public class MyLang implements MyLangConstants {
       catch (Exception e){
         System.out.println("Sorry! You have typed the invalid statements.");
         System.out.println(e.getMessage());
-        //MyLang.ReInit(System.in);
       }
       catch (Error e){
         System.out.println("Oops.");
@@ -46,19 +45,19 @@ public class MyLang implements MyLangConstants {
       }
   }
 
-  static final public int Start() throws ParseException {
+  final public int Start() throws ParseException {
     Program_declaration();
     jj_consume_token(0);
     {if (true) return 0;}
     throw new Error("Missing return statement in function");
   }
 
-  static final public void Program_declaration() throws ParseException {
+  final public void Program_declaration() throws ParseException {
     Program_head();
     Program_body();
   }
 
-  static final public void Program_head() throws ParseException {
+  final public void Program_head() throws ParseException {
     jj_consume_token(PROGRAM);
     Program_name();
     Program_parameter_list();
@@ -70,21 +69,21 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Program_body() throws ParseException {
+  final public void Program_body() throws ParseException {
     Component_declarations();
     Program_variable_declarations();
     Program_process();
   }
 
-  static final public void Program_name() throws ParseException {
+  final public void Program_name() throws ParseException {
     Identifier();
   }
 
-  static final public void Program_parameter_list() throws ParseException {
+  final public void Program_parameter_list() throws ParseException {
     Parameter_list();
   }
 
-  static final public void Program_parameters_type() throws ParseException {
+  final public void Program_parameters_type() throws ParseException {
     label_1:
     while (true) {
       if (jj_2_2(3)) {
@@ -96,17 +95,17 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Program_parameter_type() throws ParseException {
+  final public void Program_parameter_type() throws ParseException {
     Variable_declaration();
   }
 
-  static final public void Program_return_declaration() throws ParseException {
+  final public void Program_return_declaration() throws ParseException {
     jj_consume_token(RETURN);
     Type();
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void Program_variable_declarations() throws ParseException {
+  final public void Program_variable_declarations() throws ParseException {
     jj_consume_token(IS);
     label_2:
     while (true) {
@@ -119,17 +118,17 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Program_variable_declaration() throws ParseException {
+  final public void Program_variable_declaration() throws ParseException {
     Variable_declaration();
   }
 
-  static final public void Program_process() throws ParseException {
+  final public void Program_process() throws ParseException {
     jj_consume_token(BEGIN);
     Block();
     jj_consume_token(END);
   }
 
-  static final public void Component_declarations() throws ParseException {
+  final public void Component_declarations() throws ParseException {
     label_3:
     while (true) {
       if (jj_2_4(3)) {
@@ -141,7 +140,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Component_declaration() throws ParseException {
+  final public void Component_declaration() throws ParseException {
     if (jj_2_5(3)) {
       Function_declaration();
     } else if (jj_2_6(3)) {
@@ -152,7 +151,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Type_and_class_declaration() throws ParseException {
+  final public void Type_and_class_declaration() throws ParseException {
     jj_consume_token(TYPE);
     Identifier();
     jj_consume_token(IS);
@@ -166,12 +165,12 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Function_declaration() throws ParseException {
+  final public void Function_declaration() throws ParseException {
     Function_head();
     Function_body();
   }
 
-  static final public void Function_head() throws ParseException {
+  final public void Function_head() throws ParseException {
     jj_consume_token(FUNCTION);
     Function_name();
     Function_parameter_list();
@@ -183,20 +182,20 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Function_body() throws ParseException {
+  final public void Function_body() throws ParseException {
     Function_variable_declarations();
     Function_process();
   }
 
-  static final public void Function_name() throws ParseException {
+  final public void Function_name() throws ParseException {
     Identifier();
   }
 
-  static final public void Function_parameter_list() throws ParseException {
+  final public void Function_parameter_list() throws ParseException {
     Parameter_list();
   }
 
-  static final public void Function_parameters_type() throws ParseException {
+  final public void Function_parameters_type() throws ParseException {
     label_4:
     while (true) {
       if (jj_2_10(3)) {
@@ -208,17 +207,17 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Function_parameter_type() throws ParseException {
+  final public void Function_parameter_type() throws ParseException {
     Variable_declaration();
   }
 
-  static final public void Function_return_declaration() throws ParseException {
+  final public void Function_return_declaration() throws ParseException {
     jj_consume_token(RETURN);
     Type();
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void Function_variable_declarations() throws ParseException {
+  final public void Function_variable_declarations() throws ParseException {
     jj_consume_token(IS);
     label_5:
     while (true) {
@@ -231,11 +230,11 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Function_variable_declaration() throws ParseException {
+  final public void Function_variable_declaration() throws ParseException {
     Variable_declaration();
   }
 
-  static final public void Function_process() throws ParseException {
+  final public void Function_process() throws ParseException {
     jj_consume_token(BEGIN);
     Block();
     jj_consume_token(END);
@@ -244,7 +243,7 @@ public class MyLang implements MyLangConstants {
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void Variable_declaration() throws ParseException {
+  final public void Variable_declaration() throws ParseException {
     jj_consume_token(VAR);
     Identifier();
     jj_consume_token(IS);
@@ -252,7 +251,7 @@ public class MyLang implements MyLangConstants {
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void Parameter_list() throws ParseException {
+  final public void Parameter_list() throws ParseException {
     jj_consume_token(LEFTPARENTHESES);
     if (jj_2_12(3)) {
       Parameters();
@@ -262,7 +261,7 @@ public class MyLang implements MyLangConstants {
     jj_consume_token(RIGHTPARENTHESES);
   }
 
-  static final public void Parameters() throws ParseException {
+  final public void Parameters() throws ParseException {
     Parameter();
     label_6:
     while (true) {
@@ -276,11 +275,11 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Parameter() throws ParseException {
+  final public void Parameter() throws ParseException {
     Identifier();
   }
 
-  static final public void Type_declaration() throws ParseException {
+  final public void Type_declaration() throws ParseException {
     jj_consume_token(ARRAY);
     jj_consume_token(OF);
     jj_consume_token(INTEGER_LITERAL);
@@ -288,13 +287,13 @@ public class MyLang implements MyLangConstants {
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void Class_declaration() throws ParseException {
+  final public void Class_declaration() throws ParseException {
     Class_head();
     Class_body();
     Class_tail();
   }
 
-  static final public void Class_head() throws ParseException {
+  final public void Class_head() throws ParseException {
     jj_consume_token(CLASS);
     if (jj_2_14(3)) {
       Class_extend();
@@ -303,27 +302,27 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Class_body() throws ParseException {
+  final public void Class_body() throws ParseException {
     Class_variable_declarations();
     Class_function_declarations();
   }
 
-  static final public void Class_tail() throws ParseException {
+  final public void Class_tail() throws ParseException {
     jj_consume_token(END);
     jj_consume_token(CLASS);
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void Class_name() throws ParseException {
+  final public void Class_name() throws ParseException {
     Identifier();
   }
 
-  static final public void Class_extend() throws ParseException {
+  final public void Class_extend() throws ParseException {
     jj_consume_token(EXTENDS);
     Class_type();
   }
 
-  static final public void Class_variable_declarations() throws ParseException {
+  final public void Class_variable_declarations() throws ParseException {
     label_7:
     while (true) {
       if (jj_2_15(3)) {
@@ -335,11 +334,11 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Class_variable_declaration() throws ParseException {
+  final public void Class_variable_declaration() throws ParseException {
     Variable_declaration();
   }
 
-  static final public void Class_function_declarations() throws ParseException {
+  final public void Class_function_declarations() throws ParseException {
     label_8:
     while (true) {
       if (jj_2_16(3)) {
@@ -351,11 +350,11 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Class_function_declaration() throws ParseException {
+  final public void Class_function_declaration() throws ParseException {
     Function_declaration();
   }
 
-  static final public void Type() throws ParseException {
+  final public void Type() throws ParseException {
     if (jj_2_17(3)) {
       Primitive_type();
     } else if (jj_2_18(3)) {
@@ -366,7 +365,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Primitive_type() throws ParseException {
+  final public void Primitive_type() throws ParseException {
     if (jj_2_19(3)) {
       Numeric_type();
     } else if (jj_2_20(3)) {
@@ -377,27 +376,27 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Numeric_type() throws ParseException {
+  final public void Numeric_type() throws ParseException {
     Integral_type();
   }
 
-  static final public void Integral_type() throws ParseException {
+  final public void Integral_type() throws ParseException {
     jj_consume_token(INTEGER);
   }
 
-  static final public void Reference_type() throws ParseException {
+  final public void Reference_type() throws ParseException {
     Class_type();
   }
 
-  static final public void Class_type() throws ParseException {
+  final public void Class_type() throws ParseException {
     Type_name();
   }
 
-  static final public void Type_name() throws ParseException {
+  final public void Type_name() throws ParseException {
     Identifier();
   }
 
-  static final public void Block() throws ParseException {
+  final public void Block() throws ParseException {
     label_9:
     while (true) {
       if (jj_2_21(3)) {
@@ -409,11 +408,11 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Block_statement() throws ParseException {
+  final public void Block_statement() throws ParseException {
     Statement();
   }
 
-  static final public void Statement() throws ParseException {
+  final public void Statement() throws ParseException {
     if (jj_2_22(3)) {
       Statement_without_substatement();
     } else if (jj_2_23(3)) {
@@ -430,7 +429,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Statement_without_substatement() throws ParseException {
+  final public void Statement_without_substatement() throws ParseException {
     if (jj_2_27(3)) {
       Empty_statement();
     } else if (jj_2_28(3)) {
@@ -447,11 +446,11 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Empty_statement() throws ParseException {
+  final public void Empty_statement() throws ParseException {
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void Return_statement() throws ParseException {
+  final public void Return_statement() throws ParseException {
     jj_consume_token(RETURN);
     if (jj_2_32(3)) {
       Expression();
@@ -464,18 +463,18 @@ public class MyLang implements MyLangConstants {
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void Print_statement() throws ParseException {
+  final public void Print_statement() throws ParseException {
     jj_consume_token(PRINT);
     Expression();
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void Function_statement() throws ParseException {
+  final public void Function_statement() throws ParseException {
     Function_call_expression();
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void If_statement() throws ParseException {
+  final public void If_statement() throws ParseException {
     jj_consume_token(IF);
     Logical_expression();
     jj_consume_token(THEN);
@@ -498,19 +497,19 @@ public class MyLang implements MyLangConstants {
     jj_consume_token(IF);
   }
 
-  static final public void Elif_statement() throws ParseException {
+  final public void Elif_statement() throws ParseException {
     jj_consume_token(ELIF);
     Logical_expression();
     jj_consume_token(THEN);
     Block();
   }
 
-  static final public void Else_statement() throws ParseException {
+  final public void Else_statement() throws ParseException {
     jj_consume_token(ELSE);
     Block();
   }
 
-  static final public void While_statement() throws ParseException {
+  final public void While_statement() throws ParseException {
     jj_consume_token(WHILE);
     Logical_expression();
     jj_consume_token(DO);
@@ -519,7 +518,7 @@ public class MyLang implements MyLangConstants {
     jj_consume_token(WHILE);
   }
 
-  static final public void Repeat_statement() throws ParseException {
+  final public void Repeat_statement() throws ParseException {
     jj_consume_token(REPEAT);
     Block();
     jj_consume_token(UNTIL);
@@ -527,7 +526,7 @@ public class MyLang implements MyLangConstants {
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void Foreach_statement() throws ParseException {
+  final public void Foreach_statement() throws ParseException {
     jj_consume_token(FOREACH);
     Identifier();
     jj_consume_token(IN);
@@ -538,15 +537,15 @@ public class MyLang implements MyLangConstants {
     jj_consume_token(FOREACH);
   }
 
-  static final public void Expression() throws ParseException {
+  final public void Expression() throws ParseException {
     Arithmetic_expression();
   }
 
-  static final public void Arithmetic_expression() throws ParseException {
+  final public void Arithmetic_expression() throws ParseException {
     Additive_expression();
   }
 
-  static final public void Additive_expression() throws ParseException {
+  final public void Additive_expression() throws ParseException {
     Multiplicative_expression();
     label_11:
     while (true) {
@@ -560,7 +559,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Multiplicative_expression() throws ParseException {
+  final public void Multiplicative_expression() throws ParseException {
     Unary_expression();
     label_12:
     while (true) {
@@ -574,7 +573,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Unary_expression() throws ParseException {
+  final public void Unary_expression() throws ParseException {
     if (jj_2_38(3)) {
       Constant_expression();
     } else if (jj_2_39(3)) {
@@ -596,11 +595,11 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Logical_expression() throws ParseException {
+  final public void Logical_expression() throws ParseException {
     Or_expression();
   }
 
-  static final public void Or_expression() throws ParseException {
+  final public void Or_expression() throws ParseException {
     And_expression();
     label_13:
     while (true) {
@@ -614,7 +613,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void And_expression() throws ParseException {
+  final public void And_expression() throws ParseException {
     Unary_logical_expression();
     label_14:
     while (true) {
@@ -628,7 +627,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Unary_logical_expression() throws ParseException {
+  final public void Unary_logical_expression() throws ParseException {
     if (jj_2_46(3)) {
       Function_call_expression();
     } else if (jj_2_47(3)) {
@@ -648,20 +647,20 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Relation_expression() throws ParseException {
+  final public void Relation_expression() throws ParseException {
     Expression();
     Relation_operator();
     Expression();
   }
 
-  static final public void Assignment_expression() throws ParseException {
+  final public void Assignment_expression() throws ParseException {
     Left_value();
     jj_consume_token(COLONEQUAL);
     Expression();
     jj_consume_token(SEMICOLON);
   }
 
-  static final public void Left_value() throws ParseException {
+  final public void Left_value() throws ParseException {
     Identifier();
     label_15:
     while (true) {
@@ -681,7 +680,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Constant_expression() throws ParseException {
+  final public void Constant_expression() throws ParseException {
     if (jj_2_54(3)) {
       Sign();
     } else {
@@ -690,13 +689,13 @@ public class MyLang implements MyLangConstants {
     Digits();
   }
 
-  static final public void Array_access_expression() throws ParseException {
+  final public void Array_access_expression() throws ParseException {
     jj_consume_token(LEFTBRACKET);
     Arithmetic_expression();
     jj_consume_token(RIGHTBRACKET);
   }
 
-  static final public void Class_member_expression() throws ParseException {
+  final public void Class_member_expression() throws ParseException {
     jj_consume_token(POINT);
     Identifier();
     label_16:
@@ -711,12 +710,12 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Function_call_expression() throws ParseException {
+  final public void Function_call_expression() throws ParseException {
     Function_name();
     Function_call_parameter_list();
   }
 
-  static final public void Function_call_parameter_list() throws ParseException {
+  final public void Function_call_parameter_list() throws ParseException {
     jj_consume_token(LEFTPARENTHESES);
     if (jj_2_57(3)) {
       Call_parameter();
@@ -736,11 +735,11 @@ public class MyLang implements MyLangConstants {
     jj_consume_token(RIGHTPARENTHESES);
   }
 
-  static final public void Call_parameter() throws ParseException {
+  final public void Call_parameter() throws ParseException {
     Expression();
   }
 
-  static final public void Class_function_or_member() throws ParseException {
+  final public void Class_function_or_member() throws ParseException {
     Class_name();
     jj_consume_token(POINT);
     label_18:
@@ -761,7 +760,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Additive_operator() throws ParseException {
+  final public void Additive_operator() throws ParseException {
     if (jj_2_60(3)) {
       jj_consume_token(PLUS);
     } else if (jj_2_61(3)) {
@@ -772,7 +771,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Multiplicative_operator() throws ParseException {
+  final public void Multiplicative_operator() throws ParseException {
     if (jj_2_62(3)) {
       jj_consume_token(TIMES);
     } else if (jj_2_63(3)) {
@@ -785,7 +784,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Relation_operator() throws ParseException {
+  final public void Relation_operator() throws ParseException {
     if (jj_2_65(3)) {
       jj_consume_token(EQUALEQUAL);
     } else if (jj_2_66(3)) {
@@ -804,7 +803,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Or_operator() throws ParseException {
+  final public void Or_operator() throws ParseException {
     if (jj_2_71(3)) {
       jj_consume_token(OR);
     } else if (jj_2_72(3)) {
@@ -815,7 +814,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void And_operator() throws ParseException {
+  final public void And_operator() throws ParseException {
     if (jj_2_73(3)) {
       jj_consume_token(AND);
     } else if (jj_2_74(3)) {
@@ -826,7 +825,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Unary_logical_operator() throws ParseException {
+  final public void Unary_logical_operator() throws ParseException {
     if (jj_2_75(3)) {
       jj_consume_token(NOT);
     } else if (jj_2_76(3)) {
@@ -837,7 +836,7 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Sign() throws ParseException {
+  final public void Sign() throws ParseException {
     if (jj_2_77(3)) {
       jj_consume_token(PLUS);
     } else if (jj_2_78(3)) {
@@ -848,11 +847,11 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Digits() throws ParseException {
+  final public void Digits() throws ParseException {
     jj_consume_token(INTEGER_LITERAL);
   }
 
-  static final public void Default_logical_value() throws ParseException {
+  final public void Default_logical_value() throws ParseException {
     if (jj_2_79(3)) {
       jj_consume_token(YES);
     } else if (jj_2_80(3)) {
@@ -863,581 +862,581 @@ public class MyLang implements MyLangConstants {
     }
   }
 
-  static final public void Identifier() throws ParseException {
+  final public void Identifier() throws ParseException {
     jj_consume_token(IDENTIFIER);
   }
 
-  static private boolean jj_2_1(int xla) {
+  private boolean jj_2_1(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_1(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(0, xla); }
   }
 
-  static private boolean jj_2_2(int xla) {
+  private boolean jj_2_2(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_2(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(1, xla); }
   }
 
-  static private boolean jj_2_3(int xla) {
+  private boolean jj_2_3(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_3(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(2, xla); }
   }
 
-  static private boolean jj_2_4(int xla) {
+  private boolean jj_2_4(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_4(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(3, xla); }
   }
 
-  static private boolean jj_2_5(int xla) {
+  private boolean jj_2_5(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_5(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(4, xla); }
   }
 
-  static private boolean jj_2_6(int xla) {
+  private boolean jj_2_6(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_6(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(5, xla); }
   }
 
-  static private boolean jj_2_7(int xla) {
+  private boolean jj_2_7(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_7(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(6, xla); }
   }
 
-  static private boolean jj_2_8(int xla) {
+  private boolean jj_2_8(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_8(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(7, xla); }
   }
 
-  static private boolean jj_2_9(int xla) {
+  private boolean jj_2_9(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_9(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(8, xla); }
   }
 
-  static private boolean jj_2_10(int xla) {
+  private boolean jj_2_10(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_10(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(9, xla); }
   }
 
-  static private boolean jj_2_11(int xla) {
+  private boolean jj_2_11(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_11(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(10, xla); }
   }
 
-  static private boolean jj_2_12(int xla) {
+  private boolean jj_2_12(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_12(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(11, xla); }
   }
 
-  static private boolean jj_2_13(int xla) {
+  private boolean jj_2_13(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_13(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(12, xla); }
   }
 
-  static private boolean jj_2_14(int xla) {
+  private boolean jj_2_14(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_14(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(13, xla); }
   }
 
-  static private boolean jj_2_15(int xla) {
+  private boolean jj_2_15(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_15(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(14, xla); }
   }
 
-  static private boolean jj_2_16(int xla) {
+  private boolean jj_2_16(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_16(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(15, xla); }
   }
 
-  static private boolean jj_2_17(int xla) {
+  private boolean jj_2_17(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_17(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(16, xla); }
   }
 
-  static private boolean jj_2_18(int xla) {
+  private boolean jj_2_18(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_18(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(17, xla); }
   }
 
-  static private boolean jj_2_19(int xla) {
+  private boolean jj_2_19(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_19(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(18, xla); }
   }
 
-  static private boolean jj_2_20(int xla) {
+  private boolean jj_2_20(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_20(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(19, xla); }
   }
 
-  static private boolean jj_2_21(int xla) {
+  private boolean jj_2_21(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_21(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(20, xla); }
   }
 
-  static private boolean jj_2_22(int xla) {
+  private boolean jj_2_22(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_22(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(21, xla); }
   }
 
-  static private boolean jj_2_23(int xla) {
+  private boolean jj_2_23(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_23(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(22, xla); }
   }
 
-  static private boolean jj_2_24(int xla) {
+  private boolean jj_2_24(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_24(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(23, xla); }
   }
 
-  static private boolean jj_2_25(int xla) {
+  private boolean jj_2_25(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_25(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(24, xla); }
   }
 
-  static private boolean jj_2_26(int xla) {
+  private boolean jj_2_26(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_26(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(25, xla); }
   }
 
-  static private boolean jj_2_27(int xla) {
+  private boolean jj_2_27(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_27(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(26, xla); }
   }
 
-  static private boolean jj_2_28(int xla) {
+  private boolean jj_2_28(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_28(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(27, xla); }
   }
 
-  static private boolean jj_2_29(int xla) {
+  private boolean jj_2_29(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_29(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(28, xla); }
   }
 
-  static private boolean jj_2_30(int xla) {
+  private boolean jj_2_30(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_30(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(29, xla); }
   }
 
-  static private boolean jj_2_31(int xla) {
+  private boolean jj_2_31(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_31(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(30, xla); }
   }
 
-  static private boolean jj_2_32(int xla) {
+  private boolean jj_2_32(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_32(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(31, xla); }
   }
 
-  static private boolean jj_2_33(int xla) {
+  private boolean jj_2_33(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_33(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(32, xla); }
   }
 
-  static private boolean jj_2_34(int xla) {
+  private boolean jj_2_34(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_34(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(33, xla); }
   }
 
-  static private boolean jj_2_35(int xla) {
+  private boolean jj_2_35(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_35(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(34, xla); }
   }
 
-  static private boolean jj_2_36(int xla) {
+  private boolean jj_2_36(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_36(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(35, xla); }
   }
 
-  static private boolean jj_2_37(int xla) {
+  private boolean jj_2_37(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_37(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(36, xla); }
   }
 
-  static private boolean jj_2_38(int xla) {
+  private boolean jj_2_38(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_38(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(37, xla); }
   }
 
-  static private boolean jj_2_39(int xla) {
+  private boolean jj_2_39(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_39(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(38, xla); }
   }
 
-  static private boolean jj_2_40(int xla) {
+  private boolean jj_2_40(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_40(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(39, xla); }
   }
 
-  static private boolean jj_2_41(int xla) {
+  private boolean jj_2_41(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_41(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(40, xla); }
   }
 
-  static private boolean jj_2_42(int xla) {
+  private boolean jj_2_42(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_42(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(41, xla); }
   }
 
-  static private boolean jj_2_43(int xla) {
+  private boolean jj_2_43(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_43(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(42, xla); }
   }
 
-  static private boolean jj_2_44(int xla) {
+  private boolean jj_2_44(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_44(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(43, xla); }
   }
 
-  static private boolean jj_2_45(int xla) {
+  private boolean jj_2_45(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_45(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(44, xla); }
   }
 
-  static private boolean jj_2_46(int xla) {
+  private boolean jj_2_46(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_46(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(45, xla); }
   }
 
-  static private boolean jj_2_47(int xla) {
+  private boolean jj_2_47(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_47(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(46, xla); }
   }
 
-  static private boolean jj_2_48(int xla) {
+  private boolean jj_2_48(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_48(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(47, xla); }
   }
 
-  static private boolean jj_2_49(int xla) {
+  private boolean jj_2_49(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_49(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(48, xla); }
   }
 
-  static private boolean jj_2_50(int xla) {
+  private boolean jj_2_50(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_50(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(49, xla); }
   }
 
-  static private boolean jj_2_51(int xla) {
+  private boolean jj_2_51(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_51(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(50, xla); }
   }
 
-  static private boolean jj_2_52(int xla) {
+  private boolean jj_2_52(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_52(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(51, xla); }
   }
 
-  static private boolean jj_2_53(int xla) {
+  private boolean jj_2_53(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_53(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(52, xla); }
   }
 
-  static private boolean jj_2_54(int xla) {
+  private boolean jj_2_54(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_54(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(53, xla); }
   }
 
-  static private boolean jj_2_55(int xla) {
+  private boolean jj_2_55(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_55(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(54, xla); }
   }
 
-  static private boolean jj_2_56(int xla) {
+  private boolean jj_2_56(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_56(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(55, xla); }
   }
 
-  static private boolean jj_2_57(int xla) {
+  private boolean jj_2_57(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_57(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(56, xla); }
   }
 
-  static private boolean jj_2_58(int xla) {
+  private boolean jj_2_58(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_58(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(57, xla); }
   }
 
-  static private boolean jj_2_59(int xla) {
+  private boolean jj_2_59(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_59(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(58, xla); }
   }
 
-  static private boolean jj_2_60(int xla) {
+  private boolean jj_2_60(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_60(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(59, xla); }
   }
 
-  static private boolean jj_2_61(int xla) {
+  private boolean jj_2_61(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_61(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(60, xla); }
   }
 
-  static private boolean jj_2_62(int xla) {
+  private boolean jj_2_62(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_62(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(61, xla); }
   }
 
-  static private boolean jj_2_63(int xla) {
+  private boolean jj_2_63(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_63(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(62, xla); }
   }
 
-  static private boolean jj_2_64(int xla) {
+  private boolean jj_2_64(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_64(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(63, xla); }
   }
 
-  static private boolean jj_2_65(int xla) {
+  private boolean jj_2_65(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_65(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(64, xla); }
   }
 
-  static private boolean jj_2_66(int xla) {
+  private boolean jj_2_66(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_66(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(65, xla); }
   }
 
-  static private boolean jj_2_67(int xla) {
+  private boolean jj_2_67(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_67(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(66, xla); }
   }
 
-  static private boolean jj_2_68(int xla) {
+  private boolean jj_2_68(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_68(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(67, xla); }
   }
 
-  static private boolean jj_2_69(int xla) {
+  private boolean jj_2_69(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_69(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(68, xla); }
   }
 
-  static private boolean jj_2_70(int xla) {
+  private boolean jj_2_70(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_70(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(69, xla); }
   }
 
-  static private boolean jj_2_71(int xla) {
+  private boolean jj_2_71(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_71(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(70, xla); }
   }
 
-  static private boolean jj_2_72(int xla) {
+  private boolean jj_2_72(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_72(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(71, xla); }
   }
 
-  static private boolean jj_2_73(int xla) {
+  private boolean jj_2_73(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_73(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(72, xla); }
   }
 
-  static private boolean jj_2_74(int xla) {
+  private boolean jj_2_74(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_74(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(73, xla); }
   }
 
-  static private boolean jj_2_75(int xla) {
+  private boolean jj_2_75(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_75(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(74, xla); }
   }
 
-  static private boolean jj_2_76(int xla) {
+  private boolean jj_2_76(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_76(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(75, xla); }
   }
 
-  static private boolean jj_2_77(int xla) {
+  private boolean jj_2_77(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_77(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(76, xla); }
   }
 
-  static private boolean jj_2_78(int xla) {
+  private boolean jj_2_78(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_78(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(77, xla); }
   }
 
-  static private boolean jj_2_79(int xla) {
+  private boolean jj_2_79(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_79(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(78, xla); }
   }
 
-  static private boolean jj_2_80(int xla) {
+  private boolean jj_2_80(int xla) {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return !jj_3_80(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(79, xla); }
   }
 
-  static private boolean jj_3_20() {
+  private boolean jj_3_20() {
     if (jj_scan_token(BOOLEAN)) return true;
     return false;
   }
 
-  static private boolean jj_3_19() {
+  private boolean jj_3_19() {
     if (jj_scan_token(17)) return true;
     return false;
   }
 
-  static private boolean jj_3R_34() {
+  private boolean jj_3R_34() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_19()) {
@@ -1447,17 +1446,17 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_18() {
-    if (jj_scan_token(64)) return true;
+  private boolean jj_3_18() {
+    if (jj_scan_token(37)) return true;
     return false;
   }
 
-  static private boolean jj_3_17() {
+  private boolean jj_3_17() {
     if (jj_3R_34()) return true;
     return false;
   }
 
-  static private boolean jj_3R_70() {
+  private boolean jj_3R_70() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_17()) {
@@ -1467,17 +1466,17 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_33() {
+  private boolean jj_3R_33() {
     if (jj_3R_23()) return true;
     return false;
   }
 
-  static private boolean jj_3_16() {
+  private boolean jj_3_16() {
     if (jj_3R_33()) return true;
     return false;
   }
 
-  static private boolean jj_3R_83() {
+  private boolean jj_3R_83() {
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1486,17 +1485,17 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_32() {
+  private boolean jj_3R_32() {
     if (jj_3R_71()) return true;
     return false;
   }
 
-  static private boolean jj_3_15() {
+  private boolean jj_3_15() {
     if (jj_3R_32()) return true;
     return false;
   }
 
-  static private boolean jj_3R_82() {
+  private boolean jj_3R_82() {
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1505,35 +1504,35 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_31() {
+  private boolean jj_3R_31() {
     if (jj_scan_token(EXTENDS)) return true;
-    if (jj_scan_token(64)) return true;
+    if (jj_scan_token(37)) return true;
     return false;
   }
 
-  static private boolean jj_3_9() {
+  private boolean jj_3_9() {
     if (jj_3R_27()) return true;
     return false;
   }
 
-  static private boolean jj_3_14() {
+  private boolean jj_3_14() {
     if (jj_3R_31()) return true;
     return false;
   }
 
-  static private boolean jj_3R_75() {
+  private boolean jj_3R_75() {
     if (jj_scan_token(END)) return true;
     if (jj_scan_token(CLASS)) return true;
     return false;
   }
 
-  static private boolean jj_3R_74() {
+  private boolean jj_3R_74() {
     if (jj_3R_82()) return true;
     if (jj_3R_83()) return true;
     return false;
   }
 
-  static private boolean jj_3R_73() {
+  private boolean jj_3R_73() {
     if (jj_scan_token(CLASS)) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -1541,33 +1540,33 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_12() {
+  private boolean jj_3_12() {
     if (jj_3R_30()) return true;
     return false;
   }
 
-  static private boolean jj_3R_26() {
+  private boolean jj_3R_26() {
     if (jj_3R_73()) return true;
     if (jj_3R_74()) return true;
     if (jj_3R_75()) return true;
     return false;
   }
 
-  static private boolean jj_3_13() {
+  private boolean jj_3_13() {
     if (jj_scan_token(COMMA)) return true;
-    if (jj_scan_token(64)) return true;
+    if (jj_scan_token(37)) return true;
     return false;
   }
 
-  static private boolean jj_3R_25() {
+  private boolean jj_3R_25() {
     if (jj_scan_token(ARRAY)) return true;
     if (jj_scan_token(OF)) return true;
     if (jj_scan_token(INTEGER_LITERAL)) return true;
     return false;
   }
 
-  static private boolean jj_3R_30() {
-    if (jj_scan_token(64)) return true;
+  private boolean jj_3R_30() {
+    if (jj_scan_token(37)) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1576,95 +1575,95 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_84() {
+  private boolean jj_3R_84() {
     if (jj_scan_token(LEFTPARENTHESES)) return true;
     return false;
   }
 
-  static private boolean jj_3R_71() {
+  private boolean jj_3R_71() {
     if (jj_scan_token(VAR)) return true;
-    if (jj_scan_token(64)) return true;
+    if (jj_scan_token(37)) return true;
     if (jj_scan_token(IS)) return true;
     return false;
   }
 
-  static private boolean jj_3_8() {
+  private boolean jj_3_8() {
     if (jj_3R_26()) return true;
     return false;
   }
 
-  static private boolean jj_3_11() {
+  private boolean jj_3_11() {
     if (jj_3R_29()) return true;
     return false;
   }
 
-  static private boolean jj_3R_29() {
+  private boolean jj_3R_29() {
     if (jj_3R_71()) return true;
     return false;
   }
 
-  static private boolean jj_3R_27() {
+  private boolean jj_3R_27() {
     if (jj_scan_token(RETURN)) return true;
     if (jj_3R_70()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  static private boolean jj_3_1() {
+  private boolean jj_3_1() {
     if (jj_3R_19()) return true;
     return false;
   }
 
-  static private boolean jj_3R_28() {
+  private boolean jj_3R_28() {
     if (jj_3R_71()) return true;
     return false;
   }
 
-  static private boolean jj_3_10() {
+  private boolean jj_3_10() {
     if (jj_3R_28()) return true;
     return false;
   }
 
-  static private boolean jj_3_7() {
+  private boolean jj_3_7() {
     if (jj_3R_25()) return true;
     return false;
   }
 
-  static private boolean jj_3R_81() {
+  private boolean jj_3R_81() {
     if (jj_3R_84()) return true;
     return false;
   }
 
-  static private boolean jj_3_6() {
+  private boolean jj_3_6() {
     if (jj_3R_24()) return true;
     return false;
   }
 
-  static private boolean jj_3R_72() {
+  private boolean jj_3R_72() {
     if (jj_scan_token(FUNCTION)) return true;
-    if (jj_scan_token(64)) return true;
+    if (jj_scan_token(37)) return true;
     if (jj_3R_81()) return true;
     return false;
   }
 
-  static private boolean jj_3R_23() {
+  private boolean jj_3R_23() {
     if (jj_3R_72()) return true;
     return false;
   }
 
-  static private boolean jj_3R_24() {
+  private boolean jj_3R_24() {
     if (jj_scan_token(TYPE)) return true;
-    if (jj_scan_token(64)) return true;
+    if (jj_scan_token(37)) return true;
     if (jj_scan_token(IS)) return true;
     return false;
   }
 
-  static private boolean jj_3_5() {
+  private boolean jj_3_5() {
     if (jj_3R_23()) return true;
     return false;
   }
 
-  static private boolean jj_3R_22() {
+  private boolean jj_3R_22() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_5()) {
@@ -1674,49 +1673,49 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_4() {
+  private boolean jj_3_4() {
     if (jj_3R_22()) return true;
     return false;
   }
 
-  static private boolean jj_3_3() {
+  private boolean jj_3_3() {
     if (jj_3R_21()) return true;
     return false;
   }
 
-  static private boolean jj_3R_21() {
+  private boolean jj_3R_21() {
     if (jj_3R_71()) return true;
     return false;
   }
 
-  static private boolean jj_3_59() {
+  private boolean jj_3_59() {
     if (jj_3R_69()) return true;
     return false;
   }
 
-  static private boolean jj_3R_19() {
+  private boolean jj_3R_19() {
     if (jj_scan_token(RETURN)) return true;
     if (jj_3R_70()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  static private boolean jj_3_80() {
+  private boolean jj_3_80() {
     if (jj_scan_token(NO)) return true;
     return false;
   }
 
-  static private boolean jj_3R_20() {
+  private boolean jj_3R_20() {
     if (jj_3R_71()) return true;
     return false;
   }
 
-  static private boolean jj_3_79() {
+  private boolean jj_3_79() {
     if (jj_scan_token(YES)) return true;
     return false;
   }
 
-  static private boolean jj_3R_65() {
+  private boolean jj_3R_65() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_79()) {
@@ -1726,22 +1725,22 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_2() {
+  private boolean jj_3_2() {
     if (jj_3R_20()) return true;
     return false;
   }
 
-  static private boolean jj_3_78() {
+  private boolean jj_3_78() {
     if (jj_scan_token(MINUS)) return true;
     return false;
   }
 
-  static private boolean jj_3_77() {
+  private boolean jj_3_77() {
     if (jj_scan_token(PLUS)) return true;
     return false;
   }
 
-  static private boolean jj_3R_58() {
+  private boolean jj_3R_58() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_77()) {
@@ -1751,17 +1750,17 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_76() {
+  private boolean jj_3_76() {
     if (jj_scan_token(EXCLAM)) return true;
     return false;
   }
 
-  static private boolean jj_3_75() {
+  private boolean jj_3_75() {
     if (jj_scan_token(NOT)) return true;
     return false;
   }
 
-  static private boolean jj_3R_64() {
+  private boolean jj_3R_64() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_75()) {
@@ -1771,17 +1770,17 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_74() {
+  private boolean jj_3_74() {
     if (jj_scan_token(ANDAND)) return true;
     return false;
   }
 
-  static private boolean jj_3_73() {
+  private boolean jj_3_73() {
     if (jj_scan_token(AND)) return true;
     return false;
   }
 
-  static private boolean jj_3R_61() {
+  private boolean jj_3R_61() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_73()) {
@@ -1791,23 +1790,23 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_56() {
+  private boolean jj_3_56() {
     if (jj_scan_token(COMMA)) return true;
     if (jj_3R_68()) return true;
     return false;
   }
 
-  static private boolean jj_3_72() {
+  private boolean jj_3_72() {
     if (jj_scan_token(VERTICALVERTICAL)) return true;
     return false;
   }
 
-  static private boolean jj_3_71() {
+  private boolean jj_3_71() {
     if (jj_scan_token(OR)) return true;
     return false;
   }
 
-  static private boolean jj_3R_59() {
+  private boolean jj_3R_59() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_71()) {
@@ -1817,38 +1816,38 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_70() {
+  private boolean jj_3_70() {
     if (jj_scan_token(SMALLEREQUAL)) return true;
     return false;
   }
 
-  static private boolean jj_3_69() {
+  private boolean jj_3_69() {
     if (jj_scan_token(SMALLER)) return true;
     return false;
   }
 
-  static private boolean jj_3_58() {
-    if (jj_scan_token(64)) return true;
+  private boolean jj_3_58() {
+    if (jj_scan_token(37)) return true;
     if (jj_scan_token(POINT)) return true;
     return false;
   }
 
-  static private boolean jj_3_68() {
+  private boolean jj_3_68() {
     if (jj_scan_token(GREATEREQUAL)) return true;
     return false;
   }
 
-  static private boolean jj_3_67() {
+  private boolean jj_3_67() {
     if (jj_scan_token(GREATER)) return true;
     return false;
   }
 
-  static private boolean jj_3_66() {
+  private boolean jj_3_66() {
     if (jj_scan_token(EXCLAMEQUAL)) return true;
     return false;
   }
 
-  static private boolean jj_3R_80() {
+  private boolean jj_3R_80() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_65()) {
@@ -1870,22 +1869,22 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_65() {
+  private boolean jj_3_65() {
     if (jj_scan_token(EQUALEQUAL)) return true;
     return false;
   }
 
-  static private boolean jj_3_64() {
+  private boolean jj_3_64() {
     if (jj_scan_token(MOD)) return true;
     return false;
   }
 
-  static private boolean jj_3_63() {
+  private boolean jj_3_63() {
     if (jj_scan_token(DIVIDE)) return true;
     return false;
   }
 
-  static private boolean jj_3_57() {
+  private boolean jj_3_57() {
     if (jj_3R_68()) return true;
     Token xsp;
     while (true) {
@@ -1895,12 +1894,12 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_62() {
+  private boolean jj_3_62() {
     if (jj_scan_token(TIMES)) return true;
     return false;
   }
 
-  static private boolean jj_3R_51() {
+  private boolean jj_3R_51() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_62()) {
@@ -1913,17 +1912,17 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_61() {
+  private boolean jj_3_61() {
     if (jj_scan_token(MINUS)) return true;
     return false;
   }
 
-  static private boolean jj_3_60() {
+  private boolean jj_3_60() {
     if (jj_scan_token(PLUS)) return true;
     return false;
   }
 
-  static private boolean jj_3R_49() {
+  private boolean jj_3R_49() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_60()) {
@@ -1933,35 +1932,35 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_55() {
+  private boolean jj_3_55() {
     if (jj_scan_token(POINT)) return true;
-    if (jj_scan_token(64)) return true;
+    if (jj_scan_token(37)) return true;
     return false;
   }
 
-  static private boolean jj_3R_55() {
-    if (jj_scan_token(64)) return true;
+  private boolean jj_3R_55() {
+    if (jj_scan_token(37)) return true;
     if (jj_scan_token(POINT)) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
       if (jj_3_58()) { jj_scanpos = xsp; break; }
     }
-    if (jj_scan_token(64)) return true;
+    if (jj_scan_token(37)) return true;
     return false;
   }
 
-  static private boolean jj_3_53() {
+  private boolean jj_3_53() {
     if (jj_3R_67()) return true;
     return false;
   }
 
-  static private boolean jj_3R_68() {
+  private boolean jj_3R_68() {
     if (jj_3R_45()) return true;
     return false;
   }
 
-  static private boolean jj_3R_69() {
+  private boolean jj_3R_69() {
     if (jj_scan_token(LEFTPARENTHESES)) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -1970,15 +1969,15 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_54() {
-    if (jj_scan_token(64)) return true;
+  private boolean jj_3R_54() {
+    if (jj_scan_token(37)) return true;
     if (jj_3R_69()) return true;
     return false;
   }
 
-  static private boolean jj_3R_67() {
+  private boolean jj_3R_67() {
     if (jj_scan_token(POINT)) return true;
-    if (jj_scan_token(64)) return true;
+    if (jj_scan_token(37)) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1987,38 +1986,38 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_66() {
+  private boolean jj_3R_66() {
     if (jj_scan_token(LEFTBRACKET)) return true;
     if (jj_3R_57()) return true;
     if (jj_scan_token(RIGHTBRACKET)) return true;
     return false;
   }
 
-  static private boolean jj_3_45() {
+  private boolean jj_3_45() {
     if (jj_3R_61()) return true;
     if (jj_3R_62()) return true;
     return false;
   }
 
-  static private boolean jj_3_54() {
+  private boolean jj_3_54() {
     if (jj_3R_58()) return true;
     return false;
   }
 
-  static private boolean jj_3R_53() {
+  private boolean jj_3R_53() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_54()) jj_scanpos = xsp;
-    if (jj_scan_token(37)) return true;
+    if (jj_scan_token(39)) return true;
     return false;
   }
 
-  static private boolean jj_3_52() {
+  private boolean jj_3_52() {
     if (jj_3R_66()) return true;
     return false;
   }
 
-  static private boolean jj_3_51() {
+  private boolean jj_3_51() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_52()) {
@@ -2028,8 +2027,8 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_56() {
-    if (jj_scan_token(64)) return true;
+  private boolean jj_3R_56() {
+    if (jj_scan_token(37)) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -2038,66 +2037,66 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_44() {
+  private boolean jj_3R_44() {
     if (jj_3R_56()) return true;
     if (jj_scan_token(COLONEQUAL)) return true;
     if (jj_3R_45()) return true;
     return false;
   }
 
-  static private boolean jj_3_44() {
+  private boolean jj_3_44() {
     if (jj_3R_59()) return true;
     if (jj_3R_60()) return true;
     return false;
   }
 
-  static private boolean jj_3R_63() {
+  private boolean jj_3R_63() {
     if (jj_3R_45()) return true;
     if (jj_3R_80()) return true;
     if (jj_3R_45()) return true;
     return false;
   }
 
-  static private boolean jj_3_50() {
+  private boolean jj_3_50() {
     if (jj_3R_65()) return true;
     return false;
   }
 
-  static private boolean jj_3_49() {
+  private boolean jj_3_49() {
     if (jj_3R_64()) return true;
     if (jj_3R_62()) return true;
     return false;
   }
 
-  static private boolean jj_3_48() {
+  private boolean jj_3_48() {
     if (jj_scan_token(LEFTPARENTHESES)) return true;
     if (jj_3R_62()) return true;
     if (jj_scan_token(RIGHTPARENTHESES)) return true;
     return false;
   }
 
-  static private boolean jj_3_47() {
+  private boolean jj_3_47() {
     if (jj_3R_63()) return true;
     return false;
   }
 
-  static private boolean jj_3_46() {
+  private boolean jj_3_46() {
     if (jj_3R_54()) return true;
     return false;
   }
 
-  static private boolean jj_3_36() {
+  private boolean jj_3_36() {
     if (jj_3R_49()) return true;
     if (jj_3R_50()) return true;
     return false;
   }
 
-  static private boolean jj_3_35() {
+  private boolean jj_3_35() {
     if (jj_3R_48()) return true;
     return false;
   }
 
-  static private boolean jj_3R_62() {
+  private boolean jj_3R_62() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_46()) {
@@ -2116,7 +2115,7 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_60() {
+  private boolean jj_3R_60() {
     if (jj_3R_62()) return true;
     Token xsp;
     while (true) {
@@ -2126,13 +2125,13 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_37() {
+  private boolean jj_3_37() {
     if (jj_3R_51()) return true;
     if (jj_3R_52()) return true;
     return false;
   }
 
-  static private boolean jj_3R_78() {
+  private boolean jj_3R_78() {
     if (jj_3R_60()) return true;
     Token xsp;
     while (true) {
@@ -2142,50 +2141,50 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_46() {
+  private boolean jj_3R_46() {
     if (jj_3R_78()) return true;
     return false;
   }
 
-  static private boolean jj_3_43() {
+  private boolean jj_3_43() {
     if (jj_3R_58()) return true;
     if (jj_3R_52()) return true;
     return false;
   }
 
-  static private boolean jj_3_42() {
+  private boolean jj_3_42() {
     if (jj_scan_token(LEFTPARENTHESES)) return true;
     if (jj_3R_57()) return true;
     if (jj_scan_token(RIGHTPARENTHESES)) return true;
     return false;
   }
 
-  static private boolean jj_3_41() {
+  private boolean jj_3_41() {
     if (jj_3R_56()) return true;
     return false;
   }
 
-  static private boolean jj_3_40() {
+  private boolean jj_3_40() {
     if (jj_3R_55()) return true;
     return false;
   }
 
-  static private boolean jj_3_39() {
+  private boolean jj_3_39() {
     if (jj_3R_54()) return true;
     return false;
   }
 
-  static private boolean jj_3_34() {
+  private boolean jj_3_34() {
     if (jj_3R_47()) return true;
     return false;
   }
 
-  static private boolean jj_3_38() {
+  private boolean jj_3_38() {
     if (jj_3R_53()) return true;
     return false;
   }
 
-  static private boolean jj_3R_52() {
+  private boolean jj_3R_52() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_38()) {
@@ -2207,7 +2206,7 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_50() {
+  private boolean jj_3R_50() {
     if (jj_3R_52()) return true;
     Token xsp;
     while (true) {
@@ -2217,7 +2216,7 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_79() {
+  private boolean jj_3R_79() {
     if (jj_3R_50()) return true;
     Token xsp;
     while (true) {
@@ -2227,24 +2226,24 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_57() {
+  private boolean jj_3R_57() {
     if (jj_3R_79()) return true;
     return false;
   }
 
-  static private boolean jj_3R_45() {
+  private boolean jj_3R_45() {
     if (jj_3R_57()) return true;
     return false;
   }
 
-  static private boolean jj_3R_40() {
+  private boolean jj_3R_40() {
     if (jj_scan_token(FOREACH)) return true;
-    if (jj_scan_token(64)) return true;
+    if (jj_scan_token(37)) return true;
     if (jj_scan_token(IN)) return true;
     return false;
   }
 
-  static private boolean jj_3R_39() {
+  private boolean jj_3R_39() {
     if (jj_scan_token(REPEAT)) return true;
     if (jj_3R_77()) return true;
     if (jj_scan_token(UNTIL)) return true;
@@ -2252,56 +2251,56 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_33() {
+  private boolean jj_3_33() {
     if (jj_3R_46()) return true;
     return false;
   }
 
-  static private boolean jj_3R_38() {
+  private boolean jj_3R_38() {
     if (jj_scan_token(WHILE)) return true;
     if (jj_3R_46()) return true;
     if (jj_scan_token(DO)) return true;
     return false;
   }
 
-  static private boolean jj_3R_48() {
+  private boolean jj_3R_48() {
     if (jj_scan_token(ELSE)) return true;
     if (jj_3R_77()) return true;
     return false;
   }
 
-  static private boolean jj_3R_47() {
+  private boolean jj_3R_47() {
     if (jj_scan_token(ELIF)) return true;
     if (jj_3R_46()) return true;
     if (jj_scan_token(THEN)) return true;
     return false;
   }
 
-  static private boolean jj_3R_37() {
+  private boolean jj_3R_37() {
     if (jj_scan_token(IF)) return true;
     if (jj_3R_46()) return true;
     if (jj_scan_token(THEN)) return true;
     return false;
   }
 
-  static private boolean jj_3_32() {
+  private boolean jj_3_32() {
     if (jj_3R_45()) return true;
     return false;
   }
 
-  static private boolean jj_3R_43() {
+  private boolean jj_3R_43() {
     if (jj_3R_54()) return true;
     return false;
   }
 
-  static private boolean jj_3R_42() {
+  private boolean jj_3R_42() {
     if (jj_scan_token(PRINT)) return true;
     if (jj_3R_45()) return true;
     if (jj_scan_token(SEMICOLON)) return true;
     return false;
   }
 
-  static private boolean jj_3R_41() {
+  private boolean jj_3R_41() {
     if (jj_scan_token(RETURN)) return true;
     Token xsp;
     xsp = jj_scanpos;
@@ -2313,32 +2312,32 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_31() {
+  private boolean jj_3_31() {
     if (jj_3R_44()) return true;
     return false;
   }
 
-  static private boolean jj_3_30() {
+  private boolean jj_3_30() {
     if (jj_3R_43()) return true;
     return false;
   }
 
-  static private boolean jj_3_29() {
+  private boolean jj_3_29() {
     if (jj_3R_42()) return true;
     return false;
   }
 
-  static private boolean jj_3_28() {
+  private boolean jj_3_28() {
     if (jj_3R_41()) return true;
     return false;
   }
 
-  static private boolean jj_3_27() {
-    if (jj_scan_token(50)) return true;
+  private boolean jj_3_27() {
+    if (jj_scan_token(52)) return true;
     return false;
   }
 
-  static private boolean jj_3R_36() {
+  private boolean jj_3R_36() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_27()) {
@@ -2357,32 +2356,32 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3_26() {
+  private boolean jj_3_26() {
     if (jj_3R_40()) return true;
     return false;
   }
 
-  static private boolean jj_3_25() {
+  private boolean jj_3_25() {
     if (jj_3R_39()) return true;
     return false;
   }
 
-  static private boolean jj_3_24() {
+  private boolean jj_3_24() {
     if (jj_3R_38()) return true;
     return false;
   }
 
-  static private boolean jj_3_23() {
+  private boolean jj_3_23() {
     if (jj_3R_37()) return true;
     return false;
   }
 
-  static private boolean jj_3_22() {
+  private boolean jj_3_22() {
     if (jj_3R_36()) return true;
     return false;
   }
 
-  static private boolean jj_3R_76() {
+  private boolean jj_3R_76() {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_3_22()) {
@@ -2401,17 +2400,17 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_3R_35() {
+  private boolean jj_3R_35() {
     if (jj_3R_76()) return true;
     return false;
   }
 
-  static private boolean jj_3_21() {
+  private boolean jj_3_21() {
     if (jj_3R_35()) return true;
     return false;
   }
 
-  static private boolean jj_3R_77() {
+  private boolean jj_3R_77() {
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -2420,19 +2419,18 @@ public class MyLang implements MyLangConstants {
     return false;
   }
 
-  static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
-  static public MyLangTokenManager token_source;
-  static SimpleCharStream jj_input_stream;
+  public MyLangTokenManager token_source;
+  SimpleCharStream jj_input_stream;
   /** Current token. */
-  static public Token token;
+  public Token token;
   /** Next token. */
-  static public Token jj_nt;
-  static private int jj_ntk;
-  static private Token jj_scanpos, jj_lastpos;
-  static private int jj_la;
-  static private int jj_gen;
-  static final private int[] jj_la1 = new int[0];
+  public Token jj_nt;
+  private int jj_ntk;
+  private Token jj_scanpos, jj_lastpos;
+  private int jj_la;
+  private int jj_gen;
+  final private int[] jj_la1 = new int[0];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -2450,9 +2448,9 @@ public class MyLang implements MyLangConstants {
    private static void jj_la1_init_2() {
       jj_la1_2 = new int[] {};
    }
-  static final private JJCalls[] jj_2_rtns = new JJCalls[80];
-  static private boolean jj_rescan = false;
-  static private int jj_gc = 0;
+  final private JJCalls[] jj_2_rtns = new JJCalls[80];
+  private boolean jj_rescan = false;
+  private int jj_gc = 0;
 
   /** Constructor with InputStream. */
   public MyLang(java.io.InputStream stream) {
@@ -2460,13 +2458,6 @@ public class MyLang implements MyLangConstants {
   }
   /** Constructor with InputStream and supplied encoding */
   public MyLang(java.io.InputStream stream, String encoding) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser.  ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source = new MyLangTokenManager(jj_input_stream);
     token = new Token();
@@ -2477,11 +2468,11 @@ public class MyLang implements MyLangConstants {
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream) {
+  public void ReInit(java.io.InputStream stream) {
      ReInit(stream, null);
   }
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream, String encoding) {
+  public void ReInit(java.io.InputStream stream, String encoding) {
     try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
     token = new Token();
@@ -2493,13 +2484,6 @@ public class MyLang implements MyLangConstants {
 
   /** Constructor. */
   public MyLang(java.io.Reader stream) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser. ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
     token_source = new MyLangTokenManager(jj_input_stream);
     token = new Token();
@@ -2510,7 +2494,7 @@ public class MyLang implements MyLangConstants {
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.Reader stream) {
+  public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
     token = new Token();
@@ -2522,13 +2506,6 @@ public class MyLang implements MyLangConstants {
 
   /** Constructor with generated Token Manager. */
   public MyLang(MyLangTokenManager tm) {
-    if (jj_initialized_once) {
-      System.out.println("ERROR: Second call to constructor of static parser. ");
-      System.out.println("       You must either use ReInit() or set the JavaCC option STATIC to false");
-      System.out.println("       during parser generation.");
-      throw new Error();
-    }
-    jj_initialized_once = true;
     token_source = tm;
     token = new Token();
     jj_ntk = -1;
@@ -2547,7 +2524,7 @@ public class MyLang implements MyLangConstants {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  static private Token jj_consume_token(int kind) throws ParseException {
+  private Token jj_consume_token(int kind) throws ParseException {
     Token oldToken;
     if ((oldToken = token).next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -2572,8 +2549,8 @@ public class MyLang implements MyLangConstants {
   }
 
   static private final class LookaheadSuccess extends java.lang.Error { }
-  static final private LookaheadSuccess jj_ls = new LookaheadSuccess();
-  static private boolean jj_scan_token(int kind) {
+  final private LookaheadSuccess jj_ls = new LookaheadSuccess();
+  private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {
       jj_la--;
       if (jj_scanpos.next == null) {
@@ -2596,7 +2573,7 @@ public class MyLang implements MyLangConstants {
 
 
 /** Get the next Token. */
-  static final public Token getNextToken() {
+  final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
     jj_ntk = -1;
@@ -2605,7 +2582,7 @@ public class MyLang implements MyLangConstants {
   }
 
 /** Get the specific Token. */
-  static final public Token getToken(int index) {
+  final public Token getToken(int index) {
     Token t = token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;
@@ -2614,20 +2591,20 @@ public class MyLang implements MyLangConstants {
     return t;
   }
 
-  static private int jj_ntk() {
+  private int jj_ntk() {
     if ((jj_nt=token.next) == null)
       return (jj_ntk = (token.next=token_source.getNextToken()).kind);
     else
       return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
-  static private int[] jj_expentry;
-  static private int jj_kind = -1;
-  static private int[] jj_lasttokens = new int[100];
-  static private int jj_endpos;
+  private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  private int[] jj_expentry;
+  private int jj_kind = -1;
+  private int[] jj_lasttokens = new int[100];
+  private int jj_endpos;
 
-  static private void jj_add_error_token(int kind, int pos) {
+  private void jj_add_error_token(int kind, int pos) {
     if (pos >= 100) return;
     if (pos == jj_endpos + 1) {
       jj_lasttokens[jj_endpos++] = kind;
@@ -2653,7 +2630,7 @@ public class MyLang implements MyLangConstants {
   }
 
   /** Generate ParseException. */
-  static public ParseException generateParseException() {
+  public ParseException generateParseException() {
     jj_expentries.clear();
     boolean[] la1tokens = new boolean[66];
     if (jj_kind >= 0) {
@@ -2693,14 +2670,14 @@ public class MyLang implements MyLangConstants {
   }
 
   /** Enable tracing. */
-  static final public void enable_tracing() {
+  final public void enable_tracing() {
   }
 
   /** Disable tracing. */
-  static final public void disable_tracing() {
+  final public void disable_tracing() {
   }
 
-  static private void jj_rescan_token() {
+  private void jj_rescan_token() {
     jj_rescan = true;
     for (int i = 0; i < 80; i++) {
     try {
@@ -2798,7 +2775,7 @@ public class MyLang implements MyLangConstants {
     jj_rescan = false;
   }
 
-  static private void jj_save(int index, int xla) {
+  private void jj_save(int index, int xla) {
     JJCalls p = jj_2_rtns[index];
     while (p.gen > jj_gen) {
       if (p.next == null) { p = p.next = new JJCalls(); break; }
