@@ -1,0 +1,594 @@
+
+options {
+  LOOKAHEAD = 3;
+  CHOICE_AMBIGUITY_CHECK = 2;
+  OTHER_AMBIGUITY_CHECK = 1;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = false;
+  IGNORE_CASE = false;
+  USER_TOKEN_MANAGER = false;
+  SUPPORT_CLASS_VISIBILITY_PUBLIC = true;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = false;
+}
+
+PARSER_BEGIN(MyLangTree)
+
+package jjt;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+public class MyLangTree {
+
+  public static void main(String args[]) throws ParseException {
+      FileInputStream ml_file = null;
+      String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
+      String file_name = "MyLang_simple_1.ml";
+      File file = new File(parent_path + file_name);
+      if (file.isFile() && file.exists()) {
+        System.out.println("find file");
+      } else {
+        System.out.println("not find file");
+      }
+      try {
+        ml_file = new FileInputStream(file);
+      }
+      catch (FileNotFoundException e) {
+        System.out.print("src file open failed.");
+      }
+      //MyLang parser = new MyLang(System.in);
+      MyLangTree parser = new MyLangTree(ml_file);
+
+      System.out.println("Please type the valid statement...");
+      System.out.println("input>>");
+      try {
+        parser.Start();
+        System.out.println("OK.You have typed the correct statements.");
+      }
+      catch (Exception e){
+        System.out.println("Sorry! You have typed the invalid statements.");
+        System.out.println(e.getMessage());
+      }
+      catch (Error e){
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+      }
+  }
+}
+
+PARSER_END(MyLangTree)
+
+SKIP:{
+  " "
+  | "\t"
+  | "\n"
+  | "\r"
+  | <"//"(~["\n", "\r"])*("\n"|"\r"|"\r\n")>
+  | <"/*"(~["*"])*"*"(~["/"](~["*"])*"*")*"/">
+}
+
+TOKEN:
+{
+  <PROGRAM:"program">
+  | <CLASS:"class">
+  | <VAR:"var">
+  | <IS:"is">
+  | <BEGIN:"begin">
+  | <END:"end">
+  | <FUNCTION:"function">
+  | <RETURN:"return">
+  | <TYPE:"type">
+  | <BOOLEAN:"boolean">
+  | <INTEGER:"integer">
+  | <ARRAY:"array">
+  | <OF:"of">
+  | <OR:"or">
+  | <AND:"and">
+  | <NOT:"not">
+  | <EXTENDS:"extends">
+  | <IF:"if">
+  | <THEN:"then">
+  | <ELIF:"elif">
+  | <ELSE:"else">
+  | <WHILE:"while">
+  | <DO:"do">
+  | <REPEAT:"repeat">
+  | <UNTIL:"until">
+  | <FOREACH:"foreach">
+  | <IN:"in">
+  | <PRINT:"print">
+  | <YES:"yes">
+  | <NO:"no">
+
+}
+
+TOKEN:/* 定义标识符 */
+{
+ <IDENTIFIER:
+     <LETTER>
+   | <LETTER>(<LETTER>|<DIGIT>|<UNDERSCORE>)*(<LETTER>|<DIGIT>)+
+ >
+ | <#LETTER:["a"-"z", "A"-"Z"]>
+}
+
+TOKEN:/* 定义整数 */
+{
+ //<INTEGER_LITERAL:["1"-"9"](<DIGIT>)*>
+ <INTEGER_LITERAL:(<DIGIT>)+>
+}
+
+/* 定义实数
+TOKEN:
+{
+ <REAL_LITERAL:(<DIGIT>)+
+ | (<DIGIT>)+"."
+ | (<DIGIT>)+"."(<DIGIT>)+
+ | "."(<DIGIT>)+>
+}
+*/
+
+TOKEN:/*定义数字*/
+{
+ <DIGIT:["0"-"9"]>
+}
+
+TOKEN:/*定义符号*/
+{
+   <UNDERSCORE:"_">
+ | <VERTICALVERTICAL:"||">
+ | <ANDAND:"&&">
+ | <EQUALEQUAL:"==">
+ | <EXCLAMEQUAL:"!=">
+ | <GREATEREQUAL:">=">
+ | <SMALLEREQUAL:"<=">
+ | <GREATER:">">
+ | <SMALLER:"<">
+ | <COLONEQUAL:":=">
+ | <COMMA:",">
+ | <SEMICOLON:";">
+ | <COLON:":">
+ | <LEFTPARENTHESES:"(">
+ | <RIGHTPARENTHESES:")">
+ | <EQUAL:"=">
+ | <PLUS:"+">
+ | <MINUS:"-">
+ | <TIMES:"*">
+ | <DIVIDE:"/">
+ | <MOD:"%">
+ | <LEFTBRACKET:"[">
+ | <RIGHTBRACKET:"]">
+ | <POINT:".">
+ | <EXCLAM:"!">
+}
+
+
+
+SimpleNode  Start() #START :{}{
+  Program_declaration() <EOF>
+  {
+    return jjtThis;
+  }
+}
+
+void Program_declaration() :{}{
+  Program_head() Program_body()
+}
+
+void Program_head() :{}{
+  <PROGRAM> Program_name() Program_parameter_list() Program_parameters_type() [Program_return_declaration()]
+}
+
+void Program_body():{}{
+  Component_declarations() Program_variable_declarations() Program_process()
+}
+
+void Program_name():{}{
+  Identifier()
+}
+
+void Program_parameter_list():{}{
+  Parameter_list()
+}
+
+void Program_parameters_type():{}{
+  (Program_parameter_type())*
+}
+
+void Program_parameter_type():{}{
+  Variable_declaration()
+}
+
+void Program_return_declaration():{}{
+  <RETURN> Type() <SEMICOLON>
+}
+
+void Program_variable_declarations():{}{
+  <IS> (Program_variable_declaration())*
+}
+
+void Program_variable_declaration():{}{
+  Variable_declaration()
+}
+
+void Program_process():{}{
+  <BEGIN> Block() <END>
+}
+
+void Component_declarations():{}{
+  (Component_declaration())*
+}
+
+void Component_declaration():{}{
+  Function_declaration() | Type_and_class_declaration()
+}
+
+void Type_and_class_declaration():{}{
+  <TYPE> Identifier() <IS> (Type_declaration() | Class_declaration())
+}
+
+
+void Function_declaration():{}{
+  Function_head() Function_body()
+}
+
+void Function_head():{}{
+  <FUNCTION> Function_name() Function_parameter_list() Function_parameters_type() [Function_return_declaration()]
+}
+
+void Function_body():{}{
+  Function_variable_declarations() Function_process()
+}
+
+void Function_name():{}{
+  Identifier()
+}
+
+void Function_parameter_list():{}{
+  Parameter_list()
+}
+
+void Function_parameters_type():{}{
+  (Function_parameter_type())*
+}
+
+void Function_parameter_type():{}{
+  Variable_declaration()
+}
+
+void Function_return_declaration():{}{
+  <RETURN> Type() <SEMICOLON>
+}
+
+void Function_variable_declarations():{}{
+  <IS> (Function_variable_declaration())*
+}
+
+void Function_variable_declaration():{}{
+  Variable_declaration()
+}
+
+void Function_process():{}{
+  <BEGIN> Block() <END> <FUNCTION> Function_name() <SEMICOLON>
+}
+
+
+
+
+
+void Variable_declaration():{}{
+  <VAR> Identifier() <IS> Type() <SEMICOLON>
+}
+
+void Parameter_list():{}{
+  <LEFTPARENTHESES> [Parameters()] <RIGHTPARENTHESES>
+}
+
+void Parameters():{}{
+  Parameter() (<COMMA> Parameter())*
+}
+
+void Parameter():{}{
+  Identifier()
+}
+
+void Type_declaration():{}{
+  <ARRAY> <OF> <INTEGER_LITERAL> Type() <SEMICOLON>
+}
+
+
+
+
+void Class_declaration():{}{
+  Class_head() Class_body() Class_tail()
+}
+
+void Class_head():{}{
+ <CLASS> [Class_extend()]
+}
+
+void Class_body():{}{
+  Class_variable_declarations() Class_function_declarations()
+}
+
+void Class_tail():{}{
+  <END> <CLASS> <SEMICOLON>
+}
+
+void Class_name():{}{
+  Identifier()
+}
+
+void Class_extend():{}{
+  <EXTENDS> Class_type()
+}
+
+void Class_variable_declarations():{}{
+  (Class_variable_declaration())*
+}
+
+void Class_variable_declaration():{}{
+  Variable_declaration()
+}
+
+void Class_function_declarations():{}{
+  (Class_function_declaration())*
+}
+
+void Class_function_declaration():{}{
+  Function_declaration()
+}
+
+
+
+
+
+void Type():{}{
+  Primitive_type()
+  | Reference_type()
+}
+
+void Primitive_type():{}{
+  Numeric_type()
+  | <BOOLEAN>
+}
+
+void Numeric_type():{}{
+  Integral_type()
+}
+
+void Integral_type():{}{
+  <INTEGER>
+}
+
+void Reference_type():{}{
+  Class_type()
+}
+
+void Class_type():{}{
+  Type_name()
+}
+
+void Type_name():{}{
+  Identifier()
+}
+
+
+
+void Block():{}{
+  (Block_statement())*
+}
+
+void Block_statement():{}{
+  Statement()
+}
+
+void Statement():{}{
+  Statement_without_substatement()
+  | If_statement()
+  | While_statement()
+  | Repeat_statement()
+  | Foreach_statement()
+}
+
+void Statement_without_substatement():{}{
+    Empty_statement()
+    | Return_statement()
+    | Print_statement()
+    | Function_statement()
+    | Assignment_expression()
+}
+
+void Empty_statement():{}{
+    <SEMICOLON>
+}
+
+void Return_statement():{}{
+    <RETURN> (Expression() | Logical_expression()) <SEMICOLON>
+}
+
+void Print_statement():{}{
+    <PRINT> Expression() <SEMICOLON>
+}
+
+void Function_statement():{}{
+    Function_call_expression() <SEMICOLON>
+}
+
+void If_statement():{}{
+    <IF> Logical_expression() <THEN> Block() (Elif_statement())* [Else_statement()] <END> <IF>
+}
+
+void Elif_statement():{}{
+    <ELIF> Logical_expression() <THEN> Block()
+}
+
+void Else_statement():{}{
+    <ELSE> Block()
+}
+
+void While_statement():{}{
+    <WHILE> Logical_expression() <DO> Block() <END> <WHILE>
+}
+
+void Repeat_statement():{}{
+    <REPEAT> Block() <UNTIL> Logical_expression() <SEMICOLON>
+}
+
+void Foreach_statement():{}{
+    <FOREACH> Identifier() <IN> Identifier() <DO> Block() <END> <FOREACH>
+}
+
+
+
+
+void Expression():{}{
+  Arithmetic_expression()
+}
+
+void Arithmetic_expression():{}{
+  Additive_expression()
+}
+
+void Additive_expression():{}{
+  Multiplicative_expression() (Additive_operator() Multiplicative_expression())*
+}
+
+void Multiplicative_expression():{}{
+  Unary_expression() (Multiplicative_operator() Unary_expression())*
+}
+
+void Unary_expression():{}{
+  Constant_expression()
+  | Function_call_expression()
+  | Class_function_or_member()
+  | Left_value()
+  | (<LEFTPARENTHESES> Arithmetic_expression() <RIGHTPARENTHESES>)
+  | (Sign() Unary_expression())
+}
+
+void Logical_expression():{}{
+  Or_expression()
+}
+
+void Or_expression():{}{
+  And_expression() (Or_operator() And_expression())*
+}
+
+void And_expression():{}{
+  Unary_logical_expression() (And_operator() Unary_logical_expression())*
+}
+
+void Unary_logical_expression():{}{
+  Function_call_expression()
+  | Relation_expression()
+  | (<LEFTPARENTHESES> Unary_logical_expression() <RIGHTPARENTHESES>)
+  | (Unary_logical_operator() Unary_logical_expression())
+  | Default_logical_value()
+}
+
+void Relation_expression():{}{
+  Expression() Relation_operator() Expression()
+}
+
+void Assignment_expression():{}{
+  Left_value() <COLONEQUAL> Expression() <SEMICOLON>
+}
+
+void Left_value():{}{
+  Identifier()
+  (Array_access_expression() | Class_member_expression())*
+}
+
+void Constant_expression():{}{
+  [Sign()] Digits()
+}
+
+void Array_access_expression():{}{
+  <LEFTBRACKET> Arithmetic_expression() <RIGHTBRACKET>
+}
+
+void Class_member_expression():{}{
+  <POINT> Identifier() (<POINT> Identifier())*
+}
+
+void Function_call_expression():{}{
+  Function_name() Function_call_parameter_list()
+}
+
+void Function_call_parameter_list():{}{
+    <LEFTPARENTHESES> [Call_parameter() (<COMMA> Call_parameter())*] <RIGHTPARENTHESES>
+}
+
+void Call_parameter():{}{
+    Expression()
+}
+
+void Class_function_or_member():{}{
+    Class_name() <POINT> (Class_name() <POINT>)* Identifier() [Function_call_parameter_list()]
+}
+
+
+
+
+void Additive_operator():{}{
+   <PLUS>
+   | <MINUS>
+}
+
+void Multiplicative_operator():{}{
+  <TIMES>
+  | <DIVIDE>
+  | <MOD>
+}
+
+void Relation_operator():{}{
+  <EQUALEQUAL>
+  | <EXCLAMEQUAL>
+  | <GREATER>
+  | <GREATEREQUAL>
+  | <SMALLER>
+  | <SMALLEREQUAL>
+}
+
+void Or_operator():{}{
+  <OR>
+  | <VERTICALVERTICAL>
+}
+
+void And_operator():{}{
+  <AND>
+  | <ANDAND>
+}
+
+void Unary_logical_operator():{}{
+  <NOT>
+  | <EXCLAM>
+}
+
+void Sign():{}{
+  <PLUS>
+  | <MINUS>
+}
+
+void Digits():{}{
+  <INTEGER_LITERAL>
+}
+
+void Default_logical_value():{}{
+    <YES>
+    | <NO>
+}
+
+void Identifier():{}{
+  <IDENTIFIER>
+}

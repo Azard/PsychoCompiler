@@ -1,8 +1,7 @@
 package PsychoCompiler;
 
-import jj.MyLangTokenManager;
-import jj.Token;
-import jj.MyLang;
+import jjt.MyLangTree;
+import jjt.SimpleNode;
 
 
 import java.io.File;
@@ -16,7 +15,7 @@ public class CompilerMain {
         System.out.println("Hello World!");
         FileInputStream ml_file = null;
         String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
-        String file_name = "MyLang_simple_1.ml";
+        String file_name = "MyLang_simple_3.ml";
         File file = new File(parent_path + file_name);
         if (file.isFile() && file.exists()) {
             System.out.println("find file success");
@@ -30,10 +29,11 @@ public class CompilerMain {
             System.out.print("src file open failed.");
         }
 
-        MyLang parser = new MyLang(ml_file);
+        MyLangTree parser = new MyLangTree(ml_file);
 
 
         try {
+
             // Token test
             String temp = null;
             while(!(temp = parser.getNextToken().toString()).equals("")) {
@@ -43,8 +43,9 @@ public class CompilerMain {
             // Parser test
             file = new File(parent_path + file_name);
             ml_file = new FileInputStream(file);
-            parser = new MyLang(ml_file);
-            parser.Start();
+            parser = new MyLangTree(ml_file);
+            SimpleNode root = parser.Start();
+            root.dump("");
 
 
             System.out.println("Format true!");
