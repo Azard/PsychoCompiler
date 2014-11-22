@@ -32,7 +32,7 @@ public class MyLang {
   public static void main(String args[]) throws ParseException {
       FileInputStream ml_file = null;
       String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
-      String file_name = "MyLang_simple_4.ml";
+      String file_name = "MyLang_quick_sort.ml";
       File file = new File(parent_path + file_name);
       if (file.isFile() && file.exists()) {
         System.out.println("find file");
