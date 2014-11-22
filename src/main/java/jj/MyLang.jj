@@ -32,7 +32,7 @@ public class MyLang {
   public static void main(String args[]) throws ParseException {
       FileInputStream ml_file = null;
       String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
-      String file_name = "MyLang_simple_3.ml";
+      String file_name = "MyLang_simple_4.ml";
       File file = new File(parent_path + file_name);
       if (file.isFile() && file.exists()) {
         System.out.println("find file");
@@ -99,20 +99,37 @@ TOKEN:
   | <AND:"and">
   | <NOT:"not">
   | <EXTENDS:"extends">
+  | <IF:"if">
+  | <THEN:"then">
+  | <ELIF:"elif">
+  | <ELSE:"else">
+  | <WHILE:"while">
+  | <DO:"do">
+  | <REPEAT:"repeat">
+  | <UNTIL:"until">
+  | <FOREACH:"foreach">
+  | <IN:"in">
+  | <PRINT:"print">
+  | <YES:"yes">
+  | <NO:"no">
+
 }
 
 TOKEN:/* 定义整数 */
 {
- <INTEGER_LITERAL:["1"-"9"](<DIGIT>)*>
+ //<INTEGER_LITERAL:["1"-"9"](<DIGIT>)*>
+ <INTEGER_LITERAL:(<DIGIT>)+>
 }
 
-TOKEN:/* 定义实数 */
+/* 定义实数
+TOKEN:
 {
  <REAL_LITERAL:(<DIGIT>)+
  | (<DIGIT>)+"."
  | (<DIGIT>)+"."(<DIGIT>)+
  | "."(<DIGIT>)+>
 }
+*/
 
 TOKEN:/*定义数字*/
 {
@@ -368,13 +385,68 @@ void Type_name():{}{
 
 
 
-
-
-
-// TODO Block and Statement Command
 void Block():{}{
-  // TODO
-  [<VAR>]
+  (Block_statement())*
+}
+
+void Block_statement():{}{
+  Statement()
+}
+
+void Statement():{}{
+  Statement_without_substatement()
+  | If_statement()
+  | While_statement()
+  | Repeat_statement()
+  | Foreach_statement()
+}
+
+void Statement_without_substatement():{}{
+    Empty_statement()
+    | Return_statement()
+    | Print_statement()
+    | Function_statement()
+    | Assignment_expression()
+}
+
+void Empty_statement():{}{
+    <SEMICOLON>
+}
+
+void Return_statement():{}{
+    <RETURN> (Expression() | Logical_expression()) <SEMICOLON>
+}
+
+void Print_statement():{}{
+    <PRINT> Expression() <SEMICOLON>
+}
+
+void Function_statement():{}{
+    Function_call_expression() <SEMICOLON>
+}
+
+void If_statement():{}{
+    <IF> Logical_expression() <THEN> Block() (Elif_statement())* [Else_statement()] <END> <IF>
+}
+
+void Elif_statement():{}{
+    <ELIF> Logical_expression() <THEN> Block()
+}
+
+void Else_statement():{}{
+    <ELSE> Block()
+}
+
+void While_statement():{}{
+    <WHILE> Logical_expression() <DO> Block() <END> <WHILE>
+}
+
+void Repeat_statement():{}{
+    <REPEAT> Block() <UNTIL> Logical_expression() <SEMICOLON>
+}
+
+void Foreach_statement():{}{
+    <FOREACH> Identifier() <IN> Identifier() <DO> Block() <END> <FOREACH>
 }
 
 
@@ -382,7 +454,6 @@ void Block():{}{
 
 void Expression():{}{
   Arithmetic_expression()
-  | Assignment_expression()
 }
 
 void Arithmetic_expression():{}{
@@ -399,10 +470,9 @@ void Multiplicative_expression():{}{
 
 void Unary_expression():{}{
   Constant_expression()
-  | Identifier()
-  | Array_access_expression()
-  | Class_member_expression()
   | Function_call_expression()
+  | Class_function_or_member()
+  | Left_value()
   | (<LEFTPARENTHESES> Arithmetic_expression() <RIGHTPARENTHESES>)
   | (Sign() Unary_expression())
 }
@@ -420,28 +490,24 @@ void And_expression():{}{
 }
 
 void Unary_logical_expression():{}{
-  Arithmetic_expression()
+  Function_call_expression()
   | Relation_expression()
   | (<LEFTPARENTHESES> Unary_logical_expression() <RIGHTPARENTHESES>)
   | (Unary_logical_operator() Unary_logical_expression())
+  | Default_logical_value()
 }
 
 void Relation_expression():{}{
   Expression() Relation_operator() Expression()
 }
 
-void Assignment():{}{
-  Assignment_expression()
-}
-
 void Assignment_expression():{}{
-  Left_value() <COLONEQUAL> Expression()
+  Left_value() <COLONEQUAL> Expression() <SEMICOLON>
 }
 
 void Left_value():{}{
   Identifier()
-  | Array_access_expression()
-  | Class_member_expression()
+  (Array_access_expression() | Class_member_expression())*
 }
 
 void Constant_expression():{}{
@@ -449,18 +515,28 @@ void Constant_expression():{}{
 }
 
 void Array_access_expression():{}{
-  Identifier() <LEFTBRACKET> Arithmetic_expression() <RIGHTBRACKET>
+  <LEFTBRACKET> Arithmetic_expression() <RIGHTBRACKET>
 }
 
 void Class_member_expression():{}{
-  Class_name() <POINT> Identifier() (<POINT> Identifier())*
+  <POINT> Identifier() (<POINT> Identifier())*
 }
 
 void Function_call_expression():{}{
-  Function_name() Function_parameter_list()
+  Function_name() Function_call_parameter_list()
 }
 
+void Function_call_parameter_list():{}{
+    <LEFTPARENTHESES> [Call_parameter() (<COMMA> Call_parameter())*] <RIGHTPARENTHESES>
+}
 
+void Call_parameter():{}{
+    Expression()
+}
+
+void Class_function_or_member():{}{
+    Class_name() <POINT> (Class_name() <POINT>)* Identifier() [Function_call_parameter_list()]
+}
 
 
 
@@ -506,16 +582,13 @@ void Sign():{}{
 }
 
 void Digits():{}{
-  Digit()
-  | Digit() Digits()
+  <INTEGER_LITERAL>
 }
 
-void Digit():{}{
-  <DIGIT>
+void Default_logical_value():{}{
+    <YES>
+    | <NO>
 }
-
-
-
 
 void Identifier():{}{
   <IDENTIFIER>

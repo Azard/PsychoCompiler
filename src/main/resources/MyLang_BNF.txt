@@ -80,9 +80,8 @@
 <type name> ::= <identifier>
 
 
-#块(Block)和命令(Command)
-<block> ::= {<block statements>}
-<block statements> ::= <block statement> | <block statements> <block statement>
+#块(Block)和命令(Command)*
+<block> ::= {<block statement>}
 <block statement> ::= <statement>
 <statement> ::= <statement without substatement> 
               | <if statement> 
@@ -92,18 +91,19 @@
 
 <statement without substatement> ::= <empty statement>
                                    | <return statement>
-                                   | <expression statement>
                                    | <print statement>
+                                   | <function statement>
+                                   | <assignment_expression>
 <empty statement> ::= <semicolon> <line-end>
-<return statement> ::= "return" <white-space> <expression> <semicolon> <line-end>
-<expression statement> ::= <assignment>
+<return statement> ::= "return" <white-space> (<expression> | <logical expression>) <semicolon> <line-end>
 <print statement> ::= "print" <white-space> <expression> <semicolon> <line-end>
+<function statement> ::= <function call expression> <SEMICOLON>
 
 <if statement> ::= "if" <white-space> <logical expression> <white-space> "then" <line-end> <block> {<elif statement>} [<else statement>] "end" <white-space> "if" <line-end>
 <elif statement> ::= "elif" <white-space> <logical expression> <white-space> "then" <line-end> <block>
 <else statement> ::= "else" <line-end> <block>
 
-<while statement> ::= "whilte" <white-space> <logical expression> <whilte-space> "do" <line-end> <block> "end" <white-space> "while" <line-end>
+<while statement> ::= "while" <white-space> <logical expression> <whilte-space> "do" <line-end> <block> "end" <white-space> "while" <line-end>
 
 <repeat statement> ::= "repeat" <line-end> <block> "until" <white-space> <logical expression> <semicolon> <line-end>
 
@@ -115,41 +115,39 @@
 
 #表达式(Expression)
 <expression> ::= <arithmetic expression>
-               | <assignment expression>
 
 <arithmetic expression> ::= <additive expression>
 <additive expression> ::= <multiplicative expression> {<additive operator> <multiplicative expression>}
 <multiplicative expression> ::= <unary expression> {<multiplicative operator> <unary expression>}
-<unary expression> ::= <constant expression> 
-                     | <identifier> 
-                     | <array access expression> 
-                     | <class member expression>
+<unary expression> ::= <constant expression>
                      | <function call expression>
+                     | <class function or member>
+                     | <left value>
                      | "(" <arithmetic expression> ")"
                      | <sign> <unary expression>
 
 <logical expression> ::= <or expression> 
 <or expression> ::= <and expression> {<or operator> <and expression>}
 <and expression> ::= <unary logical expression> {<and operator> <unary logical expression>}
-<unary logical expression> ::= <arithmetic expression>
-                             | <relation expression>
+<unary logical expression> ::= <relation expression>
                              | "(" <unary logical expression> ")"
                              | <unary logical operator> <unary logical expression>
+                             | <default logical value>
+
 <relation expression> ::= <expression> <white-space> <relation operator> <white-space> <expression>
+<default logical value> ::= <yes> | <no>
 
-
-<assignment> ::= <assignment expression>
 <assignment expression> ::= <left value> <white-space> ":=" <white-space> <expression>
 
-<left value> ::= <identifier>
-               | <array access expression>
-               | <class member expression>
+<left value> ::= <identifier> {<array access expression>| <class member expression>}
 <constant expression> ::= [<sign>] <digits>
-<array access expression> ::= <identifier> "[" <arithmetic expression> "]"
-<class member expression> ::= <class name> {"." <identifier>}+
+<array access expression> ::= "[" <arithmetic expression> "]"
+<class member expression> ::= {"." <identifier>}+
                             | <class member expression> "." <identifier>
-<function call expression> ::= <function name> <function parameter list>
-
+<function call expression> ::= <function name> <function call parameter list>
+<function call parameter list> ::= "(" [<call parameter> {"," <call parameter}]  ")"
+<call parameter> ::= <expression>
+<class function or member> ::= <class name> "." {<class name> "."} <identifier> [<function call parameter list>]
 
 
 #Tokens单元
@@ -167,5 +165,7 @@
            | <digit> <digits>
 <digit> ::= "0" | <non zero digit>
 <non zero digit> ::= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-<keyword> ::= "program" | "function" | "var" | "is" | "integer" | "boolean" | "return" | "true" | "false" |"begin" | "end" | "if" | "else" | "elif" | "then" | "type" | "array" | "of" | "do" | "while" | "repeat" | "until" | "foreach" | "in" | "print" | "class" | "extends"
+<yes> ::= "yes"
+<no> ::= "no"
+<keyword> ::= "program" | "function" | "var" | "is" | "integer" | "boolean" | "return" | "yes" | "no" |"begin" | "end" | "if" | "else" | "elif" | "then" | "type" | "array" | "of" | "do" | "while" | "repeat" | "until" | "foreach" | "in" | "print" | "class" | "extends"
 

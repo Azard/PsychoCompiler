@@ -45,65 +45,89 @@ public interface MyLangConstants {
   /** RegularExpression Id. */
   int EXTENDS = 23;
   /** RegularExpression Id. */
-  int INTEGER_LITERAL = 24;
+  int IF = 24;
   /** RegularExpression Id. */
-  int REAL_LITERAL = 25;
+  int THEN = 25;
   /** RegularExpression Id. */
-  int DIGIT = 26;
+  int ELIF = 26;
   /** RegularExpression Id. */
-  int UNDERSCORE = 27;
+  int ELSE = 27;
   /** RegularExpression Id. */
-  int VERTICALVERTICAL = 28;
+  int WHILE = 28;
   /** RegularExpression Id. */
-  int ANDAND = 29;
+  int DO = 29;
   /** RegularExpression Id. */
-  int EQUALEQUAL = 30;
+  int REPEAT = 30;
   /** RegularExpression Id. */
-  int EXCLAMEQUAL = 31;
+  int UNTIL = 31;
   /** RegularExpression Id. */
-  int GREATEREQUAL = 32;
+  int FOREACH = 32;
   /** RegularExpression Id. */
-  int SMALLEREQUAL = 33;
+  int IN = 33;
   /** RegularExpression Id. */
-  int GREATER = 34;
+  int PRINT = 34;
   /** RegularExpression Id. */
-  int SMALLER = 35;
+  int YES = 35;
   /** RegularExpression Id. */
-  int COLONEQUAL = 36;
+  int NO = 36;
   /** RegularExpression Id. */
-  int COMMA = 37;
+  int INTEGER_LITERAL = 37;
   /** RegularExpression Id. */
-  int SEMICOLON = 38;
+  int DIGIT = 38;
   /** RegularExpression Id. */
-  int COLON = 39;
+  int UNDERSCORE = 39;
   /** RegularExpression Id. */
-  int LEFTPARENTHESES = 40;
+  int VERTICALVERTICAL = 40;
   /** RegularExpression Id. */
-  int RIGHTPARENTHESES = 41;
+  int ANDAND = 41;
   /** RegularExpression Id. */
-  int EQUAL = 42;
+  int EQUALEQUAL = 42;
   /** RegularExpression Id. */
-  int PLUS = 43;
+  int EXCLAMEQUAL = 43;
   /** RegularExpression Id. */
-  int MINUS = 44;
+  int GREATEREQUAL = 44;
   /** RegularExpression Id. */
-  int TIMES = 45;
+  int SMALLEREQUAL = 45;
   /** RegularExpression Id. */
-  int DIVIDE = 46;
+  int GREATER = 46;
   /** RegularExpression Id. */
-  int MOD = 47;
+  int SMALLER = 47;
   /** RegularExpression Id. */
-  int LEFTBRACKET = 48;
+  int COLONEQUAL = 48;
   /** RegularExpression Id. */
-  int RIGHTBRACKET = 49;
+  int COMMA = 49;
   /** RegularExpression Id. */
-  int POINT = 50;
+  int SEMICOLON = 50;
   /** RegularExpression Id. */
-  int EXCLAM = 51;
+  int COLON = 51;
   /** RegularExpression Id. */
-  int IDENTIFIER = 52;
+  int LEFTPARENTHESES = 52;
   /** RegularExpression Id. */
-  int LETTER = 53;
+  int RIGHTPARENTHESES = 53;
+  /** RegularExpression Id. */
+  int EQUAL = 54;
+  /** RegularExpression Id. */
+  int PLUS = 55;
+  /** RegularExpression Id. */
+  int MINUS = 56;
+  /** RegularExpression Id. */
+  int TIMES = 57;
+  /** RegularExpression Id. */
+  int DIVIDE = 58;
+  /** RegularExpression Id. */
+  int MOD = 59;
+  /** RegularExpression Id. */
+  int LEFTBRACKET = 60;
+  /** RegularExpression Id. */
+  int RIGHTBRACKET = 61;
+  /** RegularExpression Id. */
+  int POINT = 62;
+  /** RegularExpression Id. */
+  int EXCLAM = 63;
+  /** RegularExpression Id. */
+  int IDENTIFIER = 64;
+  /** RegularExpression Id. */
+  int LETTER = 65;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -134,8 +158,20 @@ public interface MyLangConstants {
     "\"and\"",
     "\"not\"",
     "\"extends\"",
+    "\"if\"",
+    "\"then\"",
+    "\"elif\"",
+    "\"else\"",
+    "\"while\"",
+    "\"do\"",
+    "\"repeat\"",
+    "\"until\"",
+    "\"foreach\"",
+    "\"in\"",
+    "\"print\"",
+    "\"yes\"",
+    "\"no\"",
     "<INTEGER_LITERAL>",
-    "<REAL_LITERAL>",
     "<DIGIT>",
     "\"_\"",
     "\"||\"",
