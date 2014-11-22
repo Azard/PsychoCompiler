@@ -14,7 +14,7 @@ public class CompilerMain {
 
         System.out.println("Hello World!");
         FileInputStream ml_file = null;
-        String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
+        String parent_path = "D:\\compiler\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
         String file_name = "MyLang_simple_3.ml";
         File file = new File(parent_path + file_name);
         if (file.isFile() && file.exists()) {

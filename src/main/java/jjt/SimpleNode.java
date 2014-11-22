@@ -2,6 +2,8 @@
 /* JavaCCOptions:MULTI=false,NODE_USES_PARSER=false,VISITOR=false,TRACK_TOKENS=false,NODE_PREFIX=AST,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package jjt;
 
+import java.awt.*;
+
 public
 class SimpleNode implements Node {
 
@@ -70,6 +72,18 @@ class SimpleNode implements Node {
         SimpleNode n = (SimpleNode)children[i];
         if (n != null) {
           n.dump(prefix + " ");
+        }
+      }
+    }
+  }
+  public void dumptoarea(String prefix,TextArea area) {
+    //System.out.println(toString(prefix));
+    area.append(toString(prefix)+"\n");
+    if (children != null) {
+      for (int i = 0; i < children.length; ++i) {
+        SimpleNode n = (SimpleNode)children[i];
+        if (n != null) {
+          n.dumptoarea(prefix + " ",area);
         }
       }
     }
