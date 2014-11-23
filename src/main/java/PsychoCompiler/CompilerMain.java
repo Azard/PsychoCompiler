@@ -15,7 +15,7 @@ public class CompilerMain {
         System.out.println("Hello World!");
         FileInputStream ml_file = null;
         String parent_path = "D:\\compiler\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
-        String file_name = "MyLang_simple_3.ml";
+        String file_name = "MyLang_error_token_1.ml";
         File file = new File(parent_path + file_name);
         if (file.isFile() && file.exists()) {
             System.out.println("find file success");

@@ -20,6 +20,7 @@ class CompilerGUI extends Frame implements ActionListener {
     FileDialog  open;
     Button      load, ge_token, ge_tree,quit;//按钮
     TextArea    tarea;//文本框
+    TextArea    tareaout;
     FileInputStream ml_file = null;
     FileInputStream ml_file2 = null;
     MyLangTree parser;
@@ -27,24 +28,28 @@ class CompilerGUI extends Frame implements ActionListener {
         super("Compiler");//标题
         setLayout(null);//布局
         setBackground(Color.gray);//背景色
-        setSize(800, 700);//设置大学
+        setSize(1140, 700);//设置大学
         setVisible(true);//设置可见
-        load = new Button("加载文件");//创建按钮
-        ge_token = new Button("生成Token");
-        ge_tree = new Button("生成语法树");
-        quit = new Button("退出");
+        load = new Button("Load File");//创建按钮
+        ge_token = new Button("GE Token");
+        ge_tree = new Button("GE Tree");
+        quit = new Button("Exit");
         tarea = new TextArea("");//创建文本框
+        tareaout = new TextArea("");
         tarea.setFont(new Font("SansSerif",Font.BOLD,15));
+        tareaout.setFont(new Font("SansSerif",Font.BOLD,15));
         add(load);//添加按钮
         add(ge_token);
         add(ge_tree);
         add(quit);
         add(tarea);
-        tarea.setBounds(30, 50, 640, 600);//设置文本框位置
-        load.setBounds(700, 60, 70, 30);
-        ge_token.setBounds(700, 120, 70, 30);
-        ge_tree.setBounds(700, 180, 70, 30);
-        quit.setBounds(700,240,70,30);
+        add(tareaout);
+        tarea.setBounds(30, 50, 440, 600);//设置文本框位置
+        tareaout.setBounds(600,50,500,600);
+        load.setBounds(500, 60, 70, 30);
+        ge_token.setBounds(500, 120, 70, 30);
+        ge_tree.setBounds(500, 180, 70, 30);
+        quit.setBounds(500,240,70,30);
         open = new FileDialog(this, "打开", FileDialog.LOAD);//新建对话框
         //sv = new FileDialog(this, "保存", FileDialog.SAVE);
 
@@ -78,13 +83,7 @@ class CompilerGUI extends Frame implements ActionListener {
                 } else {
                     System.out.println("not find file");
                 }
-                try {
-                    ml_file = new FileInputStream(prog);
-                    ml_file2=new FileInputStream(prog);
-                }
-                catch (FileNotFoundException e3) {
-                    System.out.print("src file open failed.");
-                }
+
                 FileReader fr = new FileReader(prog);
                 BufferedReader br = new BufferedReader(fr);//读取文件
                 tarea.setText("");//设置文本框内容为空
@@ -106,31 +105,49 @@ class CompilerGUI extends Frame implements ActionListener {
                // bw.write(gt, 0, gt.length());//将文本框内容写入文件
                 //bw.flush();//真正的写入文件
                 //fw.close();//关闭写入
-                if(ml_file !=null){
+                if(!tarea.getText().equals("")){
+                    File temfile = new File("tempfile");
+                    try {
+                        FileWriter fw = new FileWriter(temfile);
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        String gt = tarea.getText();//获取文本框内容
+                        bw.write(gt, 0, gt.length());//将文本框内容写入文件
+                        bw.flush();//真正的写入文件
+                        fw.close();//关闭写入
+                    }catch(Exception e6){
+                        e6.printStackTrace();
+                    }
+                    try {
+                        ml_file = new FileInputStream(temfile);
+                        //ml_file2=new FileInputStream();
+                    }
+                    catch (FileNotFoundException e3) {
+                        System.out.print("src file open failed.");
+                    }
                     parser = new MyLangTree(ml_file);
                     // Token test
                     String temp = null;
-                    tarea.setText(" ");
+                    tareaout.setText(" ");
                    //String str;
                     int i=0;
                     while(!(temp = parser.getNextToken().toString()).equals("")) {
                         //System.out.print(temp + " ");
-                        tarea.append(temp + ' ');
+                        tareaout.append(temp + ' ');
                         i++;
-                        if(i%10 == 0)tarea.append("\n");
+                        if(i%10 == 0)tareaout.append("\n");
                     }
                     //System.out.println(" ");
                 }
                 else{
-                    tarea.setText(" ");
-                    tarea.append("file has not been load");
+                    tareaout.setText(" ");
+                    tareaout.append("file has not been load");
                 }
-            }catch (Exception e4){
+            }catch (Error e4){
                     System.out.println("Token Error::");
                     System.out.println(e4.getMessage());
-                    tarea.setText(" ");
-                    tarea.append("\n\n");
-                    tarea.append("Token Error::" + e4.getMessage());
+                    tareaout.setText(" ");
+                    tareaout.append("\n\n");
+                    tareaout.append("Token Error::" + e4.getMessage());
             }
 
         }
@@ -139,24 +156,42 @@ class CompilerGUI extends Frame implements ActionListener {
                 //file = new File(parent_path + file_name);
 
                 //ml_file = new FileInputStream(file);
-                if(ml_file2 != null) {
+                if(!tarea.getInputContext().equals("")) {
+                    File temfile = new File("tempfile");
+                    try {
+                        FileWriter fw = new FileWriter(temfile);
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        String gt = tarea.getText();//获取文本框内容
+                        bw.write(gt, 0, gt.length());//将文本框内容写入文件
+                        bw.flush();//真正的写入文件
+                        fw.close();//关闭写入
+                    }catch(Exception e6){
+                        e6.printStackTrace();
+                    }
+                    try {
+                        ml_file2 = new FileInputStream(temfile);
+                        //ml_file2=new FileInputStream();
+                    }
+                    catch (FileNotFoundException e3) {
+                        System.out.print("src file open failed.");
+                    }
                     parser = new MyLangTree(ml_file2);
                     SimpleNode root = parser.Start();
-                    tarea.setText(" ");
-                    root.dumptoarea("",tarea);
+                    tareaout.setText(" ");
+                    root.dumptoarea("",tareaout);
                    // root.dump("");
                  //   System.out.println("Format true!");
                 }
                 else{
-                    tarea.setText(" ");
-                    tarea.append("file has not been load");
+                    tareaout.setText(" ");
+                    tareaout.append("file has not been load");
                 }
             } catch (Exception e5){
                 //System.out.println("Parser Exception:");
                 //System.out.println(e5.getMessage());
-                tarea.setText(" ");
-                tarea.append("\n\n");
-                tarea.append("Parser Exception:" + e5.getMessage());
+                tareaout.setText(" ");
+                tareaout.append("\n\n");
+                tareaout.append("Parser Exception:" + e5.getMessage());
             }
         if(e.getSource() == quit)
             try{
@@ -165,6 +200,5 @@ class CompilerGUI extends Frame implements ActionListener {
             }catch (Exception e3) {
                 e3.printStackTrace();
             }
-
     }
 }
