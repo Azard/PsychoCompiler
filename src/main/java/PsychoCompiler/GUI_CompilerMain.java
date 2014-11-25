@@ -28,7 +28,7 @@ class CompilerGUI extends Frame implements ActionListener {
         super("Compiler");//标题
         setLayout(null);//布局
         setBackground(Color.gray);//背景色
-        setSize(1140, 700);//设置大学
+        setSize(1240, 700);//设置大学
         setVisible(true);//设置可见
         load = new Button("Load File");//创建按钮
         ge_token = new Button("GE Token");
@@ -45,7 +45,7 @@ class CompilerGUI extends Frame implements ActionListener {
         add(tarea);
         add(tareaout);
         tarea.setBounds(30, 50, 440, 600);//设置文本框位置
-        tareaout.setBounds(600,50,500,600);
+        tareaout.setBounds(600,50,600,600);
         load.setBounds(500, 60, 70, 30);
         ge_token.setBounds(500, 120, 70, 30);
         ge_tree.setBounds(500, 180, 70, 30);
@@ -178,8 +178,9 @@ class CompilerGUI extends Frame implements ActionListener {
                     parser = new MyLangTree(ml_file2);
                     SimpleNode root = parser.Start();
                     tareaout.setText(" ");
-                    root.dumptoarea("",tareaout);
-                   // root.dump("");
+                    tareaout.setText("");
+                    root.dumptoarea("",true,tareaout);
+                    root.dump("");
                  //   System.out.println("Format true!");
                 }
                 else{

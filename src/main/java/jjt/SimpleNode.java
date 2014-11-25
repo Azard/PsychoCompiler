@@ -12,7 +12,7 @@ class SimpleNode implements Node {
   protected int id;
   protected Object value;
   protected MyLangTree parser;
-
+  static int spacecount=0;
   public SimpleNode(int i) {
     id = i;
   }
@@ -71,21 +71,60 @@ class SimpleNode implements Node {
       for (int i = 0; i < children.length; ++i) {
         SimpleNode n = (SimpleNode)children[i];
         if (n != null) {
-          n.dump(prefix + " ");
+          n.dump(prefix + "    ");
         }
       }
     }
   }
-  public void dumptoarea(String prefix,TextArea area) {
+  public void printspace(String prefix)
+  {
+    for(int i=0;i<spacecount;i++)
+    {
+      if(i%4==0)
+        prefix+="|";
+      else
+        prefix+=" ";
+    }
+  }
+  public void dumptoarea(String prefix,boolean end,TextArea area) {
     //System.out.println(toString(prefix));
-    area.append(toString(prefix)+"\n");
+    area.append(toString(prefix+"|->")+"\n");
     if (children != null) {
-      for (int i = 0; i < children.length; ++i) {
-        SimpleNode n = (SimpleNode)children[i];
-        if (n != null) {
-          n.dumptoarea(prefix + " ",area);
+      if(end) {
+        for (int i = 0; i < children.length; ++i) {
+          SimpleNode n = (SimpleNode) children[i];
+          if (n != null) {
+            if (i == children.length - 1) {
+              String temp = "";
+              for (int j = 0; j < prefix.length(); j++) {
+                temp += ' ';
+              }
+              //prefix = temp;
+              n.dumptoarea(prefix + "   ", true, area);
+            } else {
+              n.dumptoarea(prefix + "   ", false, area);
+            }
+          }
         }
       }
+      else{
+        for (int i = 0; i < children.length; ++i) {
+          SimpleNode n = (SimpleNode) children[i];
+          if (n != null) {
+            if (i == children.length - 1) {
+              String temp = "";
+              for (int j = 0; j < prefix.length(); j++) {
+                temp += ' ';
+              }
+              //prefix = temp;
+              n.dumptoarea(prefix + "|  ", true, area);
+            } else {
+              n.dumptoarea(prefix + "|  ", false, area);
+            }
+          }
+        }
+      }
+      //prefix=prefix.substring(4);
     }
   }
 }
