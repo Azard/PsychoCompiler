@@ -88,7 +88,7 @@ class SimpleNode implements Node {
   }
   public void dumptoarea(String prefix,boolean end,TextArea area) {
     //System.out.println(toString(prefix));
-    area.append(toString(prefix+"|->")+"\n");
+    area.append(toString(prefix+"|-->")+"\n");
     if (children != null) {
       if(end) {
         for (int i = 0; i < children.length; ++i) {
@@ -100,9 +100,9 @@ class SimpleNode implements Node {
                 temp += ' ';
               }
               //prefix = temp;
-              n.dumptoarea(prefix + "   ", true, area);
+              n.dumptoarea(prefix + "    ", true, area);
             } else {
-              n.dumptoarea(prefix + "   ", false, area);
+              n.dumptoarea(prefix + "    ", false, area);
             }
           }
         }
@@ -117,9 +117,9 @@ class SimpleNode implements Node {
                 temp += ' ';
               }
               //prefix = temp;
-              n.dumptoarea(prefix + "|  ", true, area);
+              n.dumptoarea(prefix + "|   ", true, area);
             } else {
-              n.dumptoarea(prefix + "|  ", false, area);
+              n.dumptoarea(prefix + "|   ", false, area);
             }
           }
         }

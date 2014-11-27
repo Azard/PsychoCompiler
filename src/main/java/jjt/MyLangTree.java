@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 
 public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLangTreeConstants {/*@bgen(jjtree)*/
   protected JJTMyLangTreeState jjtree = new JJTMyLangTreeState();
+
   public static void main(String args[]) throws ParseException {
       FileInputStream ml_file = null;
       String parent_path = "I:\u005c\u005cJetBrains\u005c\u005cPsychoCompiler\u005c\u005csrc\u005c\u005cmain\u005c\u005cresources\u005c\u005cMyLang_code\u005c\u005c";
@@ -42,11 +43,13 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
       }
   }
 
+
   final public SimpleNode Start() throws ParseException {
+
                              /*@bgen(jjtree) START */
-  SimpleNode jjtn000 = new SimpleNode(JJTSTART);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
+                             SimpleNode jjtn000 = new SimpleNode(JJTSTART);
+                             boolean jjtc000 = true;
+                             jjtree.openNodeScope(jjtn000);
     try {
       Program_declaration();
       jj_consume_token(0);
@@ -77,12 +80,15 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
 
   final public void Program_declaration() throws ParseException {
                              /*@bgen(jjtree) Program_declaration */
-  SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_DECLARATION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
+                             SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_DECLARATION);
+                             boolean jjtc000 = true;
+                             jjtree.openNodeScope(jjtn000);Token t = token;
     try {
       Program_head();
       Program_body();
+    jjtree.closeNodeScope(jjtn000, true);
+    jjtc000 = false;
+   jjtn000.value = t.image;
     } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -106,9 +112,9 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
 
   final public void Program_head() throws ParseException {
                       /*@bgen(jjtree) Program_head */
-  SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_HEAD);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
+                      SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_HEAD);
+                      boolean jjtc000 = true;
+                      jjtree.openNodeScope(jjtn000);Token t = token;
     try {
       jj_consume_token(PROGRAM);
       Program_name();
@@ -119,6 +125,9 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
       } else {
         ;
       }
+    jjtree.closeNodeScope(jjtn000, true);
+    jjtc000 = false;
+   jjtn000.value = t.image;
     } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -3427,11 +3436,6 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     finally { jj_save(79, xla); }
   }
 
-  private boolean jj_3R_82() {
-    if (jj_3R_94()) return true;
-    return false;
-  }
-
   private boolean jj_3R_36() {
     if (jj_3R_82()) return true;
     return false;
@@ -3640,13 +3644,13 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     return false;
   }
 
-  private boolean jj_3_1() {
-    if (jj_3R_19()) return true;
+  private boolean jj_3R_28() {
+    if (jj_3R_77()) return true;
     return false;
   }
 
-  private boolean jj_3R_28() {
-    if (jj_3R_77()) return true;
+  private boolean jj_3_1() {
+    if (jj_3R_19()) return true;
     return false;
   }
 
@@ -4475,6 +4479,11 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     return false;
   }
 
+  private boolean jj_3R_82() {
+    if (jj_3R_94()) return true;
+    return false;
+  }
+
   /** Generated Token Manager. */
   public MyLangTreeTokenManager token_source;
   SimpleCharStream jj_input_stream;
@@ -4633,7 +4642,8 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
 
 /** Get the next Token. */
   final public Token getNextToken() {
-    if (token.next != null) token = token.next;
+    if (token.next != null)
+      token = token.next;
     else token = token.next = token_source.getNextToken();
     jj_ntk = -1;
     jj_gen++;

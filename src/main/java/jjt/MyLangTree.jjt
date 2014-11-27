@@ -173,19 +173,22 @@ TOKEN:/*定义符号*/
 
 
 
-SimpleNode  Start() #START :{}{
+SimpleNode  Start() #START :{Token t = token;}{
   Program_declaration() <EOF>
   {
+    jjtThis.value = t.image;
     return jjtThis;
   }
 }
 
-void Program_declaration() :{}{
+void Program_declaration() :{Token t = token;}{
   Program_head() Program_body()
+  {jjtThis.value = t.image;}
 }
 
-void Program_head() :{}{
+void Program_head() :{Token t = token;}{
   <PROGRAM> Program_name() Program_parameter_list() Program_parameters_type() [Program_return_declaration()]
+  {jjtThis.value = t.image;}
 }
 
 void Program_body():{}{

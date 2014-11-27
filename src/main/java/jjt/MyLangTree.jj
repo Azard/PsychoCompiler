@@ -178,10 +178,10 @@ TOKEN:/*\u7039\u6c2b\u7b9f\u7ed7\ufe40\u5f7f*/
 
 
 SimpleNode  Start()        :{/*@bgen(jjtree) START */
-  SimpleNode jjtn000 = new SimpleNode(JJTSTART);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}{/*@bgen(jjtree) START */
+                             SimpleNode jjtn000 = new SimpleNode(JJTSTART);
+                             boolean jjtc000 = true;
+                             jjtree.openNodeScope(jjtn000);
+/*@egen*/Token t = token;}{/*@bgen(jjtree) START */
   try {
 /*@egen*/
   Program_declaration() <EOF>/*@bgen(jjtree)*/
@@ -191,6 +191,7 @@ SimpleNode  Start()        :{/*@bgen(jjtree) START */
   }
 /*@egen*/
   {
+    jjtn000.value = t.image;
     return jjtn000;
   }/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
@@ -216,13 +217,19 @@ SimpleNode  Start()        :{/*@bgen(jjtree) START */
 }
 
 void Program_declaration() :{/*@bgen(jjtree) Program_declaration */
-  SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_DECLARATION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}{/*@bgen(jjtree) Program_declaration */
+                             SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_DECLARATION);
+                             boolean jjtc000 = true;
+                             jjtree.openNodeScope(jjtn000);
+/*@egen*/Token t = token;}{/*@bgen(jjtree) Program_declaration */
   try {
 /*@egen*/
   Program_head() Program_body()/*@bgen(jjtree)*/
+  {
+    jjtree.closeNodeScope(jjtn000, true);
+    jjtc000 = false;
+  }
+/*@egen*/
+  {jjtn000.value = t.image;}/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -246,13 +253,19 @@ void Program_declaration() :{/*@bgen(jjtree) Program_declaration */
 }
 
 void Program_head() :{/*@bgen(jjtree) Program_head */
-  SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_HEAD);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}{/*@bgen(jjtree) Program_head */
+                      SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_HEAD);
+                      boolean jjtc000 = true;
+                      jjtree.openNodeScope(jjtn000);
+/*@egen*/Token t = token;}{/*@bgen(jjtree) Program_head */
   try {
 /*@egen*/
   <PROGRAM> Program_name() Program_parameter_list() Program_parameters_type() [Program_return_declaration()]/*@bgen(jjtree)*/
+  {
+    jjtree.closeNodeScope(jjtn000, true);
+    jjtc000 = false;
+  }
+/*@egen*/
+  {jjtn000.value = t.image;}/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
