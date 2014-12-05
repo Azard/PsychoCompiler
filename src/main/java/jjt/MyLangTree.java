@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 
 public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLangTreeConstants {/*@bgen(jjtree)*/
   protected JJTMyLangTreeState jjtree = new JJTMyLangTreeState();
-
   public static void main(String args[]) throws ParseException {
       FileInputStream ml_file = null;
       String parent_path = "I:\u005c\u005cJetBrains\u005c\u005cPsychoCompiler\u005c\u005csrc\u005c\u005cmain\u005c\u005cresources\u005c\u005cMyLang_code\u005c\u005c";
@@ -43,18 +42,19 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
       }
   }
 
-
   final public SimpleNode Start() throws ParseException {
-
                              /*@bgen(jjtree) START */
                              SimpleNode jjtn000 = new SimpleNode(JJTSTART);
                              boolean jjtc000 = true;
                              jjtree.openNodeScope(jjtn000);
+                             jjtn000.jjtSetFirstToken(getToken(1));Token t = token;
     try {
       Program_declaration();
       jj_consume_token(0);
     jjtree.closeNodeScope(jjtn000, true);
     jjtc000 = false;
+    jjtn000.jjtSetLastToken(getToken(0));
+    jjtn000.value = t.image;
     {if (true) return jjtn000;}
     } catch (Throwable jjte000) {
     if (jjtc000) {
@@ -73,6 +73,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
     throw new Error("Missing return statement in function");
@@ -82,12 +83,14 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
                              /*@bgen(jjtree) Program_declaration */
                              SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_DECLARATION);
                              boolean jjtc000 = true;
-                             jjtree.openNodeScope(jjtn000);Token t = token;
+                             jjtree.openNodeScope(jjtn000);
+                             jjtn000.jjtSetFirstToken(getToken(1));Token t = token;
     try {
       Program_head();
       Program_body();
     jjtree.closeNodeScope(jjtn000, true);
     jjtc000 = false;
+    jjtn000.jjtSetLastToken(getToken(0));
    jjtn000.value = t.image;
     } catch (Throwable jjte000) {
     if (jjtc000) {
@@ -106,6 +109,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -114,7 +118,8 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
                       /*@bgen(jjtree) Program_head */
                       SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_HEAD);
                       boolean jjtc000 = true;
-                      jjtree.openNodeScope(jjtn000);Token t = token;
+                      jjtree.openNodeScope(jjtn000);
+                      jjtn000.jjtSetFirstToken(getToken(1));Token t = token;
     try {
       jj_consume_token(PROGRAM);
       Program_name();
@@ -127,6 +132,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
       }
     jjtree.closeNodeScope(jjtn000, true);
     jjtc000 = false;
+    jjtn000.jjtSetLastToken(getToken(0));
    jjtn000.value = t.image;
     } catch (Throwable jjte000) {
     if (jjtc000) {
@@ -145,6 +151,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -154,6 +161,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_BODY);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Component_declarations();
       Program_variable_declarations();
@@ -175,6 +183,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -184,6 +193,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_NAME);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Identifier();
     } catch (Throwable jjte000) {
@@ -203,6 +213,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -212,6 +223,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_PARAMETER_LIST);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Parameter_list();
     } catch (Throwable jjte000) {
@@ -231,6 +243,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -240,6 +253,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_PARAMETERS_TYPE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       label_1:
       while (true) {
@@ -267,6 +281,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -276,6 +291,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_PARAMETER_TYPE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Variable_declaration();
     } catch (Throwable jjte000) {
@@ -295,6 +311,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -304,6 +321,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_RETURN_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(RETURN);
       Type();
@@ -325,6 +343,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -334,6 +353,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_VARIABLE_DECLARATIONS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(IS);
       label_2:
@@ -362,6 +382,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -371,6 +392,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_VARIABLE_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Variable_declaration();
     } catch (Throwable jjte000) {
@@ -390,6 +412,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -399,6 +422,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPROGRAM_PROCESS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(BEGIN);
       Block();
@@ -420,6 +444,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -429,6 +454,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCOMPONENT_DECLARATIONS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       label_3:
       while (true) {
@@ -456,6 +482,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -465,6 +492,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCOMPONENT_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_5(3)) {
         Function_declaration();
@@ -491,6 +519,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -500,6 +529,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTTYPE_AND_CLASS_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(TYPE);
       Identifier();
@@ -529,6 +559,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -538,6 +569,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Function_head();
       Function_body();
@@ -558,6 +590,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -567,6 +600,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_HEAD);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(FUNCTION);
       Function_name();
@@ -594,6 +628,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -603,6 +638,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_BODY);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Function_variable_declarations();
       Function_process();
@@ -623,6 +659,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -632,6 +669,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_NAME);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Identifier();
     } catch (Throwable jjte000) {
@@ -651,6 +689,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -660,6 +699,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_PARAMETER_LIST);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Parameter_list();
     } catch (Throwable jjte000) {
@@ -679,6 +719,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -688,6 +729,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_PARAMETERS_TYPE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       label_4:
       while (true) {
@@ -715,6 +757,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -724,6 +767,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_PARAMETER_TYPE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Variable_declaration();
     } catch (Throwable jjte000) {
@@ -743,6 +787,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -752,6 +797,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_RETURN_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(RETURN);
       Type();
@@ -773,6 +819,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -782,6 +829,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_VARIABLE_DECLARATIONS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(IS);
       label_5:
@@ -810,6 +858,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -819,6 +868,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_VARIABLE_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Variable_declaration();
     } catch (Throwable jjte000) {
@@ -838,6 +888,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -847,6 +898,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_PROCESS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(BEGIN);
       Block();
@@ -871,6 +923,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -880,6 +933,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTVARIABLE_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(VAR);
       Identifier();
@@ -903,6 +957,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -912,6 +967,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPARAMETER_LIST);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(LEFTPARENTHESES);
       if (jj_2_12(3)) {
@@ -937,6 +993,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -946,6 +1003,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPARAMETERS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Parameter();
       label_6:
@@ -975,6 +1033,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -984,6 +1043,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPARAMETER);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Identifier();
     } catch (Throwable jjte000) {
@@ -1003,6 +1063,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1012,6 +1073,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTTYPE_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(ARRAY);
       jj_consume_token(OF);
@@ -1035,6 +1097,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1044,6 +1107,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Class_head();
       Class_body();
@@ -1065,6 +1129,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1074,6 +1139,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_HEAD);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(CLASS);
       if (jj_2_14(3)) {
@@ -1098,6 +1164,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
    if (jjtc000) {
      jjtree.closeNodeScope(jjtn000, true);
+     jjtn000.jjtSetLastToken(getToken(0));
    }
     }
   }
@@ -1107,6 +1174,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_BODY);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Class_variable_declarations();
       Class_function_declarations();
@@ -1127,6 +1195,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1136,6 +1205,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_TAIL);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(END);
       jj_consume_token(CLASS);
@@ -1143,6 +1213,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1152,6 +1223,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_NAME);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Identifier();
     } catch (Throwable jjte000) {
@@ -1171,6 +1243,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1180,6 +1253,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_EXTEND);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(EXTENDS);
       Class_type();
@@ -1200,6 +1274,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1209,6 +1284,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_VARIABLE_DECLARATIONS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       label_7:
       while (true) {
@@ -1236,6 +1312,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1245,6 +1322,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_VARIABLE_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Variable_declaration();
     } catch (Throwable jjte000) {
@@ -1264,6 +1342,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1273,6 +1352,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_FUNCTION_DECLARATIONS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       label_8:
       while (true) {
@@ -1300,6 +1380,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1309,6 +1390,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_FUNCTION_DECLARATION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Function_declaration();
     } catch (Throwable jjte000) {
@@ -1328,6 +1410,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1337,6 +1420,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTTYPE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_17(3)) {
         Primitive_type();
@@ -1363,6 +1447,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1372,6 +1457,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPRIMITIVE_TYPE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_19(3)) {
         Numeric_type();
@@ -1398,6 +1484,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1407,6 +1494,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTNUMERIC_TYPE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Integral_type();
     } catch (Throwable jjte000) {
@@ -1426,6 +1514,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1435,11 +1524,13 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTINTEGRAL_TYPE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(INTEGER);
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1449,6 +1540,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTREFERENCE_TYPE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Class_type();
     } catch (Throwable jjte000) {
@@ -1468,6 +1560,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1477,6 +1570,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_TYPE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Type_name();
     } catch (Throwable jjte000) {
@@ -1496,6 +1590,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1505,6 +1600,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTTYPE_NAME);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Identifier();
     } catch (Throwable jjte000) {
@@ -1524,6 +1620,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1533,6 +1630,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTBLOCK);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       label_9:
       while (true) {
@@ -1560,6 +1658,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1569,6 +1668,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTBLOCK_STATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Statement();
     } catch (Throwable jjte000) {
@@ -1588,6 +1688,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1597,6 +1698,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTSTATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_22(3)) {
         Statement_without_substatement();
@@ -1629,6 +1731,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -1638,6 +1741,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTSTATEMENT_WITHOUT_SUBSTATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_27(3)) {
         Empty_statement();
@@ -1670,6 +1774,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -1679,11 +1784,13 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTEMPTY_STATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(SEMICOLON);
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -1693,6 +1800,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTRETURN_STATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(RETURN);
       if (jj_2_32(3)) {
@@ -1721,6 +1829,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -1730,6 +1839,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTPRINT_STATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(PRINT);
       Expression();
@@ -1751,6 +1861,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -1760,6 +1871,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_STATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Function_call_expression();
       jj_consume_token(SEMICOLON);
@@ -1780,6 +1892,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -1789,6 +1902,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTIF_STATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(IF);
       Logical_expression();
@@ -1827,6 +1941,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -1836,6 +1951,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTELIF_STATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(ELIF);
       Logical_expression();
@@ -1858,6 +1974,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -1867,6 +1984,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTELSE_STATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(ELSE);
       Block();
@@ -1887,6 +2005,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -1896,6 +2015,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTWHILE_STATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(WHILE);
       Logical_expression();
@@ -1920,6 +2040,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -1929,6 +2050,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTREPEAT_STATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(REPEAT);
       Block();
@@ -1952,6 +2074,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -1961,6 +2084,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFOREACH_STATEMENT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(FOREACH);
       Identifier();
@@ -1987,6 +2111,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -1996,6 +2121,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTEXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Arithmetic_expression();
     } catch (Throwable jjte000) {
@@ -2015,6 +2141,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2024,6 +2151,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTARITHMETIC_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Additive_expression();
     } catch (Throwable jjte000) {
@@ -2043,6 +2171,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2052,6 +2181,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTADDITIVE_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Multiplicative_expression();
       label_11:
@@ -2081,6 +2211,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2090,6 +2221,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTMULTIPLICATIVE_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Unary_expression();
       label_12:
@@ -2119,6 +2251,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2128,6 +2261,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTUNARY_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_38(3)) {
         Constant_expression();
@@ -2165,6 +2299,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2174,6 +2309,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTLOGICAL_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Or_expression();
     } catch (Throwable jjte000) {
@@ -2193,6 +2329,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2202,6 +2339,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTOR_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       And_expression();
       label_13:
@@ -2231,6 +2369,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2240,6 +2379,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTAND_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Unary_logical_expression();
       label_14:
@@ -2269,6 +2409,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2278,6 +2419,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTUNARY_LOGICAL_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_46(3)) {
         Function_call_expression();
@@ -2313,6 +2455,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2322,6 +2465,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTRELATION_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Expression();
       Relation_operator();
@@ -2343,6 +2487,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2352,6 +2497,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTASSIGNMENT_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Left_value();
       jj_consume_token(COLONEQUAL);
@@ -2374,6 +2520,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2383,6 +2530,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTLEFT_VALUE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Identifier();
       label_15:
@@ -2418,6 +2566,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2427,6 +2576,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCONSTANT_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_54(3)) {
         Sign();
@@ -2451,6 +2601,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2460,6 +2611,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTARRAY_ACCESS_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(LEFTBRACKET);
       Arithmetic_expression();
@@ -2481,6 +2633,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2490,6 +2643,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_MEMBER_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(POINT);
       Identifier();
@@ -2520,6 +2674,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2529,6 +2684,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_CALL_EXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Function_name();
       Function_call_parameter_list();
@@ -2549,6 +2705,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2558,6 +2715,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTFUNCTION_CALL_PARAMETER_LIST);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(LEFTPARENTHESES);
       if (jj_2_57(3)) {
@@ -2593,6 +2751,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -2602,6 +2761,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCALL_PARAMETER);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Expression();
     } catch (Throwable jjte000) {
@@ -2621,6 +2781,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -2630,6 +2791,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTCLASS_FUNCTION_OR_MEMBER);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       Class_name();
       jj_consume_token(POINT);
@@ -2666,6 +2828,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -2675,6 +2838,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTADDITIVE_OPERATOR);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_60(3)) {
         jj_consume_token(PLUS);
@@ -2687,6 +2851,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
      if (jjtc000) {
        jjtree.closeNodeScope(jjtn000, true);
+       jjtn000.jjtSetLastToken(getToken(0));
      }
     }
   }
@@ -2696,6 +2861,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTMULTIPLICATIVE_OPERATOR);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_62(3)) {
         jj_consume_token(TIMES);
@@ -2710,6 +2876,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2719,6 +2886,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTRELATION_OPERATOR);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_65(3)) {
         jj_consume_token(EQUALEQUAL);
@@ -2739,6 +2907,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2748,6 +2917,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTOR_OPERATOR);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_71(3)) {
         jj_consume_token(OR);
@@ -2760,6 +2930,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2769,6 +2940,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTAND_OPERATOR);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_73(3)) {
         jj_consume_token(AND);
@@ -2781,6 +2953,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2790,6 +2963,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTUNARY_LOGICAL_OPERATOR);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_75(3)) {
         jj_consume_token(NOT);
@@ -2802,6 +2976,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2811,6 +2986,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTSIGN);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_77(3)) {
         jj_consume_token(PLUS);
@@ -2823,6 +2999,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2832,11 +3009,13 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTDIGITS);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(INTEGER_LITERAL);
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -2846,6 +3025,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTDEFAULT_LOGICAL_VALUE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       if (jj_2_79(3)) {
         jj_consume_token(YES);
@@ -2858,6 +3038,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
+        jjtn000.jjtSetLastToken(getToken(0));
       }
     }
   }
@@ -2867,11 +3048,13 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
   SimpleNode jjtn000 = new SimpleNode(JJTIDENTIFIER);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
+  jjtn000.jjtSetFirstToken(getToken(1));
     try {
       jj_consume_token(IDENTIFIER);
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
+      jjtn000.jjtSetLastToken(getToken(0));
     }
     }
   }
@@ -3434,11 +3617,6 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     try { return !jj_3_80(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(79, xla); }
-  }
-
-  private boolean jj_3R_36() {
-    if (jj_3R_82()) return true;
-    return false;
   }
 
   private boolean jj_3R_83() {
@@ -4484,6 +4662,11 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
     return false;
   }
 
+  private boolean jj_3R_36() {
+    if (jj_3R_82()) return true;
+    return false;
+  }
+
   /** Generated Token Manager. */
   public MyLangTreeTokenManager token_source;
   SimpleCharStream jj_input_stream;
@@ -4642,8 +4825,7 @@ public class MyLangTree/*@bgen(jjtree)*/implements MyLangTreeTreeConstants, MyLa
 
 /** Get the next Token. */
   final public Token getNextToken() {
-    if (token.next != null)
-      token = token.next;
+    if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
     jj_ntk = -1;
     jj_gen++;

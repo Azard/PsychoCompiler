@@ -15,7 +15,7 @@ public class CompilerMain {
         System.out.println("Hello World!");
         FileInputStream ml_file = null;
         String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
-        String file_name = "MyLang_error_token_1.ml";
+        String file_name = "MyLang_simple_1.ml";
         File file = new File(parent_path + file_name);
         if (file.isFile() && file.exists()) {
             System.out.println("find file success");
@@ -46,7 +46,12 @@ public class CompilerMain {
             ml_file = new FileInputStream(file);
             parser = new MyLangTree(ml_file);
             SimpleNode root = parser.Start();
-            root.dump("");
+
+            //root.dump("");
+            analyse(root);
+
+
+
 
 
             System.out.println("Format true!");
@@ -58,5 +63,19 @@ public class CompilerMain {
             System.out.println("Token Error:");
             System.out.println(e.getMessage());
         }
+    }
+
+    public static void analyse(SimpleNode root) {
+        System.out.println("Fuck: " + root.toString());
+        System.out.println("Fuck: " + root.jjtGetChild(0).toString());
+        System.out.println("Fuck: " + root.jjtGetChild(0).jjtGetChild(0).toString());
+        SimpleNode ttt = (SimpleNode)root.jjtGetChild(0).jjtGetChild(0);
+        System.out.println("Fuck: " + ttt.toString());
+        System.out.println("Fuck: " + ttt.jjtGetFirstToken().toString());
+        System.out.println("Fuck: " + ttt.jjtGetFirstToken().next.toString());
+        System.out.println("Fuck: " + ttt.jjtGetFirstToken().next.next.toString());
+        System.out.println("Fuck: " + ttt.jjtGetFirstToken().next.next.next.toString());
+        System.out.println("Fuck: " + ttt.jjtGetFirstToken().next.next.next.next.toString());
+        System.out.println("Fuck: " + ttt.jjtGetFirstToken().next.next.next.next.next.toString());
     }
 }

@@ -169,3 +169,66 @@
 <no> ::= "no"
 <keyword> ::= "program" | "function" | "var" | "is" | "integer" | "boolean" | "return" | "yes" | "no" |"begin" | "end" | "if" | "else" | "elif" | "then" | "type" | "array" | "of" | "do" | "while" | "repeat" | "until" | "foreach" | "in" | "print" | "class" | "extends"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public void dumptoarea(String prefix,boolean end,TextArea area) {
+    //System.out.println(toString(prefix));
+    area.append(toString(prefix+"|-->")+"\n");
+    if (children != null) {
+      if(end) {
+        for (int i = 0; i < children.length; ++i) {
+          SimpleNode n = (SimpleNode) children[i];
+          if (n != null) {
+            if (i == children.length - 1) {
+              String temp = "";
+              for (int j = 0; j < prefix.length(); j++) {
+                temp += ' ';
+              }
+              //prefix = temp;
+              n.dumptoarea(prefix + "    ", true, area);
+            } else {
+              n.dumptoarea(prefix + "    ", false, area);
+            }
+          }
+        }
+      }
+      else{
+        for (int i = 0; i < children.length; ++i) {
+          SimpleNode n = (SimpleNode) children[i];
+          if (n != null) {
+            if (i == children.length - 1) {
+              String temp = "";
+              for (int j = 0; j < prefix.length(); j++) {
+                temp += ' ';
+              }
+              //prefix = temp;
+              n.dumptoarea(prefix + "|   ", true, area);
+            } else {
+              n.dumptoarea(prefix + "|   ", false, area);
+            }
+          }
+        }
+      }
+      //prefix=prefix.substring(4);
+    }
+  }
+
+
+

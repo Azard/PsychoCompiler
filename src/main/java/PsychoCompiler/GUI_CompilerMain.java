@@ -179,7 +179,8 @@ class CompilerGUI extends Frame implements ActionListener {
                     SimpleNode root = parser.Start();
                     tareaout.setText(" ");
                     tareaout.setText("");
-                    root.dumptoarea("",true,tareaout);
+                    //TODO
+                    //root.dumptoarea("",true,tareaout);
                     root.dump("");
                  //   System.out.println("Format true!");
                 }
