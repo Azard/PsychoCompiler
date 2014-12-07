@@ -3,7 +3,7 @@
 package jjt;
 
 public
-class SimpleNode extends GuiNode implements Node {
+class SimpleNode  implements Node {
 
   protected Node parent;
   protected Node[] children;

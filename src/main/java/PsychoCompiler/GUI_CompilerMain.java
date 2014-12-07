@@ -2,6 +2,8 @@ package PsychoCompiler;
 import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
+
+import jjt.GuiNode;
 import jjt.MyLangTree;
 import jjt.SimpleNode;
 
@@ -176,11 +178,11 @@ class CompilerGUI extends Frame implements ActionListener {
                         System.out.print("src file open failed.");
                     }
                     parser = new MyLangTree(ml_file2);
-                    SimpleNode root = parser.Start();
+                    GuiNode root = new GuiNode(parser.Start());
                     tareaout.setText(" ");
                     tareaout.setText("");
                     //TODO
-                    //root.dumptoarea("",true,tareaout);
+                    root.dumptoarea("",true,tareaout);
                     root.dump("");
                  //   System.out.println("Format true!");
                 }
