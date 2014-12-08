@@ -8,6 +8,7 @@ import sun.java2d.pipe.SpanShapeRenderer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -88,7 +89,6 @@ public class CompilerMain {
 
     // 查找是否有该type
     public static boolean check_type_exist(Type_table type_table, String name) {
-
         if (name.equals("integer") || name.equals("boolean"))
             return true;
         for (int i = 0; i < type_table.type_name.size(); i++) {
@@ -98,6 +98,51 @@ public class CompilerMain {
         }
         return false;
     }
+
+    // 查找是否有该var
+    public static boolean check_variable_name_repeat(Variable_table variable_table, String name) {
+        for (int i = 0; i < variable_table.variable_name.size(); i++) {
+            if (variable_table.variable_name.get(i).toString().equals(name)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // 搜索function
+    public static int search_function_by_name(Function_table function_table, String name) {
+        int num = function_table.function_name.size();
+        for (int i = 0; i < num; i++) {
+            if (function_table.function_name.get(i).toString().equals(name)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // 搜索type
+    public static int search_type_by_name(Type_table type_table, String name) {
+        int num = type_table.type_name.size();
+        for (int i = 0; i < num; i++) {
+            if (type_table.type_name.get(i).toString().equals(name)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // 搜索variable
+    public static int search_var_by_name(Variable_table variable_table, String name) {
+        int num = variable_table.variable_name.size();
+        for (int i = 0; i < num; i++) {
+            if (variable_table.variable_name.get(i).toString().equals(name)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
 
     // 读取main的变量申明
     public static void read_main_variable(SimpleNode declarations, Symbol_table symbol_table, Variable_table variable_table, Type_table type_table) {
@@ -158,7 +203,6 @@ public class CompilerMain {
     }
 
     public static void read_function_def(SimpleNode declarations, Symbol_table symbol_table, Type_table type_table, Function_table function_table) {
-        // TODO
         try {
             int component_num = declarations.jjtGetNumChildren();
             for (int i = 0; i < component_num; i++) {
@@ -189,36 +233,99 @@ public class CompilerMain {
                         // 没有参数
                         function_table.function_parameter_num.add(0);
                         function_table.function_parameter_type.add(new ArrayList());
+                        function_table.function_parameter_name.add(new ArrayList());
                     }
                     else {
                         // 有参数
                         SimpleNode node_parameters = (SimpleNode)node_parameter_list.jjtGetChild(0);
                         int parameter_num = node_parameters.jjtGetNumChildren();
+                        function_table.function_parameter_num.add(parameter_num);
+                        ArrayList mul_para_name = new ArrayList();  // 形参列表
                         for (int j = 0; j < parameter_num; j++) {
-                            // TODO 参数加入函数的结构中，判断重复
+                            // 参数名加入函数的结构中，判断重复
                             SimpleNode temp_parameter_node = (SimpleNode)node_parameters.jjtGetChild(j);
-                            System.out.println(temp_parameter_node.jjtGetFirstToken().toString());
+                            String para_name = temp_parameter_node.jjtGetFirstToken().toString();
+                            for (int k = 0; k < mul_para_name.size(); k++) {
+                                if (mul_para_name.get(k).toString().equals(para_name)) {
+                                    throw new Exception("function " + function_name + " parameter name repeat");
+                                }
+                            }
+                            mul_para_name.add(para_name);
                         }
-
+                        function_table.function_parameter_name.add(mul_para_name);
                     }
 
-                    // TODO 参数的类型申明保存
-                    // TODO return类型保存，先判断有无return
+
+                    // 参数类型的保存和check
+                    int para_type_num = node_function_parameters_type.jjtGetNumChildren();
+                    if (para_type_num != Integer.parseInt(function_table.function_parameter_num.get(function_table.function_parameter_num.size()-1).toString())) {
+                        // 类型申明和传参数量没对上
+                        throw new Exception("function " + function_name + " parameter type declare number wrong");
+                    }
+                    ArrayList para_name_list = (ArrayList)function_table.function_parameter_name.get(function_table.function_parameter_name.size()-1);
+                    ArrayList para_type_list = new ArrayList();
+                    for (int j = 0; j < para_type_num; j++) {
+                        SimpleNode node_function_para_type = (SimpleNode)node_function_parameters_type.jjtGetChild(j);
+                        // 参数名判断是否和传参一致
+                        String temp_name = node_function_para_type.jjtGetFirstToken().next.toString();
+                        if (!temp_name.equals(para_name_list.get(j).toString())) {
+                            throw new Exception("function " + function_name + " parameter name wrong");
+                        }
+                        // 参数类型判断是否存在
+                        String temp_type = node_function_para_type.jjtGetFirstToken().next.next.next.toString();
+                        if (!check_type_exist(type_table, temp_type)) {
+                            throw new Exception("function " + function_name + " parameter type not exist");
+                        }
+                        para_type_list.add(temp_type);
+                    }
+                    function_table.function_parameter_type.add(para_type_list);
 
 
+                    // 保存return的类型
+                    if (node_function_return_declaration == null) {
+                        // 没有返回值的情况
+                        function_table.function_return_type.add(null);
+                    } else {
+                        // 有返回值的情况
+                        String temp_return_type = node_function_return_declaration.jjtGetFirstToken().next.toString();
+                        if(!check_type_exist(type_table, temp_return_type)) {
+                            // 不存在返回的类型
+                            throw new Exception("function " + function_name + " return type not exist");
+                        }
+                        function_table.function_return_type.add(temp_return_type);
+                    }
 
 
+                    // 函数内部变量申明
+                    SimpleNode node_function_variable_declarations = (SimpleNode)node_function_body.jjtGetChild(0);
+                    Variable_table variable_list = new Variable_table();
+                    ArrayList function_para_name_list = (ArrayList)function_table.function_parameter_name.get(function_table.function_parameter_name.size()-1);
 
+                    int function_variable_num = node_function_variable_declarations.jjtGetNumChildren();
+                    for (int j = 0; j < function_variable_num; j++) {
+                        SimpleNode node_function_variable_declaration = (SimpleNode)node_function_variable_declarations.jjtGetChild(j);
+                        SimpleNode node_variable_declaration = (SimpleNode)node_function_variable_declaration.jjtGetChild(0);
+                        String var_name = node_variable_declaration.jjtGetFirstToken().next.toString();
+                        String var_type = node_variable_declaration.jjtGetFirstToken().next.next.next.toString();
+                        if (!check_variable_name_repeat(variable_list, var_name)) {
+                            throw new Exception("variable " + var_type + " declaration name repeat");
+                        }
+                        if (!check_type_exist(type_table, var_type)) {
+                            throw new Exception("variable " + var_type + " declaration type not exist");
+                        }
+                        // 不与parameter名字重复
+                        for (int k = 0; k < function_para_name_list.size(); k++ ) {
+                            if (function_para_name_list.get(k).toString().equals(var_name)) {
+                                throw new Exception("variable " + var_type + " declaration name repeat");
+                            }
+                        }
+                        variable_list.variable_name.add(var_name);
+                        variable_list.variable_type.add(var_type);
+                        variable_list.variable_value.add(0);
+                    }
+                    function_table.function_variable_list.add(variable_list);
 
-
-
-
-
-
-
-
-
-
+                    
                 }
             }
         } catch (Exception e){
@@ -257,7 +364,6 @@ public class CompilerMain {
         read_main_variable(node_program_variable_declarations, symbol_table, variable_table, type_table);
 
         show_symbol_table(symbol_table);
-
     }
 }
 
@@ -274,8 +380,11 @@ class Symbol_table {
 class Function_table {
     ArrayList function_name = new ArrayList();              // String
     ArrayList function_parameter_num = new ArrayList();     // int
-    ArrayList function_parameter_type = new ArrayList();    // ArrayList(String)，二维的List对应参数类型
-    ArrayList function_return_type = new ArrayList();       // String
+    ArrayList function_parameter_type = new ArrayList();    // ArrayList<String>，二维的List对应参数类型
+    ArrayList function_parameter_name = new ArrayList();    // ArrayList<String>，形参名字
+    ArrayList function_return_type = new ArrayList();       // String, null表示没有返回值
+
+    ArrayList function_variable_list = new ArrayList();     // Variable_table，保存函数声明的变量
     ArrayList function_run_node = new ArrayList();
 }
 
