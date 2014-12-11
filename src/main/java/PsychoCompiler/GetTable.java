@@ -12,59 +12,73 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
-public class CompilerMain {
-    public static void main(String[] args) {
-
-
-
-        System.out.println("Hello World!");
-        FileInputStream ml_file = null;
-        String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
-        String file_name = "MyLang_simple_1.ml";
-        File file = new File(parent_path + file_name);
-        if (file.isFile() && file.exists()) {
-            System.out.println("find file success");
-        } else {
-            System.out.println("not find file");
-        }
-        try {
-            ml_file = new FileInputStream(file);
-        }
-        catch (FileNotFoundException e) {
-            System.out.print("src file open failed.");
-        }
-
-        MyLangTree parser = new MyLangTree(ml_file);
-
-
-        try {
-
-            // Token test
-            String temp = null;
-            while(!(temp = parser.getNextToken().toString()).equals("")) {
-                System.out.print(temp + " ");
-            }
-            System.out.println(" ");
-
-            // Parser test
-            file = new File(parent_path + file_name);
-            ml_file = new FileInputStream(file);
-            parser = new MyLangTree(ml_file);
-            SimpleNode root = parser.Start();
-
-            //root.dump("");
-            analyse(root);
-
-            System.out.println("Format true!");
-        } catch (Exception e){
-            System.out.println("Parser Exception:");
-            System.out.println(e.getMessage());
-        }
-        catch (Error e){
-            System.out.println("Token Error:");
-            System.out.println(e.getMessage());
-        }
+public class GetTable {
+    Symbol_table  symbol_table;
+    Struct_Program struct_program;
+    Variable_table variable_table;
+    Type_table type_table;
+    Function_table function_table;
+    SimpleNode root;
+    GetTable(SimpleNode s){
+        root=s;
+        symbol_table = new Symbol_table();
+        struct_program = new Struct_Program();
+        variable_table = new Variable_table();
+        type_table = new Type_table();
+        function_table = new Function_table();
     }
+//    public static void main(String[] args) {
+//
+//
+//
+//        System.out.println("Hello World!");
+//        FileInputStream ml_file = null;
+//        String parent_path = "I:\\JetBrains\\PsychoCompiler\\src\\main\\resources\\MyLang_code\\";
+//        String file_name = "MyLang_simple_1.ml";
+//        File file = new File(parent_path + file_name);
+//        if (file.isFile() && file.exists()) {
+//            System.out.println("find file success");
+//        } else {
+//            System.out.println("not find file");
+//        }
+//        try {
+//            ml_file = new FileInputStream(file);
+//        }
+//        catch (FileNotFoundException e) {
+//            System.out.print("src file open failed.");
+//        }
+//
+//        MyLangTree parser = new MyLangTree(ml_file);
+//
+//
+//        try {
+//
+//            // Token test
+//            String temp = null;
+//            while(!(temp = parser.getNextToken().toString()).equals("")) {
+//                System.out.print(temp + " ");
+//            }
+//            System.out.println(" ");
+//
+//            // Parser test
+//            file = new File(parent_path + file_name);
+//            ml_file = new FileInputStream(file);
+//            parser = new MyLangTree(ml_file);
+//            SimpleNode root = parser.Start();
+//
+//            //root.dump("");
+//            analyse(root);
+//
+//            System.out.println("Format true!");
+//        } catch (Exception e){
+//            System.out.println("Parser Exception:");
+//            System.out.println(e.getMessage());
+//        }
+//        catch (Error e){
+//            System.out.println("Token Error:");
+//            System.out.println(e.getMessage());
+//        }
+//    }
 
     // 打印符号表
     public static void show_symbol_table(Symbol_table symbol_table) {
@@ -325,7 +339,7 @@ public class CompilerMain {
                     }
                     function_table.function_variable_list.add(variable_list);
 
-                    
+
                 }
             }
         } catch (Exception e){
@@ -334,13 +348,9 @@ public class CompilerMain {
         }
     }
 
-    public static void analyse(SimpleNode root) {
+    public void analyse() {
 
-        Symbol_table symbol_table = new Symbol_table();
-        Struct_Program struct_program = new Struct_Program();
-        Variable_table variable_table = new Variable_table();
-        Type_table type_table = new Type_table();
-        Function_table function_table = new Function_table();
+
 
         // 读取parse tree的program部分
         SimpleNode node_program_declaration = (SimpleNode)root.jjtGetChild(0);
@@ -368,46 +378,45 @@ public class CompilerMain {
 }
 
 
-//class Symbol_table {
-//    public enum Symbol_type {
-//        PROGRAM_NAME, FUNCTION_NAME, TYPE_NAME, VARIABLE_NAME
-//    }
-//
-//    ArrayList symbol_name = new ArrayList();
-//    ArrayList symbol_type = new ArrayList();
-//}
-//
-//class Function_table {
-//    ArrayList function_name = new ArrayList();              // String
-//    ArrayList function_parameter_num = new ArrayList();     // int
-//    ArrayList function_parameter_type = new ArrayList();    // ArrayList<String>，二维的List对应参数类型
-//    ArrayList function_parameter_name = new ArrayList();    // ArrayList<String>，形参名字
-//    ArrayList function_return_type = new ArrayList();       // String, null表示没有返回值
-//
-//    ArrayList function_variable_list = new ArrayList();     // Variable_table，保存函数声明的变量
-//    ArrayList function_run_node = new ArrayList();
-//}
-//
-//class Type_table {
-//    public enum Basic_type {
-//        INTEGER, BOOLEAN
-//    }
-//
-//    ArrayList type_name = new ArrayList();      // String 类型名
-//    ArrayList type_rederence = new ArrayList(); // String 数组类型，例如Integer[], boolean[]
-//    ArrayList type_array_num = new ArrayList(); // int 数组元素数量
-//}
-//
-//class Variable_table {
-//    ArrayList variable_name = new ArrayList();
-//    ArrayList variable_type = new ArrayList();
-//    ArrayList variable_value = new ArrayList();
-//}
-//
-//
-//class Struct_Program {
-//    String program_name;
-//}
+class Symbol_table {
+    public enum Symbol_type {
+        PROGRAM_NAME, FUNCTION_NAME, TYPE_NAME, VARIABLE_NAME
+    }
+
+    ArrayList symbol_name = new ArrayList();
+    ArrayList symbol_type = new ArrayList();
+}
+
+class Function_table {
+    ArrayList function_name = new ArrayList();              // String
+    ArrayList function_parameter_num = new ArrayList();     // int
+    ArrayList function_parameter_type = new ArrayList();    // ArrayList<String>，二维的List对应参数类型
+    ArrayList function_parameter_name = new ArrayList();    // ArrayList<String>，形参名字
+    ArrayList function_return_type = new ArrayList();       // String, null表示没有返回值
+
+    ArrayList function_variable_list = new ArrayList();     // Variable_table，保存函数声明的变量
+    ArrayList function_run_node = new ArrayList();
+}
+
+class Type_table {
+    public enum Basic_type {
+        INTEGER, BOOLEAN
+    }
+
+    ArrayList type_name = new ArrayList();      // String 类型名
+    ArrayList type_rederence = new ArrayList(); // String 数组类型，例如Integer[], boolean[]
+    ArrayList type_array_num = new ArrayList(); // int 数组元素数量
+}
+
+class Variable_table {
+    ArrayList variable_name = new ArrayList();
+    ArrayList variable_type = new ArrayList();
+    ArrayList variable_value = new ArrayList();
+}
+
+class Struct_Program {
+    String program_name;
+}
 
 
 

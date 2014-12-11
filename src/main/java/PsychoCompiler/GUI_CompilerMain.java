@@ -20,21 +20,23 @@ public class GUI_CompilerMain {
 
 class CompilerGUI extends Frame implements ActionListener {
     FileDialog  open;
-    Button      load, ge_token, ge_tree,quit;//按钮
+    Button      load, ge_token, ge_tree,ge_llvm,quit;//按钮
     TextArea    tarea;//文本框
     TextArea    tareaout;
     FileInputStream ml_file = null;
     FileInputStream ml_file2 = null;
     MyLangTree parser;
+    Gene_llvm gl;
     CompilerGUI() {
         super("Compiler");//标题
         setLayout(null);//布局
         setBackground(Color.gray);//背景色
-        setSize(1240, 700);//设置大学
+        setSize(1240, 700);//
         setVisible(true);//设置可见
         load = new Button("Load File");//创建按钮
         ge_token = new Button("GE Token");
         ge_tree = new Button("GE Tree");
+        ge_llvm = new Button("GE LLVM");
         quit = new Button("Exit");
         tarea = new TextArea("");//创建文本框
         tareaout = new TextArea("");
@@ -43,6 +45,7 @@ class CompilerGUI extends Frame implements ActionListener {
         add(load);//添加按钮
         add(ge_token);
         add(ge_tree);
+        add(ge_llvm);
         add(quit);
         add(tarea);
         add(tareaout);
@@ -51,7 +54,8 @@ class CompilerGUI extends Frame implements ActionListener {
         load.setBounds(500, 60, 70, 30);
         ge_token.setBounds(500, 120, 70, 30);
         ge_tree.setBounds(500, 180, 70, 30);
-        quit.setBounds(500,240,70,30);
+        ge_llvm.setBounds(500, 240, 70, 30);
+        quit.setBounds(500,300,70,30);
         open = new FileDialog(this, "打开", FileDialog.LOAD);//新建对话框
         //sv = new FileDialog(this, "保存", FileDialog.SAVE);
 
@@ -65,6 +69,7 @@ class CompilerGUI extends Frame implements ActionListener {
         load.addActionListener(this);//设置按钮点击监听事件
         ge_token.addActionListener(this);
         ge_tree.addActionListener(this);
+        ge_llvm.addActionListener(this);
         quit.addActionListener(this);
         addWindowListener(new WindowAdapter() {//关闭事件处理
             public void windowClosing(WindowEvent e) {
@@ -183,8 +188,50 @@ class CompilerGUI extends Frame implements ActionListener {
                     tareaout.setText("");
                     //TODO
                     root.dumptoarea("",true,tareaout);
-                    root.dump("");
+                    //root.dump("");
                  //   System.out.println("Format true!");
+                }
+                else{
+                    tareaout.setText(" ");
+                    tareaout.append("file has not been load");
+                }
+            } catch (Exception e5){
+                //System.out.println("Parser Exception:");
+                //System.out.println(e5.getMessage());
+                tareaout.setText(" ");
+                tareaout.append("\n\n");
+                tareaout.append("Parser Exception:" + e5.getMessage());
+            }
+        if(e.getSource() == ge_llvm)
+            try{
+                //file = new File(parent_path + file_name);
+
+                //ml_file = new FileInputStream(file);
+                if(!tarea.getInputContext().equals("")) {
+                    File temfile = new File("tempfile");
+                    try {
+                        FileWriter fw = new FileWriter(temfile);
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        String gt = tarea.getText();//获取文本框内容
+                        bw.write(gt, 0, gt.length());//将文本框内容写入文件
+                        bw.flush();//真正的写入文件
+                        fw.close();//关闭写入
+                    }catch(Exception e6){
+                        e6.printStackTrace();
+                    }
+                    try {
+                        ml_file2 = new FileInputStream(temfile);
+                        //ml_file2=new FileInputStream();
+                    }
+                    catch (FileNotFoundException e3) {
+                        System.out.print("src file open failed.");
+                    }
+                    parser = new MyLangTree(ml_file2);
+                    SimpleNode root = parser.Start();
+                    gl=new Gene_llvm(root);
+                    tareaout.setText(" ");
+                    tareaout.setText("");
+                    gl.generate(tareaout);
                 }
                 else{
                     tareaout.setText(" ");
