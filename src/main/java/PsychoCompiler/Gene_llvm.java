@@ -13,15 +13,27 @@ public class Gene_llvm {
 
 
     private static int var_num=0;
-    private static int if_num=0;
+    //if语句会用到的变量，记录if的状态
+    private static int then_num=0;
+    private static int else_num=0;
+    private static int end_num=0;
+    private static int cmp_num=0;
+    private static int true_num=0;
+    private static int false_num=0;
     private static int while_num=0;
+    private static int and_last=0;
+    private static int or_last=0;
+
     private static int call_num=0;
+    //表达式会用到的变量
     private static int add_num=0;
     private static int sum_num=0;
     private static int mul_num=0;
     private static int div_num=0;
     private static int mod_num=0;
-    private static int last_ope = 0;
+
+   // private static int last_ope = 0;
+
     Gene_llvm(SimpleNode s){
         gt = new GetTable(s);
     }
@@ -35,15 +47,24 @@ public class Gene_llvm {
 
     public void init(){
         var_num = 0;
-        if_num = 0;
+
+        then_num=0;
+        else_num=0;
+        end_num=0;
+        cmp_num=0;
+        true_num=0;
+        false_num=0;
         while_num = 0;
+        and_last=0;
+        or_last=0;
         call_num = 0;
+
         add_num=0;
         sum_num=0;
         mul_num=0;
         div_num=0;
         mod_num=0;
-        last_ope=0;
+     //   last_ope=0;
     }
 
 
@@ -89,7 +110,6 @@ public class Gene_llvm {
 
     }
 
-
     public void ge_operation(TextArea area,String ope,String left_var,String right_var,String prefix){
 
         if(ope.equals("+"))
@@ -122,10 +142,6 @@ public class Gene_llvm {
             area.append(instr);
             mod_num = mod_num+1;
         }
-
-
-
-
     }
 
     public pair ge_mul_expression(TextArea area,SimpleNode node,String prefix){
@@ -298,24 +314,133 @@ public class Gene_llvm {
                 }
                 else{//single digit
                     //String var = cur_code.jjtGetFirstToken().toString();
-
                     String var = cur_code.jjtGetFirstToken().next.toString();//获得打印的变量名
                     ge_print(area, var, prefix);
                 }
             }
+            else if(instr_name.equals("Logical_expression")){
+
+                SimpleNode if_statement = (SimpleNode)cur_code.jjtGetChild(0).jjtGetChild(0);
+                ge_if(area,if_statement,prefix);
+
+            }
+        }
+    }
+
+    public void ge_cmp(TextArea area,String cmp,String left_var,String right_var,String prefix){
+
+        if(cmp.equals("==")){
+            String instr =prefix+ "%cmp"+String.valueOf(cmp_num)+" = icmp eq i32 "+left_var+", "+right_var+"\n";
+            cmp_num = cmp_num+1;
+            area.append(instr);
+        }
+        else if(cmp.equals(">")){
+            String instr =prefix+ "%cmp"+String.valueOf(cmp_num)+" = icmp sgt i32 "+left_var+", "+right_var+"\n";
+            cmp_num = cmp_num+1;
+            area.append(instr);
+        }
+        else if(cmp.equals(">=")){
+            String instr =prefix+ "%cmp"+String.valueOf(cmp_num)+" = icmp sge i32 "+left_var+", "+right_var+"\n";
+            cmp_num = cmp_num+1;
+            area.append(instr);
+        }
+        else if(cmp.equals("<")){
+            String instr =prefix+"%cmp"+String.valueOf(cmp_num)+" = icmp slt i32 "+left_var+", "+right_var+"\n";
+            cmp_num = cmp_num+1;
+            area.append(instr);
+        }
+        else if(cmp.equals("<=")){
+            String instr = prefix+"%cmp"+String.valueOf(cmp_num)+" = icmp sle i32 "+left_var+", "+right_var+"\n";
+            cmp_num = cmp_num+1;
+            area.append(instr);
+        }
+    }
+    public void ge_jump(TextArea area,String prefix){
+
+        if(or_last==0 && and_last==0){
+            String instr = "br i1 %cmp"+String.valueOf(cmp_num-1)+", label %land.lhs.true"+String.valueOf(true_num)+", label %lor.lhs.false";
+        }
+        else if(or_last==1 && and_last==0){
+
+        }
+        else if(or_last==0 && and_last==1){
+
+        }
+        else if(or_last==1 && and_last==1){
+
         }
 
-    }
-
-    public void ge_if(TextArea area,SimpleNode node){
 
     }
+    public void ge_relation(TextArea area,SimpleNode node,String prefix){
 
-    public void ge_for(TextArea area,SimpleNode node){
+        SimpleNode left = (SimpleNode)node.jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
+        SimpleNode rel = (SimpleNode)node.jjtGetChild(1);
+        SimpleNode right = (SimpleNode)node.jjtGetChild(2).jjtGetChild(0).jjtGetChild(0);
+
+        //if()
+        pair left_pair = ge_add_expression(area,left,prefix);
+        pair right_pair = ge_add_expression(area, right, prefix);
+        ge_cmp(area,rel.jjtGetFirstToken().toString(),left_pair.var,right_pair.var,prefix);
+        ge_jump(area,prefix);
+
+    }
+    public void ge_and_logical(TextArea area,SimpleNode node,String prefix){
+        int and_num = node.jjtGetNumChildren();
+        for(int i=0;i<and_num;i++){
+            and_last=0;
+            if(i==0)and_last=-1;
+            if(i==and_num-1) and_last=1;
+            if(and_num-1==0)and_last=2;
+
+            SimpleNode and_node = (SimpleNode)node.jjtGetChild(i).jjtGetChild(0);
+            ge_relation(area,and_node,prefix);
+        }
+        and_last=0;
+    }
+    public void ge_or_logical(TextArea area,SimpleNode node,String prefix){
+        int or_num = node.jjtGetNumChildren();
+        SimpleNode left = (SimpleNode)node.jjtGetChild(0);
+        if(or_num==1)or_last=2;
+        else or_last=-1;
+        ge_and_logical(area,left,prefix);
+        if(or_num>1) {
+
+            for (int i = 0; i < or_num; ) {
+                or_last=0;
+                if(i==or_num-1)or_last=1;
+            }
+        }
+        //记录逻辑表达式走到什么位置，是否已经走到最后
+        or_last=0;
+        and_last=0;
+    }
+    public void ge_if(TextArea area,SimpleNode node,String prefix){
+        int child_num = node.jjtGetNumChildren();
+        for(int i=0;i<child_num;i++){
+            SimpleNode child = (SimpleNode)node.jjtGetChild(i);
+            if(child.toString().equals("Logical_expression")){
+                SimpleNode logical_node =(SimpleNode)child.jjtGetChild(0);
+                ge_or_logical(area, logical_node, prefix);
+            }
+            else if(child.toString().equals("Block")){
+                //ge_block(area,,prefix);
+            }
+            else if(child.toString().equals("Elif_statement")){
+
+            }
+            else if(child.toString().equals("Else_statement")){
+
+            }
+
+        }
+    }
+
+    public void ge_for(TextArea area,SimpleNode node,String prefix){
 
     }
 
-    public void ge_while(TextArea area,SimpleNode node){
+    public void ge_while(TextArea area,SimpleNode node,String prefix){
 
     }
     public void ge_function(TextArea area,String func_name,String type,SimpleNode node){
@@ -350,7 +475,6 @@ public class Gene_llvm {
             if(symbol.equals("VARIABLE_NAME")){
                 break;
             }
-
         }
         area.append("define i32 @main() nounwind {\n");
         area.append("entry:\n");
@@ -376,5 +500,4 @@ class pair{
         ret =r;
         var = v;
     }
-
 }
