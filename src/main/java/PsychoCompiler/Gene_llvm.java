@@ -1,6 +1,7 @@
 package PsychoCompiler;
 
 import jjt.SimpleNode;
+import sun.security.ssl.SSLContextImpl;
 
 import java.awt.*;
 import java.net.SocketImpl;
@@ -21,9 +22,10 @@ public class Gene_llvm {
     private static int true_num=0;
     private static int false_num=0;
     private static int while_num=0;
+
     private static int and_last=0;
     private static int or_last=0;
-
+    private static int if_last=0;
     private static int call_num=0;
     //表达式会用到的变量
     private static int add_num=0;
@@ -57,6 +59,7 @@ public class Gene_llvm {
         while_num = 0;
         and_last=0;
         or_last=0;
+        if_last=0;
         call_num = 0;
 
         add_num=0;
@@ -270,13 +273,17 @@ public class Gene_llvm {
 
     public void ge_block(TextArea area,SimpleNode node,String prefix){
 
-        SimpleNode block = (SimpleNode)node.jjtGetChild(0);
+       // SimpleNode block = (SimpleNode)node.jjtGetChild(0);
+        SimpleNode block = node;
         int instr_num = block.jjtGetNumChildren();
         for(int i=0;i<instr_num;i++)
         {
+            System.out.println("block\n");
             SimpleNode statement = (SimpleNode)block.jjtGetChild(i).jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
+            SimpleNode statement2=(SimpleNode)block.jjtGetChild(i).jjtGetChild(0).jjtGetChild(0);
             SimpleNode cur_code = (SimpleNode)block.jjtGetChild(i);
             String instr_name = statement.toString();
+
             if(instr_name.equals("Assignment_expression")){
                 SimpleNode additive_expression = (SimpleNode)statement.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
                 if(!cur_code.jjtGetFirstToken().next.next.next.toString().equals(";")){//expression
@@ -318,11 +325,14 @@ public class Gene_llvm {
                     ge_print(area, var, prefix);
                 }
             }
-            else if(instr_name.equals("Logical_expression")){
-
+            else if(statement2.toString().equals("If_statement")&&instr_name.equals("Logical_expression")){
                 SimpleNode if_statement = (SimpleNode)cur_code.jjtGetChild(0).jjtGetChild(0);
                 ge_if(area,if_statement,prefix);
 
+            }
+            else if(statement2.toString().equals("While_statement")&&instr_name.equals("Logical_expression")){
+                SimpleNode while_statement = (SimpleNode)cur_code.jjtGetChild(0).jjtGetChild(0);
+                ge_while(area, while_statement, prefix);
             }
         }
     }
@@ -355,60 +365,113 @@ public class Gene_llvm {
             area.append(instr);
         }
     }
-    public void ge_jump(TextArea area,String prefix){
-
-        if(or_last==0 && and_last==0){
-            String instr = "br i1 %cmp"+String.valueOf(cmp_num-1)+", label %land.lhs.true"+String.valueOf(true_num)+", label %lor.lhs.false";
+    public void ge_if_jump(TextArea area,String prefix,int cur_end_num){
+        if(or_last<=0 && and_last<=0){
+            String instr =prefix+ "br i1 %cmp"+String.valueOf(cmp_num-1)+", label %land.lhs.true"+String.valueOf(true_num)+", label %lor.lhs.false"+String.valueOf(false_num)+"\n\n";
+            area.append(instr);
         }
-        else if(or_last==1 && and_last==0){
-
+        else if(or_last>=1 && and_last<=0){
+            if(if_last==0) {
+                String instr = prefix + "br i1 %cmp" + String.valueOf(cmp_num - 1) + ", label %land.lhs.true" + String.valueOf(true_num) + ", label %if.else" + String.valueOf(else_num) + "\n\n";
+                area.append(instr);
+            }
+            else{
+                String instr = prefix + "br i1 %cmp" + String.valueOf(cmp_num - 1) + ", label %land.lhs.true" + String.valueOf(true_num) + ", label %if.end" + String.valueOf(cur_end_num) + "\n\n";
+                area.append(instr);
+            }
         }
-        else if(or_last==0 && and_last==1){
-
+        else if(or_last<=0 && and_last>=1){
+            String instr = prefix +"br i1 %cmp"+String.valueOf(cmp_num-1)+", label %if.then"+String.valueOf(then_num)+", label %lor.lhs.false"+String.valueOf(false_num)+"\n\n";
+            area.append(instr);
         }
-        else if(or_last==1 && and_last==1){
-
+        else if(or_last>=1 && and_last>=1){
+            if(if_last==0) {
+                String instr = prefix + "br i1 %cmp" + String.valueOf(cmp_num-1) + ", label %if.then" + String.valueOf(then_num) + ", label %if.else" + String.valueOf(else_num) + "\n\n";
+                area.append(instr);
+            }
+            else if(if_last==1){
+                String instr = prefix + "br i1 %cmp" + String.valueOf(cmp_num-1) + ", label %if.then" + String.valueOf(then_num) + ", label %if.end" + String.valueOf(cur_end_num) + "\n\n";
+                area.append(instr);
+            }
         }
-
 
     }
-    public void ge_relation(TextArea area,SimpleNode node,String prefix){
+    public void ge_while_jump(TextArea area,String prefix,int cur_while_num){
+        if(or_last<=0 && and_last<=0){
+            String instr =prefix+ "br i1 %cmp"+String.valueOf(cmp_num-1)+", label %land.lhs.true"+String.valueOf(true_num)+", label %lor.lhs.false"+String.valueOf(false_num)+"\n\n";
+            area.append(instr);
+        }
+        else if(or_last>=1 && and_last<=0){
+                String instr = prefix + "br i1 %cmp" + String.valueOf(cmp_num - 1) + ", label %land.lhs.true" + String.valueOf(true_num) + ", label %while.end" + String.valueOf(cur_while_num) + "\n\n";
+                area.append(instr);
+        }
+        else if(or_last<=0 && and_last>=1){
+            String instr = prefix +"br i1 %cmp"+String.valueOf(cmp_num-1)+", label %while.body"+String.valueOf(cur_while_num)+", label %lor.lhs.false"+String.valueOf(false_num)+"\n\n";
+            area.append(instr);
+        }
+        else if(or_last>=1 && and_last>=1){
+                String instr = prefix + "br i1 %cmp" + String.valueOf(cmp_num-1) + ", label %while.body" + String.valueOf(cur_while_num) + ", label %while.end" + String.valueOf(cur_while_num) + "\n\n";
+                area.append(instr);
+        }
+    }
+    public void ge_relation(TextArea area,SimpleNode node,String prefix,int cur_end_num,int if_or_while){
 
         SimpleNode left = (SimpleNode)node.jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
         SimpleNode rel = (SimpleNode)node.jjtGetChild(1);
         SimpleNode right = (SimpleNode)node.jjtGetChild(2).jjtGetChild(0).jjtGetChild(0);
 
         //if()
+
+
+        if(and_last==0 || and_last==1){
+            String sub_prefix = prefix.substring(0,prefix.length()-2);
+            String instr = sub_prefix+"land.lhs.true"+String.valueOf(true_num)+":\n";
+            true_num = true_num+1;
+            area.append(instr);
+        }
         pair left_pair = ge_add_expression(area,left,prefix);
         pair right_pair = ge_add_expression(area, right, prefix);
         ge_cmp(area,rel.jjtGetFirstToken().toString(),left_pair.var,right_pair.var,prefix);
-        ge_jump(area,prefix);
+        if(if_or_while==0) {
+            ge_if_jump(area, prefix, cur_end_num);
+        }
+        else{
+            ge_while_jump(area,prefix,cur_end_num);
+        }
 
     }
-    public void ge_and_logical(TextArea area,SimpleNode node,String prefix){
+    public void ge_and_logical(TextArea area,SimpleNode node,String prefix,int cur_end_num,int if_or_while){
         int and_num = node.jjtGetNumChildren();
-        for(int i=0;i<and_num;i++){
+        for(int i=0;i<and_num;){
             and_last=0;
             if(i==0)and_last=-1;
             if(i==and_num-1) and_last=1;
             if(and_num-1==0)and_last=2;
 
             SimpleNode and_node = (SimpleNode)node.jjtGetChild(i).jjtGetChild(0);
-            ge_relation(area,and_node,prefix);
+            ge_relation(area,and_node,prefix,cur_end_num, if_or_while);
+            i=i+2;
         }
         and_last=0;
     }
-    public void ge_or_logical(TextArea area,SimpleNode node,String prefix){
+    public void ge_or_logical(TextArea area,SimpleNode node,String prefix,int cur_end_num,int if_or_while){
         int or_num = node.jjtGetNumChildren();
         SimpleNode left = (SimpleNode)node.jjtGetChild(0);
         if(or_num==1)or_last=2;
         else or_last=-1;
-        ge_and_logical(area,left,prefix);
+        ge_and_logical(area,left,prefix, cur_end_num,if_or_while);
         if(or_num>1) {
 
-            for (int i = 0; i < or_num; ) {
+            for (int i = 2; i < or_num; ) {
                 or_last=0;
                 if(i==or_num-1)or_last=1;
+                String sub_prefix = prefix.substring(0,prefix.length()-2);
+                String instr =sub_prefix+ "lor.lhs.false"+String.valueOf(false_num)+":\n";
+                area.append(instr);
+                false_num =false_num+1;
+                SimpleNode right = (SimpleNode)node.jjtGetChild(i);
+                ge_and_logical(area,right,prefix,cur_end_num, if_or_while);
+                i=i+2;
             }
         }
         //记录逻辑表达式走到什么位置，是否已经走到最后
@@ -417,23 +480,58 @@ public class Gene_llvm {
     }
     public void ge_if(TextArea area,SimpleNode node,String prefix){
         int child_num = node.jjtGetNumChildren();
+        int cur_end_num = end_num;
+        end_num = end_num+1;
+        if(child_num==2)if_last=1;
         for(int i=0;i<child_num;i++){
             SimpleNode child = (SimpleNode)node.jjtGetChild(i);
             if(child.toString().equals("Logical_expression")){
                 SimpleNode logical_node =(SimpleNode)child.jjtGetChild(0);
-                ge_or_logical(area, logical_node, prefix);
+                ge_or_logical(area, logical_node, prefix,cur_end_num,0);
             }
             else if(child.toString().equals("Block")){
-                //ge_block(area,,prefix);
+                String sub_prefix = prefix.substring(0,prefix.length()-2);
+                String instr = sub_prefix+"if.then"+String.valueOf(then_num)+":\n";
+                area.append(instr);
+                then_num = then_num+1;
+               // SimpleNode block_node = (SimpleNode)
+                ge_block(area,child,prefix);
+                String instr2 = prefix+"br label %if.end"+String.valueOf(cur_end_num)+"\n";
+                area.append(instr2);
             }
             else if(child.toString().equals("Elif_statement")){
+                if(i==child_num-1)if_last=1;
+                String sub_prefix = prefix.substring(0,prefix.length()-2);
+                String instr = sub_prefix+"if.else"+String.valueOf(else_num)+":\n";
+                else_num = else_num+1;
+                area.append(instr);
+                SimpleNode elif_node= (SimpleNode)child.jjtGetChild(0).jjtGetChild(0);
+                ge_or_logical(area,elif_node,prefix,cur_end_num,0);
+
+                String sub_prefix2 = prefix.substring(0,prefix.length()-2);
+                String instr2 = sub_prefix2+"if.then"+String.valueOf(then_num)+":\n";
+                area.append(instr2);
+                then_num = then_num+1;
+                SimpleNode block_node = (SimpleNode)child.jjtGetChild(1);
+                ge_block(area,block_node,prefix+"  ");
+
+                String instr3 = prefix+"br label %if.end"+String.valueOf(cur_end_num)+"\n";
+                area.append(instr3);
 
             }
             else if(child.toString().equals("Else_statement")){
-
+                if_last=1;
+                SimpleNode block_node = (SimpleNode)child.jjtGetChild(0);
+                ge_block(area,block_node,prefix);
+                String instr3 = prefix+"br label %if.end"+String.valueOf(cur_end_num)+"\n";
+                area.append(instr3);
             }
 
         }
+        String sub_prefix = prefix.substring(0,prefix.length()-2);
+        String instr =sub_prefix+ "if.end"+String.valueOf(cur_end_num)+":\n";
+        area.append(instr);
+        if_last=0;
     }
 
     public void ge_for(TextArea area,SimpleNode node,String prefix){
@@ -441,7 +539,26 @@ public class Gene_llvm {
     }
 
     public void ge_while(TextArea area,SimpleNode node,String prefix){
+        int cur_while_num=while_num;
+        while_num=while_num+1;
+        String sub_prefix = prefix.substring(0,prefix.length()-2);
+        String instr =prefix+ "br label %while.cond"+String.valueOf(cur_while_num)+"\n\n";
+        area.append(instr);
 
+        String instr1 = sub_prefix+ "while.cond"+String.valueOf(cur_while_num)+":\n";
+        area.append(instr1);
+
+        SimpleNode logical = (SimpleNode)node.jjtGetChild(0).jjtGetChild(0);
+        ge_or_logical(area,logical,prefix,cur_while_num,1);
+
+        SimpleNode block = (SimpleNode)node.jjtGetChild(1);
+        String instr2 = sub_prefix+ "while.body"+String.valueOf(cur_while_num)+":\n";
+        area.append(instr2);
+        ge_block(area,block,prefix+"  ");
+        String instr3 = prefix+ "br label %while.cond"+String.valueOf(cur_while_num)+"\n\n";
+        area.append(instr3);
+        String instr4 = sub_prefix+ "while.end"+String.valueOf(cur_while_num)+":\n";
+        area.append(instr4);
     }
     public void ge_function(TextArea area,String func_name,String type,SimpleNode node){
         if(type.equals("void"))
@@ -484,8 +601,8 @@ public class Gene_llvm {
                 ge_alloc(area,gt.symbol_table.symbol_name.get(i).toString(),"  ");
             }
         }
-
-        ge_block(area,node,"  ");
+        SimpleNode block = (SimpleNode)node.jjtGetChild(0);
+        ge_block(area,block,"  ");
         area.append("  ret i32 0\n");
         area.append("}\n");
     }
