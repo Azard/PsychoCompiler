@@ -5,6 +5,8 @@ import sun.security.ssl.SSLContextImpl;
 
 import java.awt.*;
 import java.net.SocketImpl;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by NinetuOne on 2014/12/10.
@@ -12,6 +14,7 @@ import java.net.SocketImpl;
 public class Gene_llvm {
     GetTable gt;
 
+    Map<String,array_info> array_var = new HashMap<String, array_info>();
 
     private static int var_num=0;
     //if语句会用到的变量，记录if的状态
@@ -34,6 +37,7 @@ public class Gene_llvm {
     private static int div_num=0;
     private static int mod_num=0;
 
+    private static int arrayidx=0;
    // private static int last_ope = 0;
 
     Gene_llvm(SimpleNode s){
@@ -67,6 +71,8 @@ public class Gene_llvm {
         mul_num=0;
         div_num=0;
         mod_num=0;
+        arrayidx=0;
+        array_var.clear();
      //   last_ope=0;
     }
 
@@ -92,6 +98,41 @@ public class Gene_llvm {
 
         String instr=prefix+"%"+var+" = "+"alloca i32, align 4\n";
         area.append(instr);
+
+    }
+
+    public void ge_alloc_array(TextArea area,String var,String type,String prefix){
+
+        for(int i=0;i<gt.type_table.type_name.size();i++)
+        {
+            if(gt.type_table.type_name.get(i).toString().equals(type))
+            {
+                if(gt.type_table.type_rederence.get(i).toString().equals("integer") || gt.type_table.type_rederence.get(i).toString().equals("boolean")){
+                    int cnt = (Integer)gt.type_table.type_array_num.get(i);
+                    String instr=prefix+"%"+var+" = "+"alloca ["+String.valueOf(cnt)+" x i32], align 4\n";
+                    area.append(instr);
+                    array_var.put(var,new array_info(1,cnt,0));
+                    break;
+                }
+                else{
+                    int cnt1 = (Integer)gt.type_table.type_array_num.get(i);
+                    String type2 = gt.type_table.type_rederence.get(i).toString();
+                    for(int j=0;j<gt.type_table.type_name.size();j++)
+                    {
+                        if(gt.type_table.type_name.get(j).toString().equals(type2))
+                        {
+
+                                int cnt2 = (Integer)gt.type_table.type_array_num.get(j);
+                                String instr=prefix+"%"+var+" = "+"alloca ["+String.valueOf(cnt1)+" x ["+String.valueOf(cnt2)+" x i32]], align 4\n";
+                                area.append(instr);
+                                array_var.put(var,new array_info(2,cnt1,cnt2));
+                                break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
 
     }
 
@@ -151,13 +192,51 @@ public class Gene_llvm {
         int ex_num = node.jjtGetNumChildren();
         if(ex_num==1){
             SimpleNode last = (SimpleNode)node.jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
-            if(last.toString().equals("Digits")){
-
-                return new pair(0,last.jjtGetFirstToken().toString());
+            SimpleNode left_value =(SimpleNode)node.jjtGetChild(0).jjtGetChild(0);
+            if(last.toString().equals("Digits")||last.toString().equals("Sign")){
+                if(last.jjtGetFirstToken().toString().equals("-"))
+                    return new pair(0,"-"+last.jjtGetFirstToken().next.toString());
+                else
+                    return new pair(0,last.jjtGetFirstToken().toString());
             }
             else if(last.toString().equals("Identifier")){
-                ge_load(area,last.jjtGetFirstToken().toString(),prefix);
-                return new pair(-1,"%"+String.valueOf(var_num-1));
+                if(left_value.jjtGetNumChildren()==1) {
+                    ge_load(area, last.jjtGetFirstToken().toString(), prefix);
+                    return new pair(-1, "%" + String.valueOf(var_num - 1));
+                }
+                else if(left_value.jjtGetNumChildren()==2){
+
+                    SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
+                    pair index = ge_add_expression(area,array_index,prefix);
+                    String var = left_value.jjtGetFirstToken().toString();
+                    int length = array_var.get(var).cnt1;
+                    String instr = prefix+"%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length)+" x i32]* %"+var+", i32 0, i32 "+index.var+"\n";
+                    area.append(instr);
+                    ge_load(area, "arrayidx" + String.valueOf(arrayidx), prefix);
+                    arrayidx = arrayidx+1;
+                    return new pair(-1, "%" + String.valueOf(var_num - 1));
+                }
+                else if(left_value.jjtGetNumChildren()==3){
+                    //SimpleNode left_value =(SimpleNode)node.jjtGetChild(0).jjtGetChild(0);
+                    SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
+                    pair index1 = ge_add_expression(area,array_index,prefix);
+                    SimpleNode array_index2 = (SimpleNode)left_value.jjtGetChild(2).jjtGetChild(0).jjtGetChild(0);
+                    pair index2 = ge_add_expression(area,array_index2,prefix);
+
+                    String var = left_value.jjtGetFirstToken().toString();
+                    int length1 = array_var.get(var).cnt1;
+                    int length2 = array_var.get(var).cnt2;
+                    String instr1 =prefix+ "%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length1)+" x ["+String.valueOf(length2)+" x i32]]* %"+var+", i32 0, i32 "+index1.var+"\n";
+                    arrayidx = arrayidx + 1;
+                    area.append(instr1);
+
+                    String instr2 =prefix+ "%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length2)+" x i32]* %arrayidx"+String.valueOf(arrayidx-1)+", i32 0, i32 "+index2.var+"\n";
+
+                    area.append(instr2);
+                    ge_load(area, "arrayidx" + String.valueOf(arrayidx), prefix);
+                    arrayidx = arrayidx+1;
+                    return new pair(-1, "%" + String.valueOf(var_num - 1));
+                }
             }
 
         }
@@ -171,9 +250,47 @@ public class Gene_llvm {
                 left_pair = ge_add_expression(area,(SimpleNode)left.jjtGetChild(0).jjtGetChild(0),prefix);
             }
             else if(left.jjtGetChild(0).toString().equals("Left_value")) {
+                SimpleNode left_value = (SimpleNode)left.jjtGetChild(0);
 
-                SimpleNode temp=(SimpleNode)left.jjtGetChild(0).jjtGetChild(0);
-                ge_load(area,temp.jjtGetFirstToken().toString(),prefix);
+                if(left_value.jjtGetNumChildren()==1) {
+                    SimpleNode temp=(SimpleNode)left.jjtGetChild(0).jjtGetChild(0);
+                    ge_load(area,temp.jjtGetFirstToken().toString(),prefix);
+                    //return new pair(-1, "%" + String.valueOf(var_num - 1));
+                }
+                else if(left_value.jjtGetNumChildren()==2){
+
+                    SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
+                    pair index = ge_add_expression(area,array_index,prefix);
+                    String var = left_value.jjtGetFirstToken().toString();
+                    int length = array_var.get(var).cnt1;
+                    String instr = prefix+"%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length)+" x i32]* %"+var+", i32 0, i32 "+index.var+"\n";
+                    area.append(instr);
+                    ge_load(area, "arrayidx" + String.valueOf(arrayidx), prefix);
+                    arrayidx = arrayidx+1;
+                    //return new pair(-1, "%" + String.valueOf(var_num - 1));
+                }
+                else if(left_value.jjtGetNumChildren()==3){
+                    //SimpleNode left_value =(SimpleNode)node.jjtGetChild(0).jjtGetChild(0);
+                    SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
+                    pair index1 = ge_add_expression(area,array_index,prefix);
+                    SimpleNode array_index2 = (SimpleNode)left_value.jjtGetChild(2).jjtGetChild(0).jjtGetChild(0);
+                    pair index2 = ge_add_expression(area,array_index2,prefix);
+
+                    String var = left_value.jjtGetFirstToken().toString();
+                    int length1 = array_var.get(var).cnt1;
+                    int length2 = array_var.get(var).cnt2;
+                    String instr1 =prefix+ "%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length1)+" x ["+String.valueOf(length2)+" x i32]]* %"+var+", i32 0, i32 "+index1.var+"\n";
+                    arrayidx = arrayidx + 1;
+                    area.append(instr1);
+
+                    String instr2 =prefix+ "%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length2)+" x i32]* %arrayidx"+String.valueOf(arrayidx-1)+", i32 0, i32 "+index2.var+"\n";
+
+                    area.append(instr2);
+                    ge_load(area, "arrayidx" + String.valueOf(arrayidx), prefix);
+                    arrayidx = arrayidx+1;
+                   // return new pair(-1, "%" + String.valueOf(var_num - 1));
+                }
+
                 left_pair = new pair(-1,"%"+String.valueOf(var_num-1));
             }
             else if(left.jjtGetChild(0).toString().equals("Constant_expression")){
@@ -193,8 +310,48 @@ public class Gene_llvm {
                 }
                 else if(right.jjtGetChild(0).toString().equals("Left_value")) {
 
-                    SimpleNode temp=(SimpleNode)right.jjtGetChild(0).jjtGetChild(0);
-                    ge_load(area,temp.jjtGetFirstToken().toString(),prefix);
+                    SimpleNode left_value = (SimpleNode)right.jjtGetChild(0);
+
+                    if(left_value.jjtGetNumChildren()==1) {
+                        SimpleNode temp=(SimpleNode)right.jjtGetChild(0).jjtGetChild(0);
+                        ge_load(area,temp.jjtGetFirstToken().toString(),prefix);
+
+                        //return new pair(-1, "%" + String.valueOf(var_num - 1));
+                    }
+                    else if(left_value.jjtGetNumChildren()==2){
+
+                        SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
+                        pair index = ge_add_expression(area,array_index,prefix);
+                        String var = left_value.jjtGetFirstToken().toString();
+                        int length = array_var.get(var).cnt1;
+                        String instr = prefix+"%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length)+" x i32]* %"+var+", i32 0, i32 "+index.var+"\n";
+                        area.append(instr);
+                        ge_load(area, "arrayidx" + String.valueOf(arrayidx), prefix);
+                        arrayidx = arrayidx+1;
+                        //return new pair(-1, "%" + String.valueOf(var_num - 1));
+                    }
+                    else if(left_value.jjtGetNumChildren()==3){
+                        //SimpleNode left_value =(SimpleNode)node.jjtGetChild(0).jjtGetChild(0);
+                        SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
+                        pair index1 = ge_add_expression(area,array_index,prefix);
+                        SimpleNode array_index2 = (SimpleNode)left_value.jjtGetChild(2).jjtGetChild(0).jjtGetChild(0);
+                        pair index2 = ge_add_expression(area,array_index2,prefix);
+
+                        String var = left_value.jjtGetFirstToken().toString();
+                        int length1 = array_var.get(var).cnt1;
+                        int length2 = array_var.get(var).cnt2;
+                        String instr1 =prefix+ "%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length1)+" x ["+String.valueOf(length2)+" x i32]]* %"+var+", i32 0, i32 "+index1.var+"\n";
+                        arrayidx = arrayidx + 1;
+                        area.append(instr1);
+
+                        String instr2 =prefix+ "%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length2)+" x i32]* %arrayidx"+String.valueOf(arrayidx-1)+", i32 0, i32 "+index2.var+"\n";
+
+                        area.append(instr2);
+                        ge_load(area, "arrayidx" + String.valueOf(arrayidx), prefix);
+                        arrayidx = arrayidx+1;
+                        // return new pair(-1, "%" + String.valueOf(var_num - 1));
+                    }
+
                     right_pair = new pair(-1,"%"+String.valueOf(var_num-1));
                 }
                 else if(right.jjtGetChild(0).toString().equals("Constant_expression")){
@@ -263,12 +420,9 @@ public class Gene_llvm {
     }
     public void ge_print(TextArea area,String var,String prefix){
 
-        String instr1 =prefix+ "%"+String.valueOf(var_num)+" = load i32* %"+var+", align 4\n";
-        area.append(instr1);
-        String instr2 = prefix+ "%call"+String.valueOf(call_num)+" = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([5 x i8]* @.str,     i32 0, i32 0), i32 %"+String.valueOf(var_num)+")\n";
-        area.append(instr2);
+        String instr = prefix+ "%call"+String.valueOf(call_num)+" = call i32 (i8*, ...)* @printf(i8* getelementptr inbounds ([5 x i8]* @.str,     i32 0, i32 0), i32 "+var+")\n";
+        area.append(instr);
         call_num = call_num+1;
-        var_num = var_num+1;
     }
 
     public void ge_block(TextArea area,SimpleNode node,String prefix){
@@ -281,12 +435,14 @@ public class Gene_llvm {
             System.out.println("block\n");
             SimpleNode statement = (SimpleNode)block.jjtGetChild(i).jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
             SimpleNode statement2=(SimpleNode)block.jjtGetChild(i).jjtGetChild(0).jjtGetChild(0);
+
             SimpleNode cur_code = (SimpleNode)block.jjtGetChild(i);
             String instr_name = statement.toString();
 
             if(instr_name.equals("Assignment_expression")){
+                SimpleNode left_value=(SimpleNode)block.jjtGetChild(i).jjtGetChild(0).jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
                 SimpleNode additive_expression = (SimpleNode)statement.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
-                if(!cur_code.jjtGetFirstToken().next.next.next.toString().equals(";")){//expression
+                //if(additive_expression.jjtGetNumChildren()>1){//expression
                     //SimpleNode expression = (SimpleNode)additive_expression.jjtGetChild(0);
                     pair result=ge_add_expression(area,additive_expression,prefix);
                     if(result == null)
@@ -295,11 +451,42 @@ public class Gene_llvm {
                     }
                     else
                     {
-                        String var = cur_code.jjtGetFirstToken().toString();
-                        ge_store(area,var,result.var,prefix);
+                        if(left_value.jjtGetNumChildren()==1) {
+                            String var = cur_code.jjtGetFirstToken().toString();
+                            ge_store(area, var, result.var, prefix);
+                        }
+                        else if(left_value.jjtGetNumChildren()==2){
+                            SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
+                            pair index = ge_add_expression(area,array_index,prefix);
+                            String var = cur_code.jjtGetFirstToken().toString();
+                            int length = array_var.get(var).cnt1;
+                            String instr = prefix+"%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length)+" x i32]* %"+var+", i32 0, i32 "+index.var+"\n";
+                            area.append(instr);
+                            ge_store(area,"arrayidx"+String.valueOf(arrayidx),result.var,prefix);
+                            arrayidx = arrayidx+1;
+                        }
+                        else if(left_value.jjtGetNumChildren()==3){
+                            SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
+                            pair index1 = ge_add_expression(area,array_index,prefix);
+                            SimpleNode array_index2 = (SimpleNode)left_value.jjtGetChild(2).jjtGetChild(0).jjtGetChild(0);
+                            pair index2 = ge_add_expression(area,array_index2,prefix);
+
+                            String var = cur_code.jjtGetFirstToken().toString();
+                            int length1 = array_var.get(var).cnt1;
+                            int length2 = array_var.get(var).cnt2;
+                            String instr1 =prefix+ "%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length1)+" x ["+String.valueOf(length2)+" x i32]]* %"+var+", i32 0, i32 "+index1.var+"\n";
+                            arrayidx = arrayidx + 1;
+                            area.append(instr1);
+
+                            String instr2 =prefix+ "%arrayidx"+String.valueOf(arrayidx)+" = getelementptr inbounds ["+String.valueOf(length2)+" x i32]* %arrayidx"+String.valueOf(arrayidx-1)+", i32 0, i32 "+index2.var+"\n";
+
+                            area.append(instr2);
+                            ge_store(area,"arrayidx"+String.valueOf(arrayidx),result.var,prefix);
+                            arrayidx = arrayidx+1;
+                        }
                     }
-                }
-                else{//single digit
+                //}
+                /*else{//single digit
                     if(additive_expression.jjtGetChild(0).jjtGetChild(0).jjtGetChild(0).toString().equals("Left_value"))//单个变量
                     {
                         String var = cur_code.jjtGetFirstToken().toString();
@@ -312,18 +499,13 @@ public class Gene_llvm {
                         String value = cur_code.jjtGetFirstToken().next.next.toString();
                         ge_store(area, var, value, prefix);
                     }
-                }
+                }*/
             }
             else if(instr_name.equals("Print_statement")){
                 SimpleNode additive_expression = (SimpleNode)statement.jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
-                if(additive_expression.jjtGetNumChildren()>1){//expression
+                pair result=ge_add_expression(area,additive_expression,prefix);
+                ge_print(area, result.var, prefix);
 
-                }
-                else{//single digit
-                    //String var = cur_code.jjtGetFirstToken().toString();
-                    String var = cur_code.jjtGetFirstToken().next.toString();//获得打印的变量名
-                    ge_print(area, var, prefix);
-                }
             }
             else if(statement2.toString().equals("If_statement")&&instr_name.equals("Logical_expression")){
                 SimpleNode if_statement = (SimpleNode)cur_code.jjtGetChild(0).jjtGetChild(0);
@@ -595,11 +777,15 @@ public class Gene_llvm {
         }
         area.append("define i32 @main() nounwind {\n");
         area.append("entry:\n");
-        for(;i < gt.symbol_table.symbol_name.size(); i++) {
+        for(i=0;i < gt.variable_table.variable_name.size(); i++) {
             String symbol = gt.symbol_table.symbol_type.get(i).toString();
-            if(symbol.equals("VARIABLE_NAME")){
-                ge_alloc(area,gt.symbol_table.symbol_name.get(i).toString(),"  ");
-            }
+            //if(symbol.equals("VARIABLE_NAME")){
+                System.out.println(gt.variable_table.variable_type.get(i).toString());
+            if(gt.variable_table.variable_type.get(i).toString().equals("integer") || gt.variable_table.variable_type.get(i).toString().equals("boolean"))
+                ge_alloc(area, gt.variable_table.variable_name.get(i).toString(),"  ");
+            else
+                ge_alloc_array(area, gt.variable_table.variable_name.get(i).toString(),gt.variable_table.variable_type.get(i).toString(),"  ");
+            //}
         }
         SimpleNode block = (SimpleNode)node.jjtGetChild(0);
         ge_block(area,block,"  ");
@@ -616,5 +802,16 @@ class pair{
     pair(int r,String v){
         ret =r;
         var = v;
+    }
+}
+class array_info{
+    int dim;
+    int cnt1;
+    int cnt2;
+
+    array_info(int d,int c1,int c2){
+        dim=d;
+        cnt1=c1;
+        cnt2=c2;
     }
 }
