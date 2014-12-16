@@ -836,32 +836,32 @@ public class Gene_llvm {
 
     public void ge_cmp(TextArea area,String cmp,String left_var,String right_var,String prefix,int con){
 
-        if(cmp.equals("==") || (cmp.equals("!=")&&con==1)){
+        if((cmp.equals("==")&&con!=1) || (cmp.equals("!=")&&con==1)){
             String instr =prefix+ "%cmp"+String.valueOf(cmp_num)+" = icmp eq i32 "+left_var+", "+right_var+"\n";
             cmp_num = cmp_num+1;
             area.append(instr);
         }
-        else if(cmp.equals("!=")|| (cmp.equals("==")&&con==1)){
+        else if((cmp.equals("!=")&&con!=1)|| (cmp.equals("==")&&con==1)){
             String instr =prefix+ "%cmp"+String.valueOf(cmp_num)+" = icmp ne i32 "+left_var+", "+right_var+"\n";
             cmp_num = cmp_num+1;
             area.append(instr);
         }
-        else if(cmp.equals(">")|| (cmp.equals("<=")&&con==1)){
+        else if((cmp.equals(">")&&con!=1)|| (cmp.equals("<=")&&con==1)){
             String instr =prefix+ "%cmp"+String.valueOf(cmp_num)+" = icmp sgt i32 "+left_var+", "+right_var+"\n";
             cmp_num = cmp_num+1;
             area.append(instr);
         }
-        else if(cmp.equals(">=")|| (cmp.equals("<")&&con==1)){
+        else if((cmp.equals(">=")&&con!=1)|| (cmp.equals("<")&&con==1)){
             String instr =prefix+ "%cmp"+String.valueOf(cmp_num)+" = icmp sge i32 "+left_var+", "+right_var+"\n";
             cmp_num = cmp_num+1;
             area.append(instr);
         }
-        else if(cmp.equals("<")|| (cmp.equals(">=")&&con==1)){
+        else if((cmp.equals("<")&&con!=1)|| (cmp.equals(">=")&&con==1)){
             String instr =prefix+"%cmp"+String.valueOf(cmp_num)+" = icmp slt i32 "+left_var+", "+right_var+"\n";
             cmp_num = cmp_num+1;
             area.append(instr);
         }
-        else if(cmp.equals("<=")|| (cmp.equals(">")&&con==1)){
+        else if((cmp.equals("<=")&&con!=1)|| (cmp.equals(">")&&con==1)){
             String instr = prefix+"%cmp"+String.valueOf(cmp_num)+" = icmp sle i32 "+left_var+", "+right_var+"\n";
             cmp_num = cmp_num+1;
             area.append(instr);
@@ -939,7 +939,7 @@ public class Gene_llvm {
         else if(node.toString().equals("Function_call_expression"))
         {
             pair func = ge_call(area,node,prefix);
-            ge_cmp(area, "==", func.var, "0", prefix,con);
+            ge_cmp(area, "!=", func.var, "0", prefix,con);
         }
         if (if_or_while == 0) {
             ge_if_jump(area, prefix, cur_end_num);
@@ -1035,6 +1035,11 @@ public class Gene_llvm {
             }
             else if(child.toString().equals("Else_statement")){
                 if_last=1;
+                String sub_prefix = prefix.substring(0,prefix.length()-2);
+                String instr = sub_prefix+"if.else"+String.valueOf(else_num)+":\n";
+                else_num = else_num+1;
+                area.append(instr);
+
                 SimpleNode block_node = (SimpleNode)child.jjtGetChild(0);
                 ge_block(area,block_node,prefix);
                 String instr3 = prefix+"br label %if.end"+String.valueOf(cur_end_num)+"\n";
@@ -1077,7 +1082,6 @@ public class Gene_llvm {
     public void ge_function(TextArea area,SimpleNode node,String prefix){
         SimpleNode name =  (SimpleNode)node.jjtGetChild(0).jjtGetChild(0);
         String func_name = name.jjtGetFirstToken().toString();
-
         String type="";
         int num = gt.function_table.function_return_type.size();
         int i=0;
@@ -1185,6 +1189,12 @@ public class Gene_llvm {
         }
         SimpleNode func_block = (SimpleNode)node.jjtGetChild(1).jjtGetChild(1).jjtGetChild(0);
         ge_block(area,func_block,prefix);
+        if(type.equals("i32")){
+            area.append("  ret i32 0\n");
+        }
+        else{
+            area.append("  ret void\n");
+        }
         area.append("}\n");
 
     }
