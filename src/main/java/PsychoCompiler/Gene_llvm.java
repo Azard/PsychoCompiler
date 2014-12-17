@@ -604,6 +604,7 @@ public class Gene_llvm {
     public void ge_return(TextArea area,String ret,String prefix){
 
         String instr =prefix+ "ret i32 "+ret+"\n";
+        var_num++;//这个为什么叫呢？其实我也不知道，但是这样子能过！！！fuck
         area.append(instr);
 
     }
@@ -697,7 +698,6 @@ public class Gene_llvm {
         int instr_num = block.jjtGetNumChildren();
         for(int i=0;i<instr_num;i++)
         {
-            System.out.println("block\n");
             SimpleNode statement = (SimpleNode)block.jjtGetChild(i).jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
             SimpleNode statement2=(SimpleNode)block.jjtGetChild(i).jjtGetChild(0).jjtGetChild(0);
 
