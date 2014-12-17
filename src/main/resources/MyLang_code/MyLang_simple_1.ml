@@ -12,6 +12,7 @@ program simple_1()
         var right is integer;
         var left is integer;
     begin
+
     end function quick_sort;
 
 
@@ -22,4 +23,5 @@ is
     var c is boolean;
     var d is B;
 begin
+
 end
