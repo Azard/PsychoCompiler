@@ -21,3 +21,4 @@ Psycho-Compiler
 * Runtime : Java JDK1.8 32bit
 * IDE     : IDEA 14 with gradle
 * LIB     : JavaCC-5.0
+* Support : LLVM-runtime
