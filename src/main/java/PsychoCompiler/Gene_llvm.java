@@ -15,6 +15,7 @@ public class Gene_llvm {
     Map<String,array_info> array_var = new HashMap<String, array_info>();
     Map<String,array_info> func_array_var = new HashMap<String, array_info>();
     Map<String,String> func_var = new HashMap<String, String>();
+    Map<String,String> func_para_var = new HashMap<String, String>();
 
     private static int var_num=0;
     //if语句会用到的变量，记录if的状态
@@ -42,17 +43,23 @@ public class Gene_llvm {
     private static int arraydecay =0;
 
     private static int in_function=0;
+
+    private static boolean call_dir=false;
    // private static int last_ope = 0;
 
-    Gene_llvm(SimpleNode s){
-        gt = new GetTable(s);
+    Gene_llvm(SimpleNode s,TextArea area){
+        gt = new GetTable(s,area);
     }
 
     public void generate(TextArea area){
-
-        gt.analyse();
-        ge_code(area,gt.root);
-
+        try {
+            gt.analyse();
+            ge_code(area, gt.root);
+        }catch (SemanticErr e){
+            area.setText("");
+            area.append("Exception: ");
+            area.append(e.getMessage());
+        }
     }
 
     public void init(){
@@ -79,13 +86,15 @@ public class Gene_llvm {
         arraydecay=0;
 
         in_function = 0;
+        call_dir = false;
         array_var.clear();
         func_array_var.clear();
         func_var.clear();
+        func_para_var.clear();
      //   last_ope=0;
     }
 
-    public void ge_code(TextArea area,SimpleNode node){
+    public void ge_code(TextArea area,SimpleNode node)throws SemanticErr{
         area.append("@.str = private unnamed_addr constant [5 x i8] c\"%d  \\00\", align 1\n");
         area.append("@.str1 = private unnamed_addr constant [2 x i8] c\"\\0A\\00\", align 1\n");
 
@@ -192,7 +201,7 @@ public class Gene_llvm {
         }
     }
 
-    public pair ge_mul_expression(TextArea area,SimpleNode node,String prefix){
+    public pair ge_mul_expression(TextArea area,SimpleNode node,String prefix)throws SemanticErr{
         int ex_num = node.jjtGetNumChildren();
         if(ex_num==1){
             SimpleNode last = (SimpleNode)node.jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
@@ -206,6 +215,10 @@ public class Gene_llvm {
             else if(last.toString().equals("Identifier")){
                 if(left_value.jjtGetNumChildren()==1) {
                     String temp_name = last.jjtGetFirstToken().toString();
+                    if(var_not_define(temp_name,false))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+temp_name+" not define");
+                    if(not_value(temp_name, left_value))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+temp_name+" can not be in expression");
                     if(in_function == 1 && func_var.containsKey(temp_name)){
                         temp_name = func_var.get(temp_name);
                     }
@@ -213,11 +226,13 @@ public class Gene_llvm {
                     return new pair(-1, "%" + String.valueOf(var_num - 1));
                 }
                 else if(left_value.jjtGetNumChildren()==2){
-
+                    String var = left_value.jjtGetFirstToken().toString();
+                    if(var_not_define(var,false))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" not define");
+                    if(not_value(var, left_value))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" can not be in expression");
                     SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
                     pair index = ge_add_expression(area,array_index,prefix);
-
-                    String var = left_value.jjtGetFirstToken().toString();
                     int length=0;
                     if(in_function ==1&& func_var.containsKey(var)){
                         length = func_array_var.get(var).cnt1;
@@ -244,12 +259,16 @@ public class Gene_llvm {
                 }
                 else if(left_value.jjtGetNumChildren()==3){
                     //SimpleNode left_value =(SimpleNode)node.jjtGetChild(0).jjtGetChild(0);
+                    String var = left_value.jjtGetFirstToken().toString();
+                    if(var_not_define(var,false))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" not define");
+                    if(not_value(var, left_value))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" can not be in expression");
                     SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
                     pair index1 = ge_add_expression(area,array_index,prefix);
                     SimpleNode array_index2 = (SimpleNode)left_value.jjtGetChild(2).jjtGetChild(0).jjtGetChild(0);
                     pair index2 = ge_add_expression(area,array_index2,prefix);
 
-                    String var = left_value.jjtGetFirstToken().toString();
                     int length1=0;
                     int length2=0;
                     if(in_function==1&& func_var.containsKey(var)){
@@ -315,6 +334,11 @@ public class Gene_llvm {
                     SimpleNode temp=(SimpleNode)left.jjtGetChild(0).jjtGetChild(0);
 
                     String temp_name = temp.jjtGetFirstToken().toString();
+                    if(var_not_define(temp_name,false))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+temp_name+" not define");
+                    if(not_value(temp_name, left_value))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+temp_name+" can not be in expression");
+
                     if(in_function == 1&& func_var.containsKey(temp_name)){
                         temp_name = func_var.get(temp_name);
                     }
@@ -326,7 +350,10 @@ public class Gene_llvm {
                     SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
                     pair index = ge_add_expression(area,array_index,prefix);
                     String var = left_value.jjtGetFirstToken().toString();
-
+                    if(var_not_define(var,false))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" not define");
+                    if(not_value(var, left_value))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" can not be in expression");
                     int length=0;
                     if(in_function ==1&& func_var.containsKey(var)){
                         length = func_array_var.get(var).cnt1;
@@ -360,7 +387,10 @@ public class Gene_llvm {
                     pair index2 = ge_add_expression(area,array_index2,prefix);
 
                     String var = left_value.jjtGetFirstToken().toString();
-
+                    if(var_not_define(var,false))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" not define");
+                    if(not_value(var, left_value))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" can not be in expression");
                     int length1=0;
                     int length2=0;
                     if(in_function==1&& func_var.containsKey(var)){
@@ -432,6 +462,10 @@ public class Gene_llvm {
                         SimpleNode temp=(SimpleNode)right.jjtGetChild(0).jjtGetChild(0);
 
                         String temp_name = temp.jjtGetFirstToken().toString();
+                        if(var_not_define(temp_name,false))
+                            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+temp_name+" not define");
+                        if(not_value(temp_name, left_value))
+                            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+temp_name+" can not be in expression");
                         if(in_function == 1&& func_var.containsKey(temp_name)){
                             temp_name = func_var.get(temp_name);
                         }
@@ -444,7 +478,10 @@ public class Gene_llvm {
                         SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
                         pair index = ge_add_expression(area,array_index,prefix);
                         String var = left_value.jjtGetFirstToken().toString();
-
+                        if(var_not_define(var,false))
+                            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" not define");
+                        if(not_value(var, left_value))
+                            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" can not be in expression");
                         int length=0;
                         if(in_function ==1&& func_var.containsKey(var)){
                             length = func_array_var.get(var).cnt1;
@@ -477,7 +514,10 @@ public class Gene_llvm {
                         pair index2 = ge_add_expression(area,array_index2,prefix);
 
                         String var = left_value.jjtGetFirstToken().toString();
-
+                        if(var_not_define(var,false))
+                            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" not define");
+                        if(not_value(var, left_value))
+                            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+var+" can not be in expression");
 
                         int length1=0;
                         int length2=0;
@@ -558,7 +598,7 @@ public class Gene_llvm {
         return null;
     }
 
-    public pair ge_add_expression(TextArea area,SimpleNode node,String prefix){
+    public pair ge_add_expression(TextArea area,SimpleNode node,String prefix)throws SemanticErr{
         SimpleNode left = (SimpleNode) node.jjtGetChild(0);
 
         int ex_num = node.jjtGetNumChildren();
@@ -609,14 +649,20 @@ public class Gene_llvm {
 
     }
 
-    public pair ge_call(TextArea area,SimpleNode node,String prefix){
+    public pair ge_call(TextArea area,SimpleNode node,String prefix)throws SemanticErr{
 
         SimpleNode name = (SimpleNode)node.jjtGetChild(0);
         String func_name = name.jjtGetFirstToken().toString();
+        if(var_not_define(func_name,true))
+            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+func_name+" not define");
+        if(not_value(func_name, node) && !call_dir)
+            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+func_name+" has no return value");
+
         SimpleNode parameter = (SimpleNode)node.jjtGetChild(1);
         String instr = prefix;
         int para_num = parameter.jjtGetNumChildren();
-
+        if(func_para_num_wrong(func_name,para_num))
+            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+"the parameter number of "+func_name+" is wrong");
         int num = gt.function_table.function_return_type.size();
         for (int i = 0; i < num; i++) {
             if (gt.function_table.function_name.get(i).toString().equals(func_name)) {
@@ -640,17 +686,23 @@ public class Gene_llvm {
 
                     array_info cur_para = func_array_var.get(para_name);
                     if (cur_para.dim == 1) {
+                        if(func_para_error(func_name,"dim1",i))
+                            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+func_name+" has wrong parameter");
                         String instr1 = prefix + "%"+String.valueOf(var_num)+" = load i32** %"+para_name+".addr, align 4\n";
                         area.append(instr1);
                         instr = instr + "i32* %" +String.valueOf(var_num);
                         var_num++;
                     } else {
+                        if(func_para_error(func_name,"dim2",i))
+                            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+func_name+" has wrong parameter");
                         String instr1 = prefix + "%"+String.valueOf(var_num)+" = load ["+String.valueOf(cur_para.cnt2)+" x i32]** %"+para_name+".addr, align 4\n";
                         area.append(instr1);
                         instr = instr + "[" + String.valueOf(cur_para.cnt2) + " x i32]* %" + String.valueOf(var_num);
                         var_num++;
                     }
                 } else {
+                    if(func_para_error(func_name,"integer",i))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+func_name+" has wrong parameter");
                     SimpleNode expression = (SimpleNode) para.jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
                     pair p = ge_add_expression(area, expression, prefix);
                     instr = instr + "i32 " + p.var;
@@ -666,17 +718,23 @@ public class Gene_llvm {
 
                     array_info cur_para = array_var.get(para_name);
                     if (cur_para.dim == 1) {
+                        if(func_para_error(func_name,"dim1",i))
+                            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+func_name+" has wrong parameter");
                         String instr1 = prefix + "%arraydecay" + String.valueOf(arraydecay) + " = getelementptr inbounds [" + String.valueOf(cur_para.cnt1) + " x i32]* %" + para_name + ", i32 0, i32 0" + "\n";
                         area.append(instr1);
                         instr = instr + "i32* %arraydecay" + String.valueOf(arraydecay);
                         arraydecay = arraydecay + 1;
                     } else {
+                        if(func_para_error(func_name,"dim2",i))
+                            throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+func_name+" has wrong parameter");
                         String instr1 = prefix + "%arraydecay" + String.valueOf(arraydecay) + " = getelementptr inbounds [" + String.valueOf(cur_para.cnt1) + " x [" + String.valueOf(cur_para.cnt2) + " x i32]]* %" + para_name + ", i32 0, i32 0" + "\n";
                         area.append(instr1);
                         instr = instr + "[" + String.valueOf(cur_para.cnt2) + " x i32]* %arraydecay" + String.valueOf(arraydecay);
                         arraydecay = arraydecay + 1;
                     }
                 } else {
+                    if(func_para_error(func_name,"integer",i))
+                        throw new SemanticErr("Exception: Line: "+node.jjtGetFirstToken().beginLine+"   "+func_name+" has wrong parameter");
                     SimpleNode expression = (SimpleNode) para.jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
                     pair p = ge_add_expression(area, expression, prefix);
                     instr = instr + "i32 " + p.var;
@@ -691,7 +749,7 @@ public class Gene_llvm {
         area.append(instr);
         return new pair(-2,"%call"+String.valueOf(call_num-1));
     }
-    public void ge_block(TextArea area,SimpleNode node,String prefix){
+    public void ge_block(TextArea area,SimpleNode node,String prefix)throws SemanticErr{
 
        // SimpleNode block = (SimpleNode)node.jjtGetChild(0);
         SimpleNode block = node;
@@ -716,15 +774,26 @@ public class Gene_llvm {
                     {
                         if(left_value.jjtGetNumChildren()==1) {
                             String var = cur_code.jjtGetFirstToken().toString();
+                            if(var_not_define(var,false))
+                                throw new SemanticErr("Exception: Line: "+left_value.jjtGetFirstToken().beginLine+"   "+var+" not define");
+                            if(not_left_value(var, 1)){
+                                throw new SemanticErr("Exception: Line: "+left_value.jjtGetFirstToken().beginLine+"   "+var+" can not be the left value");
+                            }
                             if(in_function == 1&& func_var.containsKey(var)){
                                 var = func_var.get(var);
                             }
                             ge_store(area, var, result.var, prefix);
                         }
                         else if(left_value.jjtGetNumChildren()==2){
+                            String var = cur_code.jjtGetFirstToken().toString();
+                            if(var_not_define(var,false))
+                                throw new SemanticErr("Exception: Line: "+left_value.jjtGetFirstToken().beginLine+"   "+var+" not define");
+                            if(not_left_value(var,2)){
+                                throw new SemanticErr("Exception: Line: "+left_value.jjtGetFirstToken().beginLine+"   "+var+" can not be the left value");
+                            }
                             SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
                             pair index = ge_add_expression(area,array_index,prefix);
-                            String var = cur_code.jjtGetFirstToken().toString();
+
 
                             int length=0;
                             if(in_function ==1&& func_var.containsKey(var)){
@@ -750,12 +819,16 @@ public class Gene_llvm {
                             arrayidx = arrayidx+1;
                         }
                         else if(left_value.jjtGetNumChildren()==3){
+                            String var = cur_code.jjtGetFirstToken().toString();
+                            if(var_not_define(var,false))
+                                throw new SemanticErr("Exception: Line: "+left_value.jjtGetFirstToken().beginLine+"   "+var+" not define");
+                            if(not_left_value(var,3)){
+                                throw new SemanticErr("Exception: Line: "+left_value.jjtGetFirstToken().beginLine+"   "+var+" can not be the left value");
+                            }
                             SimpleNode array_index = (SimpleNode)left_value.jjtGetChild(1).jjtGetChild(0).jjtGetChild(0);
                             pair index1 = ge_add_expression(area,array_index,prefix);
                             SimpleNode array_index2 = (SimpleNode)left_value.jjtGetChild(2).jjtGetChild(0).jjtGetChild(0);
                             pair index2 = ge_add_expression(area,array_index2,prefix);
-
-                            String var = cur_code.jjtGetFirstToken().toString();
 
                             int length1=0;
                             int length2=0;
@@ -818,9 +891,11 @@ public class Gene_llvm {
 
             }
             else if(instr_name.equals("Function_statement")){
-                System.out.println("func");
+               // System.out.println("func");
+                call_dir =true;
                 SimpleNode call_expression = (SimpleNode)statement.jjtGetChild(0);
                 ge_call(area, call_expression, prefix);
+                call_dir = false;
             }
             else if(statement2.toString().equals("If_statement")&&instr_name.equals("Logical_expression")){
                 SimpleNode if_statement = (SimpleNode)cur_code.jjtGetChild(0).jjtGetChild(0);
@@ -916,7 +991,7 @@ public class Gene_llvm {
                 area.append(instr);
         }
     }
-    public void ge_relation(TextArea area,SimpleNode node,String prefix,int cur_end_num,int if_or_while,int con){
+    public void ge_relation(TextArea area,SimpleNode node,String prefix,int cur_end_num,int if_or_while,int con)throws SemanticErr{
         if(node.toString().equals("Relation_expression")) {
             SimpleNode left = (SimpleNode) node.jjtGetChild(0).jjtGetChild(0).jjtGetChild(0);
             SimpleNode rel = (SimpleNode) node.jjtGetChild(1);
@@ -949,7 +1024,7 @@ public class Gene_llvm {
 
 
     }
-    public void ge_and_logical(TextArea area,SimpleNode node,String prefix,int cur_end_num,int if_or_while){
+    public void ge_and_logical(TextArea area,SimpleNode node,String prefix,int cur_end_num,int if_or_while)throws SemanticErr{
         int and_num = node.jjtGetNumChildren();
         int con=0;
         for(int i=0;i<and_num;){
@@ -968,7 +1043,7 @@ public class Gene_llvm {
         }
         and_last=0;
     }
-    public void ge_or_logical(TextArea area,SimpleNode node,String prefix,int cur_end_num,int if_or_while){
+    public void ge_or_logical(TextArea area,SimpleNode node,String prefix,int cur_end_num,int if_or_while)throws SemanticErr{
         int or_num = node.jjtGetNumChildren();
         SimpleNode left = (SimpleNode)node.jjtGetChild(0);
         if(or_num==1)or_last=2;
@@ -992,7 +1067,7 @@ public class Gene_llvm {
         or_last=0;
         and_last=0;
     }
-    public void ge_if(TextArea area,SimpleNode node,String prefix){
+    public void ge_if(TextArea area,SimpleNode node,String prefix)throws SemanticErr{
         int child_num = node.jjtGetNumChildren();
         int cur_end_num = end_num;
         end_num = end_num+1;
@@ -1057,7 +1132,7 @@ public class Gene_llvm {
 
     }
 
-    public void ge_while(TextArea area,SimpleNode node,String prefix){
+    public void ge_while(TextArea area,SimpleNode node,String prefix)throws SemanticErr{
         int cur_while_num=while_num;
         while_num=while_num+1;
         String sub_prefix = prefix.substring(0,prefix.length()-2);
@@ -1079,7 +1154,7 @@ public class Gene_llvm {
         String instr4 = sub_prefix+ "while.end"+String.valueOf(cur_while_num)+":\n";
         area.append(instr4);
     }
-    public void ge_function(TextArea area,SimpleNode node,String prefix){
+    public void ge_function(TextArea area,SimpleNode node,String prefix)throws SemanticErr{
         SimpleNode name =  (SimpleNode)node.jjtGetChild(0).jjtGetChild(0);
         String func_name = name.jjtGetFirstToken().toString();
         String type="";
@@ -1181,6 +1256,7 @@ public class Gene_llvm {
         for(int j=0;j<var_num;j++){
             String v_name = var_name.get(j).toString();
             String v_type = var_type.get(j).toString();
+            func_para_var.put(v_name,v_name);
             if (v_type.equals("integer") || v_type.equals("boolean"))
                 ge_alloc(area, v_name,"  ");
             else
@@ -1200,7 +1276,7 @@ public class Gene_llvm {
     }
 
 
-    public void ge_all_function(TextArea area,SimpleNode node){
+    public void ge_all_function(TextArea area,SimpleNode node)throws SemanticErr{
         int func_num  = node.jjtGetNumChildren();
         for(int i = 0;i<func_num;i++)
         {
@@ -1219,7 +1295,7 @@ public class Gene_llvm {
     }
 
 
-    public void ge_main_process(TextArea area,SimpleNode node){
+    public void ge_main_process(TextArea area,SimpleNode node)throws SemanticErr{
         int i=0;
         for (i = 0; i < gt.symbol_table.symbol_name.size(); i++) {
             String symbol = gt.symbol_table.symbol_type.get(i).toString();
@@ -1241,6 +1317,152 @@ public class Gene_llvm {
         area.append("  ret i32 0\n");
         area.append("}\n");
     }
+
+    public boolean var_not_define(String var_name,boolean func){
+        if(in_function == 1){
+            if(func_array_var.containsKey(var_name))
+                return false;
+            if(func_var.containsKey(var_name))
+                return  false;
+            if(func_para_var.containsKey(var_name))
+                return false;
+            if(func) {
+                int num = gt.function_table.function_name.size();
+                for (int i = 0; i < num; i++) {
+                    if (gt.function_table.function_name.get(i).toString().equals(var_name))
+                        return false;
+                }
+            }
+        }
+        else{
+            for(int i=0;i < gt.variable_table.variable_name.size(); i++) {
+                if(gt.variable_table.variable_name.get(i).toString().equals(var_name))
+                    return  false;
+            }
+            if(func) {
+                int num = gt.function_table.function_name.size();
+                for (int i = 0; i < num; i++) {
+                    if (gt.function_table.function_name.get(i).toString().equals(var_name))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean not_value(String val,SimpleNode node){
+        if(in_function == 1)
+        {
+            if(func_array_var.containsKey(val)){
+                int size = node.jjtGetNumChildren();
+                array_info temp = func_array_var.get(val);
+                if(temp.dim != size-1)
+                    return true;
+            }
+            int num = gt.function_table.function_name.size();
+            for (int i = 0; i < num; i++) {
+                if (gt.function_table.function_name.get(i).toString().equals(val)) {
+                    if(!(gt.function_table.function_return_type.get(i)==null)){
+                        return false;
+                    }
+                    else
+                        return true;
+                }
+
+            }
+
+        }
+        else {
+            if(array_var.containsKey(val)){
+                int size = node.jjtGetNumChildren();
+                array_info temp = array_var.get(val);
+                if(temp.dim != size-1)
+                    return true;
+            }
+            int num = gt.function_table.function_name.size();
+            for (int i = 0; i < num; i++) {
+                if (gt.function_table.function_name.get(i).toString().equals(val)) {
+                    if(!(gt.function_table.function_return_type.get(i)==null)){
+                        return false;
+                    }
+                    else
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean not_left_value(String val,int size){
+        if(in_function == 1)
+        {
+            if(func_array_var.containsKey(val)){
+                array_info temp = func_array_var.get(val);
+                if(temp.dim != size-1)
+                    return true;
+            }
+        }
+        else {
+            if(array_var.containsKey(val)){
+                array_info temp = array_var.get(val);
+                if(temp.dim != size-1)
+                    return true;
+            }
+        }
+        return false;
+
+    }
+
+    public  boolean func_para_error(String func_name,String type,int index) {
+
+        int num = gt.function_table.function_name.size();
+        for (int i = 0; i < num; i++) {
+            if (gt.function_table.function_name.get(i).toString().equals(func_name)) {
+                ArrayList para_type = (ArrayList) gt.function_table.function_parameter_type.get(i);
+                String p_type = para_type.get(index).toString();
+                if ((p_type.equals("integer") || p_type.equals("boolean")) && (type.equals("integer") || type.equals("boolean"))) {
+                    return false;
+                }
+                else if (type.equals("dim1")||type.equals("dim2"))
+                {
+                    for(int j=0;j<gt.type_table.type_name.size();j++)
+                    {
+                        if(gt.type_table.type_name.get(j).toString().equals(p_type))
+                        {
+                            if(gt.type_table.type_rederence.get(j).toString().equals("integer") || gt.type_table.type_rederence.get(j).toString().equals("boolean")){
+                                if(type.equals("dim1"))return false;
+                            }
+                            else{
+                                String type2 = gt.type_table.type_rederence.get(j).toString();
+                                for(int k=0;k<gt.type_table.type_name.size();k++)
+                                {
+                                    if(gt.type_table.type_name.get(k).toString().equals(type2))
+                                    {
+                                        if(type.equals("dim2"))return false;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                    return true;
+            }
+        }
+        return true;
+    }
+    public boolean func_para_num_wrong(String func_name,int number){
+        int num = gt.function_table.function_name.size();
+        for (int i = 0; i < num; i++) {
+            if (gt.function_table.function_name.get(i).toString().equals(func_name)) {
+                int n =(Integer)gt.function_table.function_parameter_num.get(i);
+                if(n!=number)return true;
+            }
+        }
+        return false;
+    }
+
 }
 
 class pair{

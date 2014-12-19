@@ -228,7 +228,7 @@ class CompilerGUI extends Frame implements ActionListener {
                     }
                     parser = new MyLangTree(ml_file2);
                     SimpleNode root = parser.Start();
-                    gl=new Gene_llvm(root);
+                    gl=new Gene_llvm(root,tareaout);
                     tareaout.setText(" ");
                     tareaout.setText("");
                     gl.generate(tareaout);

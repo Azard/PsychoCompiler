@@ -5,6 +5,7 @@ import jjt.SimpleNode;
 import sun.java2d.pipe.SpanShapeRenderer;
 
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,8 +20,11 @@ public class GetTable {
     Type_table type_table;
     Function_table function_table;
     SimpleNode root;
-    GetTable(SimpleNode s){
+
+    TextArea area;
+    GetTable(SimpleNode s,TextArea a){
         root=s;
+        area = a;
         symbol_table = new Symbol_table();
         struct_program = new Struct_Program();
         variable_table = new Variable_table();
@@ -159,18 +163,18 @@ public class GetTable {
 
 
     // 读取main的变量申明
-    public static void read_main_variable(SimpleNode declarations, Symbol_table symbol_table, Variable_table variable_table, Type_table type_table) {
-        try {
+    public void read_main_variable (SimpleNode declarations, Symbol_table symbol_table, Variable_table variable_table, Type_table type_table) throws SemanticErr{
+
             int declaration_num = declarations.jjtGetNumChildren();
             for (int i = 0; i < declaration_num; i++) {
                 SimpleNode var_declaration = (SimpleNode) declarations.jjtGetChild(i).jjtGetChild(0);
                 String var_name = var_declaration.jjtGetFirstToken().next.toString();
                 String var_type = var_declaration.jjtGetFirstToken().next.next.next.toString();
                 if (!check_repeat_symbol(symbol_table, var_name)) {
-                    throw new Exception("variable " + var_name + " declaration name repeat");
+                    throw new SemanticErr("Line: "+var_declaration.jjtGetFirstToken().beginLine+"  variable " + var_name + " declaration name repeat");
                 }
                 if (!check_type_exist(type_table, var_type)) {
-                    throw new Exception("variable " + var_type + " declaration type not exist");
+                    throw new SemanticErr("Line: "+var_declaration.jjtGetFirstToken().beginLine+"  variable " + var_type + " declaration type not exist");
                 }
                 symbol_table.symbol_name.add(var_name);
                 symbol_table.symbol_type.add(Symbol_table.Symbol_type.VARIABLE_NAME);
@@ -179,15 +183,11 @@ public class GetTable {
                 variable_table.variable_value.add(0);
 
             }
-        } catch (Exception e){
-            System.out.println("Analyse Exception:");
-            System.out.println(e.getMessage());
-        }
+
     }
 
     // 读取type def
-    public static void read_type_def(SimpleNode declarations, Symbol_table symbol_table, Type_table type_table) {
-        try {
+    public void read_type_def(SimpleNode declarations, Symbol_table symbol_table, Type_table type_table) throws SemanticErr{
             int component_num = declarations.jjtGetNumChildren();
             for (int i = 0; i < component_num; i++) {
                 SimpleNode type_declaration = (SimpleNode) declarations.jjtGetChild(i).jjtGetChild(0);
@@ -197,10 +197,10 @@ public class GetTable {
                     String type_reference = type_declaration.jjtGetFirstToken().next.next.next.next.next.next.toString();
 
                     if (!check_repeat_symbol(symbol_table, type_name)) {
-                        throw new Exception("type " + type_name + " declaration name repeat");
+                        throw new SemanticErr("Line: "+type_declaration.jjtGetFirstToken().beginLine+"  type " + type_name + " declaration name repeat");
                     }
                     if (!check_type_exist(type_table, type_reference)) {
-                        throw new Exception("type " + type_reference + " reference not exist");
+                        throw new SemanticErr("Line: "+type_declaration.jjtGetFirstToken().beginLine+"  type " + type_reference + " reference not exist");
                     }
 
                     symbol_table.symbol_name.add(type_name);
@@ -210,14 +210,9 @@ public class GetTable {
                     type_table.type_array_num.add(type_array_num);
                 }
             }
-        } catch (Exception e){
-            System.out.println("Analyse Exception:");
-            System.out.println(e.getMessage());
-        }
     }
 
-    public static void read_function_def(SimpleNode declarations, Symbol_table symbol_table, Type_table type_table, Function_table function_table) {
-        try {
+    public void read_function_def(SimpleNode declarations, Symbol_table symbol_table, Type_table type_table, Function_table function_table) throws SemanticErr{
             int component_num = declarations.jjtGetNumChildren();
             for (int i = 0; i < component_num; i++) {
                 SimpleNode function_declaration = (SimpleNode) declarations.jjtGetChild(i).jjtGetChild(0);
@@ -234,7 +229,7 @@ public class GetTable {
                     // 函数名
                     String function_name = node_function_head.jjtGetFirstToken().next.toString();
                     if (!check_repeat_symbol(symbol_table, function_name)) {
-                        throw new Exception("function " + function_name + " declaration name repeat");
+                        throw new SemanticErr("Line: "+node_function_head.jjtGetFirstToken().beginLine+"   function " + function_name + " declaration name repeat");
                     }
                     symbol_table.symbol_name.add(function_name);
                     symbol_table.symbol_type.add(Symbol_table.Symbol_type.FUNCTION_NAME);
@@ -261,7 +256,7 @@ public class GetTable {
                             String para_name = temp_parameter_node.jjtGetFirstToken().toString();
                             for (int k = 0; k < mul_para_name.size(); k++) {
                                 if (mul_para_name.get(k).toString().equals(para_name)) {
-                                    throw new Exception("function " + function_name + " parameter name repeat");
+                                    throw new SemanticErr("Line: "+temp_parameter_node.jjtGetFirstToken().beginLine+"   function " + function_name + " parameter name repeat");
                                 }
                             }
                             mul_para_name.add(para_name);
@@ -274,7 +269,7 @@ public class GetTable {
                     int para_type_num = node_function_parameters_type.jjtGetNumChildren();
                     if (para_type_num != Integer.parseInt(function_table.function_parameter_num.get(function_table.function_parameter_num.size()-1).toString())) {
                         // 类型申明和传参数量没对上
-                        throw new Exception("function " + function_name + " parameter type declare number wrong");
+                        throw new SemanticErr("Line: "+node_function_parameters_type.jjtGetFirstToken().beginLine+"   function " + function_name + " parameter type declare number wrong");
                     }
                     ArrayList para_name_list = (ArrayList)function_table.function_parameter_name.get(function_table.function_parameter_name.size()-1);
                     ArrayList para_type_list = new ArrayList();
@@ -283,12 +278,12 @@ public class GetTable {
                         // 参数名判断是否和传参一致
                         String temp_name = node_function_para_type.jjtGetFirstToken().next.toString();
                         if (!temp_name.equals(para_name_list.get(j).toString())) {
-                            throw new Exception("function " + function_name + " parameter name wrong");
+                            throw new SemanticErr("Line: "+node_function_para_type.jjtGetFirstToken().beginLine+"   function " + function_name + " parameter name wrong");
                         }
                         // 参数类型判断是否存在
                         String temp_type = node_function_para_type.jjtGetFirstToken().next.next.next.toString();
                         if (!check_type_exist(type_table, temp_type)) {
-                            throw new Exception("function " + function_name + " parameter type not exist");
+                            throw new SemanticErr("Line: "+node_function_para_type.jjtGetFirstToken().beginLine+"   function " + function_name + " parameter type not exist");
                         }
                         para_type_list.add(temp_type);
                     }
@@ -304,7 +299,7 @@ public class GetTable {
                         String temp_return_type = node_function_return_declaration.jjtGetFirstToken().next.toString();
                         if(!check_type_exist(type_table, temp_return_type)) {
                             // 不存在返回的类型
-                            throw new Exception("function " + function_name + " return type not exist");
+                            throw new SemanticErr("Line: "+node_function_return_declaration.jjtGetFirstToken().beginLine+"   function " + function_name + " return type not exist");
                         }
                         function_table.function_return_type.add(temp_return_type);
                     }
@@ -322,15 +317,15 @@ public class GetTable {
                         String var_name = node_variable_declaration.jjtGetFirstToken().next.toString();
                         String var_type = node_variable_declaration.jjtGetFirstToken().next.next.next.toString();
                         if (!check_variable_name_repeat(variable_list, var_name)) {
-                            throw new Exception("variable " + var_type + " declaration name repeat");
+                            throw new SemanticErr("Line: "+node_variable_declaration.jjtGetFirstToken().beginLine+"   variable " + var_type + " declaration name repeat");
                         }
                         if (!check_type_exist(type_table, var_type)) {
-                            throw new Exception("variable " + var_type + " declaration type not exist");
+                            throw new SemanticErr("Line: "+node_variable_declaration.jjtGetFirstToken().beginLine+"   variable " + var_type + " declaration type not exist");
                         }
                         // 不与parameter名字重复
                         for (int k = 0; k < function_para_name_list.size(); k++ ) {
                             if (function_para_name_list.get(k).toString().equals(var_name)) {
-                                throw new Exception("variable " + var_type + " declaration name repeat");
+                                throw new SemanticErr("Line: "+node_variable_declaration.jjtGetFirstToken().beginLine+"   variable " + var_type + " declaration name repeat");
                             }
                         }
                         variable_list.variable_name.add(var_name);
@@ -342,38 +337,35 @@ public class GetTable {
 
                 }
             }
-        } catch (Exception e){
-            System.out.println("Analyse Exception:");
-            System.out.println(e.getMessage());
-        }
+
     }
 
-    public void analyse() {
+    public void analyse() throws SemanticErr{
 
 
 
         // 读取parse tree的program部分
-        SimpleNode node_program_declaration = (SimpleNode)root.jjtGetChild(0);
-        SimpleNode node_program_head = (SimpleNode)node_program_declaration.jjtGetChild(0);
-        SimpleNode node_program_body = (SimpleNode)node_program_declaration.jjtGetChild(1);
+            SimpleNode node_program_declaration = (SimpleNode) root.jjtGetChild(0);
+            SimpleNode node_program_head = (SimpleNode) node_program_declaration.jjtGetChild(0);
+            SimpleNode node_program_body = (SimpleNode) node_program_declaration.jjtGetChild(1);
 
-        // 添加program name到符号表
-        struct_program.program_name = node_program_head.jjtGetFirstToken().next.toString();
-        symbol_table.symbol_name.add(struct_program.program_name);
-        symbol_table.symbol_type.add(Symbol_table.Symbol_type.PROGRAM_NAME);
+            // 添加program name到符号表
+            struct_program.program_name = node_program_head.jjtGetFirstToken().next.toString();
+            symbol_table.symbol_name.add(struct_program.program_name);
+            symbol_table.symbol_type.add(Symbol_table.Symbol_type.PROGRAM_NAME);
 
-        // 添加type def到符号表
-        SimpleNode node_component_declarations = (SimpleNode)node_program_body.jjtGetChild(0);
-        read_type_def(node_component_declarations, symbol_table, type_table);
+            // 添加type def到符号表
+            SimpleNode node_component_declarations = (SimpleNode) node_program_body.jjtGetChild(0);
+            read_type_def(node_component_declarations, symbol_table, type_table);
 
-        // 添加function到符号表
-        read_function_def(node_component_declarations, symbol_table, type_table, function_table);
+            // 添加function到符号表
+            read_function_def(node_component_declarations, symbol_table, type_table, function_table);
 
-        // 添加主程序变量到符号表
-        SimpleNode node_program_variable_declarations = (SimpleNode)node_program_body.jjtGetChild(1);
-        read_main_variable(node_program_variable_declarations, symbol_table, variable_table, type_table);
+            // 添加主程序变量到符号表
+            SimpleNode node_program_variable_declarations = (SimpleNode) node_program_body.jjtGetChild(1);
+            read_main_variable(node_program_variable_declarations, symbol_table, variable_table, type_table);
 
-        show_symbol_table(symbol_table);
+            show_symbol_table(symbol_table);
     }
 }
 
