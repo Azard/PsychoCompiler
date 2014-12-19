@@ -1,5 +1,7 @@
 program simple_3()
-    function isodd(n)
+    type line is array of 10 integer;
+    type grid is array of 9 line;
+    function isodd(n,m)
         var n is integer;
         return boolean;
     is
@@ -11,10 +13,13 @@ program simple_3()
     end function isodd;
 
 is
-    var i is grid;
+    var i is integer;
+    var a is line;
+    var g is grid;
 begin
     i:=isodd(1);
-    if isodd(1) then
-        print 3;
-    end if
+    a[0]:=0;
+    a[1]:=1;
+    print a[0];
+    print a[1];
 end
