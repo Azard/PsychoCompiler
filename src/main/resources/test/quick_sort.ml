@@ -56,8 +56,6 @@ program QS()
 		end if
 	end function quick_sort;
 
-
-
 is
 	var source is save_array;
 
@@ -77,10 +75,5 @@ begin
 	quick_sort(source, 0, 9);
 	show_array(source, 10);
 
-
 	print -145876239;
-
-	//print source[0];
-	//print source[1];
-	//print -145876239;
 end

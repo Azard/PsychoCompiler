@@ -1157,6 +1157,7 @@ public class Gene_llvm {
     public void ge_function(TextArea area,SimpleNode node,String prefix)throws SemanticErr{
         SimpleNode name =  (SimpleNode)node.jjtGetChild(0).jjtGetChild(0);
         String func_name = name.jjtGetFirstToken().toString();
+        System.out.println("\n\nfunction: "+func_name+":");
         String type="";
         int num = gt.function_table.function_return_type.size();
         int i=0;
@@ -1189,6 +1190,7 @@ public class Gene_llvm {
 
             String p_name = para_name.get(j).toString();
             String p_type = para_type.get(j).toString();
+            System.out.println("parameter: "+p_name+" : "+p_type+";");
             if(p_type.equals("integer") || p_type.equals("boolean")){
                 func_var.put(p_name,p_name+".addr");
                 instr = instr+"i32 %"+p_name;
@@ -1256,6 +1258,7 @@ public class Gene_llvm {
         for(int j=0;j<var_num;j++){
             String v_name = var_name.get(j).toString();
             String v_type = var_type.get(j).toString();
+            System.out.println("local variable: "+v_name+" : "+v_type+";");
             func_para_var.put(v_name,v_name);
             if (v_type.equals("integer") || v_type.equals("boolean"))
                 ge_alloc(area, v_name,"  ");
@@ -1303,14 +1306,17 @@ public class Gene_llvm {
                 break;
             }
         }
+        System.out.println("\n\nmain:");
         area.append("define i32 @main() nounwind {\n");
         area.append("entry:\n");
         for(i=0;i < gt.variable_table.variable_name.size(); i++) {
-            if(gt.variable_table.variable_type.get(i).toString().equals("integer") || gt.variable_table.variable_type.get(i).toString().equals("boolean"))
-                ge_alloc(area, gt.variable_table.variable_name.get(i).toString(),"  ");
-            else
-                ge_alloc_array(area, gt.variable_table.variable_name.get(i).toString(),gt.variable_table.variable_type.get(i).toString(),"  ");
-
+            if (gt.variable_table.variable_type.get(i).toString().equals("integer") || gt.variable_table.variable_type.get(i).toString().equals("boolean")) {
+                System.out.println(gt.variable_table.variable_name.get(i).toString()+" : "+gt.variable_table.variable_type.get(i).toString()+";");
+                ge_alloc(area, gt.variable_table.variable_name.get(i).toString(), "  ");
+            } else {
+                System.out.println(gt.variable_table.variable_name.get(i).toString()+" : "+gt.variable_table.variable_type.get(i).toString()+";");
+                ge_alloc_array(area, gt.variable_table.variable_name.get(i).toString(), gt.variable_table.variable_type.get(i).toString(), "  ");
+            }
         }
         SimpleNode block = (SimpleNode)node.jjtGetChild(0);
         ge_block(area,block,"  ");
